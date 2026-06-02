@@ -1,6 +1,6 @@
 {
   "name": "clerkai",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build"
+    "build": "cd frontend && npm install && npm run build && cp -r dist ../dist"
   }
 }
