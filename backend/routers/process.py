@@ -3,7 +3,7 @@ import json
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
-from services.assemblyai_service import transcribe_with_diarization
+from services.deepgram_service import transcribe_with_diarization
 from services.groq_service import summarize_dual
 from services.transcript_builder import format_transcript_text
 from state import jobs
