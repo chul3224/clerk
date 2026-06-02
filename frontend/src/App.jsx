@@ -2,11 +2,12 @@ import { useState } from 'react'
 import DownloadButtons from './components/DownloadButtons'
 import ModelComparison from './components/ModelComparison'
 import ProcessingStatus from './components/ProcessingStatus'
+import ServerWakeup from './components/ServerWakeup'
 import TranscriptView from './components/TranscriptView'
 import UploadZone from './components/UploadZone'
 
 export default function App() {
-  const [stage, setStage] = useState('upload') // upload | processing | result | error
+  const [stage, setStage] = useState('wakeup') // wakeup | upload | processing | result | error
   const [fileId, setFileId] = useState(null)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
@@ -60,6 +61,7 @@ export default function App() {
       </header>
 
       <main className="max-w-4xl mx-auto px-6 py-8">
+        {stage === 'wakeup' && <ServerWakeup onReady={() => setStage('upload')} />}
         {stage === 'upload' && <UploadZone onFileUploaded={handleFileUploaded} />}
 
         {stage === 'processing' && (
