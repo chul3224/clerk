@@ -1,4 +1,4 @@
-export const API_BASE = ''
+export const API_BASE = import.meta.env.VITE_API_BASE || ''
 
 export async function uploadAudio(file) {
   const form = new FormData()
