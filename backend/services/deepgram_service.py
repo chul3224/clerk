@@ -5,7 +5,11 @@ from deepgram import DeepgramClient, PrerecordedOptions
 
 
 def _transcribe_sync(file_path: str) -> list[dict]:
-    client = DeepgramClient(os.getenv("DEEPGRAM_API_KEY"))
+    api_key = os.getenv("DEEPGRAM_API_KEY")
+    if not api_key:
+        raise RuntimeError("DEEPGRAM_API_KEY 환경변수가 설정되지 않았습니다")
+
+    client = DeepgramClient(api_key)
 
     with open(file_path, "rb") as f:
         buffer_data = f.read()
@@ -22,23 +26,29 @@ def _transcribe_sync(file_path: str) -> list[dict]:
         {"buffer": buffer_data}, options
     )
 
+    results = response.results
+    if not results:
+        raise RuntimeError("Deepgram 응답이 없습니다")
+
     segments = []
 
-    if response.results.utterances:
-        for utt in response.results.utterances:
+    if results.utterances:
+        for utt in results.utterances:
+            speaker_idx = int(utt.speaker) if utt.speaker is not None else 0
             segments.append({
-                "start": utt.start,
-                "end": utt.end,
-                "speaker": f"SPEAKER_{chr(65 + int(utt.speaker))}",
+                "start": float(utt.start),
+                "end": float(utt.end),
+                "speaker": f"SPEAKER_{chr(65 + speaker_idx)}",
                 "text": utt.transcript.strip(),
             })
     else:
-        words = response.results.channels[0].alternatives[0].words or []
+        words = results.channels[0].alternatives[0].words or []
         current = None
         for w in words:
-            spk = f"SPEAKER_{chr(65 + int(w.speaker))}"
-            if current and current["speaker"] == spk and w.start - current["end"] < 1.5:
-                current["end"] = w.end
+            spk_idx = int(w.speaker) if w.speaker is not None else 0
+            spk = f"SPEAKER_{chr(65 + spk_idx)}"
+            if current and current["speaker"] == spk and float(w.start) - current["end"] < 1.5:
+                current["end"] = float(w.end)
                 current["words"].append(w.word)
             else:
                 if current:
@@ -48,7 +58,7 @@ def _transcribe_sync(file_path: str) -> list[dict]:
                         "speaker": current["speaker"],
                         "text": " ".join(current["words"]),
                     })
-                current = {"start": w.start, "end": w.end, "speaker": spk, "words": [w.word]}
+                current = {"start": float(w.start), "end": float(w.end), "speaker": spk, "words": [w.word]}
         if current:
             segments.append({
                 "start": current["start"],
@@ -61,6 +71,5 @@ def _transcribe_sync(file_path: str) -> list[dict]:
 
 
 async def transcribe_with_diarization(file_path: str) -> list[dict]:
-    return await asyncio.get_event_loop().run_in_executor(
-        None, _transcribe_sync, file_path
-    )
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, _transcribe_sync, file_path)
