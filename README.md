@@ -11,7 +11,7 @@
 
 ## 데모
 
-> 배포 URL 및 데모 영상 추가 예정
+🔗 **라이브 서비스**: [clerk-nine-mu.vercel.app](https://clerk-nine-mu.vercel.app)
 
 ---
 
