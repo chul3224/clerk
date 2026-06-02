@@ -1,6 +1,4 @@
-from dotenv import load_dotenv
-load_dotenv(override=True)
-
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import upload, process
