@@ -1,13 +1,26 @@
 import asyncio
 import os
+from pathlib import Path
 
 import httpx
+
+MIME_TYPES = {
+    ".mp3": "audio/mpeg",
+    ".wav": "audio/wav",
+    ".m4a": "audio/mp4",
+    ".webm": "audio/webm",
+    ".ogg": "audio/ogg",
+    ".flac": "audio/flac",
+}
 
 
 def _transcribe_sync(file_path: str) -> list[dict]:
     api_key = os.getenv("DEEPGRAM_API_KEY")
     if not api_key:
         raise RuntimeError("DEEPGRAM_API_KEY 환경변수가 설정되지 않았습니다")
+
+    ext = Path(file_path).suffix.lower()
+    content_type = MIME_TYPES.get(ext, "audio/mpeg")
 
     with open(file_path, "rb") as f:
         audio_data = f.read()
@@ -16,11 +29,11 @@ def _transcribe_sync(file_path: str) -> list[dict]:
         "https://api.deepgram.com/v1/listen",
         headers={
             "Authorization": f"Token {api_key}",
-            "Content-Type": "audio/mpeg",
+            "Content-Type": content_type,
         },
         params={
             "model": "nova-2",
-            "language": "ko",
+            "detect_language": "true",
             "diarize": "true",
             "punctuate": "true",
             "utterances": "true",
