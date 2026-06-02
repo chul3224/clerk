@@ -1,41 +1,63 @@
 import asyncio
 import os
-import assemblyai as aai
+
+from deepgram import DeepgramClient, PrerecordedOptions
 
 
 def _transcribe_sync(file_path: str) -> list[dict]:
-    aai.settings.api_key = os.getenv("ASSEMBLYAI_API_KEY")
+    client = DeepgramClient(os.getenv("DEEPGRAM_API_KEY"))
 
-    config = aai.TranscriptionConfig(
-        speaker_labels=True,
-        language_code="ko",
+    with open(file_path, "rb") as f:
+        buffer_data = f.read()
+
+    options = PrerecordedOptions(
+        model="nova-2",
+        language="ko",
+        diarize=True,
+        punctuate=True,
+        utterances=True,
     )
 
-    transcriber = aai.Transcriber(config=config)
-    transcript = transcriber.transcribe(file_path)
-
-    if transcript.status == aai.TranscriptStatus.error:
-        raise RuntimeError(f"AssemblyAI 오류: {transcript.error}")
+    response = client.listen.rest.v("1").transcribe_file(
+        {"buffer": buffer_data}, options
+    )
 
     segments = []
 
-    if transcript.utterances:
-        for utt in transcript.utterances:
+    if response.results.utterances:
+        for utt in response.results.utterances:
             segments.append({
-                "start": utt.start / 1000,
-                "end": utt.end / 1000,
-                "speaker": f"SPEAKER_{utt.speaker}",
-                "text": utt.text.strip(),
+                "start": utt.start,
+                "end": utt.end,
+                "speaker": f"SPEAKER_{chr(65 + int(utt.speaker))}",
+                "text": utt.transcript.strip(),
             })
     else:
-        segments.append({
-            "start": 0.0,
-            "end": 0.0,
-            "speaker": "SPEAKER_A",
-            "text": transcript.text or "",
-        })
+        words = response.results.channels[0].alternatives[0].words or []
+        current = None
+        for w in words:
+            spk = f"SPEAKER_{chr(65 + int(w.speaker))}"
+            if current and current["speaker"] == spk and w.start - current["end"] < 1.5:
+                current["end"] = w.end
+                current["words"].append(w.word)
+            else:
+                if current:
+                    segments.append({
+                        "start": current["start"],
+                        "end": current["end"],
+                        "speaker": current["speaker"],
+                        "text": " ".join(current["words"]),
+                    })
+                current = {"start": w.start, "end": w.end, "speaker": spk, "words": [w.word]}
+        if current:
+            segments.append({
+                "start": current["start"],
+                "end": current["end"],
+                "speaker": current["speaker"],
+                "text": " ".join(current["words"]),
+            })
 
-    return segments
+    return segments or [{"start": 0.0, "end": 0.0, "speaker": "SPEAKER_A", "text": "인식된 텍스트가 없습니다."}]
 
 
 async def transcribe_with_diarization(file_path: str) -> list[dict]:
