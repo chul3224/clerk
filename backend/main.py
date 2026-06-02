@@ -21,3 +21,13 @@ app.include_router(process.router, prefix="/api")
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/debug-env")
+def debug_env():
+    import os
+    return {
+        "GROQ_API_KEY": "set" if os.getenv("GROQ_API_KEY") else "NOT SET",
+        "GROQ_KEY_PREFIX": os.getenv("GROQ_API_KEY", "")[:8] if os.getenv("GROQ_API_KEY") else "EMPTY",
+        "HF_TOKEN": "set" if os.getenv("HF_TOKEN") else "NOT SET",
+    }
