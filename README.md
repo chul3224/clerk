@@ -11,7 +11,8 @@
 
 ## 데모
 
-🔗 **라이브 서비스**: [clerk-nine-mu.vercel.app](https://clerk-nine-mu.vercel.app)
+🔗 **라이브 서비스**: [clerk-nine-mu.vercel.app](https://clerk-nine-mu.vercel.app)  
+🔧 **백엔드 API**: [clerk-3251.onrender.com](https://clerk-3251.onrender.com)
 
 ---
 
