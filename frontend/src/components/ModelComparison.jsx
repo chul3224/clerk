@@ -15,7 +15,7 @@ function MetricBadge({ label, value, highlight }) {
 
 function SummaryCard({ summary, index }) {
   return (
-    <div className={`flex-1 bg-white rounded-2xl border-2 p-5 ${ACCENT_CLASSES[index % ACCENT_CLASSES.length]}`}>
+    <div className={`bg-white rounded-2xl border-2 p-5 shrink-0 w-80 ${ACCENT_CLASSES[index % ACCENT_CLASSES.length]}`}>
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">모델 {String.fromCharCode(65 + index)}</span>
         <div className="text-right">
@@ -85,7 +85,7 @@ export default function ModelComparison({ summaries }) {
           {fastest.model}이 가장 빠름 ({fastest.response_time_ms}ms)
         </span>
       </div>
-      <div className={`grid gap-4 ${summaries.length === 3 ? 'grid-cols-3' : 'flex'}`}>
+      <div className="flex gap-4 overflow-x-auto pb-2">
         {summaries.map((s, i) => (
           <SummaryCard key={i} summary={s} index={i} />
         ))}

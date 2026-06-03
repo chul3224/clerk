@@ -33,16 +33,20 @@ SUMMARY_PROMPT = """당신은 회의록 전문 분석 AI입니다. 다음 회의
 {transcript}
 
 분석 기준:
-- key_decisions: 회의에서 확정·결정·합의된 모든 사항 (작은 것도 포함)
-- action_items: 누군가 해야 할 일, 다음에 진행할 일, 검토할 사항 모두 포함. 담당자가 언급되지 않았으면 null
-- 대화에서 명시적으로 언급된 것만 작성하고 추측하지 마세요
+- key_decisions: 회의에서 확정·결정·합의된 모든 사항을 빠짐없이 추출 (사소한 것도 포함)
+- action_items: 다음 지침을 반드시 따르세요
+  * 해야 할 일을 구체적이고 실행 가능하게 작성 (언제, 무엇을, 어떻게 포함)
+  * 대화에서 언급된 기간, 조건, 방법을 함께 기재
+  * 담당자가 명시된 경우 반드시 포함, 없으면 null
+  * 예시: "다음 주 화요일까지 화자 분리 기능 구현 완료 후 배포" (assignee: "신우철")
+- 대화에서 명시적으로 언급된 것만 작성하고 추측 금지
 
 JSON 형식:
 {{
     "summary": "회의 핵심 요약 (3-5문장, 주요 논의 흐름 포함)",
     "key_decisions": ["결정사항1", "결정사항2"],
     "action_items": [
-        {{"task": "작업 내용", "assignee": "담당자 이름 또는 null"}}
+        {{"task": "구체적인 작업 내용 (기간/조건 포함)", "assignee": "담당자 이름 또는 null"}}
     ]
 }}
 
@@ -56,6 +60,7 @@ async def _summarize_groq(transcript_text: str, model: dict) -> dict:
         model=model["id"],
         messages=[{"role": "user", "content": SUMMARY_PROMPT.format(transcript=transcript_text)}],
         temperature=0.3,
+        max_tokens=2048,
         response_format={"type": "json_object"},
     )
     elapsed_ms = int((time.time() - start) * 1000)
@@ -84,7 +89,10 @@ async def _summarize_gemini(transcript_text: str, model: dict) -> dict:
         start = time.time()
         response = m.generate_content(
             SUMMARY_PROMPT.format(transcript=transcript_text),
-            generation_config=genai.GenerationConfig(temperature=0.3),
+            generation_config=genai.GenerationConfig(
+                temperature=0.3,
+                max_output_tokens=2048,
+            ),
         )
         elapsed_ms = int((time.time() - start) * 1000)
         text = response.text.strip()
