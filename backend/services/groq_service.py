@@ -60,7 +60,7 @@ async def _summarize_groq(transcript_text: str, model: dict) -> dict:
         model=model["id"],
         messages=[{"role": "user", "content": SUMMARY_PROMPT.format(transcript=transcript_text)}],
         temperature=0.3,
-        max_tokens=2048,
+        max_tokens=4096,
         response_format={"type": "json_object"},
     )
     elapsed_ms = int((time.time() - start) * 1000)
@@ -91,7 +91,7 @@ async def _summarize_gemini(transcript_text: str, model: dict) -> dict:
             SUMMARY_PROMPT.format(transcript=transcript_text),
             generation_config=genai.GenerationConfig(
                 temperature=0.3,
-                max_output_tokens=2048,
+                max_output_tokens=4096,
             ),
         )
         elapsed_ms = int((time.time() - start) * 1000)
@@ -125,9 +125,18 @@ async def _summarize_one(transcript_text: str, model: dict) -> dict:
     return await _summarize_gemini(transcript_text, model)
 
 
+def _trim_transcript(text: str, max_chars: int = 6000) -> str:
+    """대화록이 너무 길면 앞/뒤 중요 부분만 유지"""
+    if len(text) <= max_chars:
+        return text
+    half = max_chars // 2
+    return text[:half] + "\n...(중략)...\n" + text[-half:]
+
+
 async def summarize_triple(transcript_text: str) -> list[dict]:
+    trimmed = _trim_transcript(transcript_text)
     results = await asyncio.gather(
-        *[_summarize_one(transcript_text, m) for m in MODELS],
+        *[_summarize_one(trimmed, m) for m in MODELS],
         return_exceptions=True,
     )
     summaries = []
