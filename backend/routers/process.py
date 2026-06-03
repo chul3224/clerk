@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
 from services.deepgram_service import transcribe_with_diarization
-from services.groq_service import summarize_dual
+from services.groq_service import summarize_triple
 from services.transcript_builder import format_transcript_text
 from state import jobs
 
@@ -35,14 +35,13 @@ async def process_audio(file_id: str):
 
             # Step 3: AI 요약 (두 모델 병렬)
             transcript_text = format_transcript_text(transcript)
-            yield _sse({"step": "summarization", "status": "processing", "message": "AI 요약 생성 중 (두 모델 동시)..."})
-            model_a, model_b = await summarize_dual(transcript_text)
+            yield _sse({"step": "summarization", "status": "processing", "message": "AI 요약 생성 중 (3개 모델 동시)..."})
+            summaries = await summarize_triple(transcript_text)
             yield _sse({"step": "summarization", "status": "done", "message": "AI 요약 완료"})
 
             result = {
                 "transcript": transcript,
-                "summary_a": model_a,
-                "summary_b": model_b,
+                "summaries": summaries,
             }
             jobs[file_id]["result"] = result
             jobs[file_id]["status"] = "done"

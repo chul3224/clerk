@@ -124,13 +124,12 @@ export default function App() {
               }
             />
 
-            <ModelComparison summaryA={result.summary_a} summaryB={result.summary_b} />
+            <ModelComparison summaries={result.summaries} />
 
             <DownloadButtons
               transcript={result.transcript}
               speakerNames={speakerNames}
-              summaryA={result.summary_a}
-              summaryB={result.summary_b}
+              summaries={result.summaries}
             />
           </div>
         )}

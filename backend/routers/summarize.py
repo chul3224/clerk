@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from services.groq_service import summarize_dual
+from services.groq_service import summarize_triple
 
 router = APIRouter()
 
@@ -12,5 +12,5 @@ class SummarizeRequest(BaseModel):
 
 @router.post("/summarize")
 async def summarize(body: SummarizeRequest):
-    model_a, model_b = await summarize_dual(body.transcript)
-    return {"summary_a": model_a, "summary_b": model_b}
+    summaries = await summarize_triple(body.transcript)
+    return {"summaries": summaries}

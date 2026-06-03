@@ -22,8 +22,7 @@ export default function LiveRecorder({ onResultReady }) {
         transcript: finalLines.map((text) => ({
           start: 0, end: 0, speaker: 'SPEAKER_A', text,
         })),
-        summary_a: data.summary_a,
-        summary_b: data.summary_b,
+        summaries: data.summaries,
       })
     } catch {
       // 오류는 무시하고 계속

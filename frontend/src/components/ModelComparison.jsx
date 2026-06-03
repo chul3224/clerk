@@ -1,3 +1,9 @@
+const ACCENT_CLASSES = [
+  'border-blue-200',
+  'border-green-200',
+  'border-purple-200',
+]
+
 function MetricBadge({ label, value, highlight }) {
   return (
     <div className={`flex flex-col items-center px-3 py-2 rounded-lg ${highlight ? 'bg-blue-50' : 'bg-gray-50'}`}>
@@ -7,17 +13,18 @@ function MetricBadge({ label, value, highlight }) {
   )
 }
 
-function SummaryCard({ summary, label, accentClass }) {
+function SummaryCard({ summary, index }) {
   return (
-    <div className={`flex-1 bg-white rounded-2xl border-2 p-5 ${accentClass}`}>
+    <div className={`flex-1 bg-white rounded-2xl border-2 p-5 ${ACCENT_CLASSES[index % ACCENT_CLASSES.length]}`}>
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">모델 {label}</span>
-        <span className="text-xs font-medium text-gray-700 bg-gray-100 px-2 py-1 rounded-full">
-          {summary.model}
-        </span>
+        <span className="text-xs font-bold text-gray-500 uppercase tracking-wide">모델 {String.fromCharCode(65 + index)}</span>
+        <div className="text-right">
+          <p className="text-xs font-semibold text-gray-700">{summary.model}</p>
+          <p className="text-xs text-gray-400">{summary.label}</p>
+        </div>
       </div>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-4 flex-wrap">
         <MetricBadge label="응답시간" value={`${summary.response_time_ms}ms`} />
         <MetricBadge label="토큰 수" value={summary.token_count} />
         <MetricBadge label="액션아이템" value={`${summary.action_items?.length || 0}개`} highlight />
@@ -63,20 +70,25 @@ function SummaryCard({ summary, label, accentClass }) {
   )
 }
 
-export default function ModelComparison({ summaryA, summaryB }) {
-  const fasterModel = summaryA.response_time_ms <= summaryB.response_time_ms ? 'A' : 'B'
+export default function ModelComparison({ summaries }) {
+  if (!summaries?.length) return null
+
+  const fastest = summaries.reduce((a, b) =>
+    a.response_time_ms <= b.response_time_ms ? a : b
+  )
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-3">
-        <h3 className="text-lg font-bold text-gray-900">AI 요약 비교</h3>
+        <h3 className="text-lg font-bold text-gray-900">AI 요약 비교 ({summaries.length}개 모델)</h3>
         <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full font-medium">
-          모델 {fasterModel}이 {Math.abs(summaryA.response_time_ms - summaryB.response_time_ms)}ms 더 빠름
+          {fastest.model}이 가장 빠름 ({fastest.response_time_ms}ms)
         </span>
       </div>
-      <div className="flex gap-4">
-        <SummaryCard summary={summaryA} label="A" accentClass="border-blue-200" />
-        <SummaryCard summary={summaryB} label="B" accentClass="border-purple-200" />
+      <div className={`grid gap-4 ${summaries.length === 3 ? 'grid-cols-1 lg:grid-cols-3' : 'flex'}`}>
+        {summaries.map((s, i) => (
+          <SummaryCard key={i} summary={s} index={i} />
+        ))}
       </div>
     </div>
   )
