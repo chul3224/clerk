@@ -3,17 +3,18 @@ import json
 import os
 import time
 
+import google.generativeai as genai
 from groq import AsyncGroq
 
-MODELS = {
-    "model_a": {
-        "id": "llama-3.1-8b-instant",
-        "name": "Llama 3.1 8B (초고속 경량)",
-    },
-    "model_b": {
-        "id": "llama-3.3-70b-versatile",
-        "name": "Llama 3.3 70B (고성능)",
-    },
+MODEL_A = {
+    "id": "llama-3.1-8b-instant",
+    "name": "Llama 3.1 8B (Meta · Groq)",
+    "provider": "groq",
+}
+MODEL_B = {
+    "id": "gemini-2.0-flash",
+    "name": "Gemini 2.0 Flash (Google)",
+    "provider": "gemini",
 }
 
 SUMMARY_PROMPT = """당신은 회의록 전문 분석 AI입니다. 다음 회의 대화록을 빠짐없이 분석하여 JSON으로 응답하세요.
@@ -38,19 +39,12 @@ JSON 형식:
 JSON만 응답하세요."""
 
 
-async def _summarize_single(transcript_text: str, model_key: str) -> dict:
+async def _summarize_groq(transcript_text: str) -> dict:
     client = AsyncGroq(api_key=os.getenv("GROQ_API_KEY"))
-    model_info = MODELS[model_key]
-
     start = time.time()
     response = await client.chat.completions.create(
-        model=model_info["id"],
-        messages=[
-            {
-                "role": "user",
-                "content": SUMMARY_PROMPT.format(transcript=transcript_text),
-            }
-        ],
+        model=MODEL_A["id"],
+        messages=[{"role": "user", "content": SUMMARY_PROMPT.format(transcript=transcript_text)}],
         temperature=0.3,
         response_format={"type": "json_object"},
     )
@@ -59,15 +53,11 @@ async def _summarize_single(transcript_text: str, model_key: str) -> dict:
     try:
         data = json.loads(response.choices[0].message.content)
     except json.JSONDecodeError:
-        data = {
-            "summary": response.choices[0].message.content,
-            "key_decisions": [],
-            "action_items": [],
-        }
+        data = {"summary": response.choices[0].message.content, "key_decisions": [], "action_items": []}
 
     return {
-        "model": model_info["name"],
-        "model_id": model_info["id"],
+        "model": MODEL_A["name"],
+        "model_id": MODEL_A["id"],
         "summary": data.get("summary", ""),
         "key_decisions": data.get("key_decisions", []),
         "action_items": data.get("action_items", []),
@@ -76,9 +66,45 @@ async def _summarize_single(transcript_text: str, model_key: str) -> dict:
     }
 
 
+async def _summarize_gemini(transcript_text: str) -> dict:
+    loop = asyncio.get_running_loop()
+
+    def _run():
+        genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+        model = genai.GenerativeModel(MODEL_B["id"])
+        start = time.time()
+        response = model.generate_content(
+            SUMMARY_PROMPT.format(transcript=transcript_text),
+            generation_config=genai.GenerationConfig(
+                temperature=0.3,
+                response_mime_type="application/json",
+            ),
+        )
+        elapsed_ms = int((time.time() - start) * 1000)
+
+        try:
+            data = json.loads(response.text)
+        except json.JSONDecodeError:
+            data = {"summary": response.text, "key_decisions": [], "action_items": []}
+
+        token_count = getattr(response.usage_metadata, "total_token_count", 0)
+
+        return {
+            "model": MODEL_B["name"],
+            "model_id": MODEL_B["id"],
+            "summary": data.get("summary", ""),
+            "key_decisions": data.get("key_decisions", []),
+            "action_items": data.get("action_items", []),
+            "response_time_ms": elapsed_ms,
+            "token_count": token_count,
+        }
+
+    return await loop.run_in_executor(None, _run)
+
+
 async def summarize_dual(transcript_text: str) -> tuple[dict, dict]:
     model_a, model_b = await asyncio.gather(
-        _summarize_single(transcript_text, "model_a"),
-        _summarize_single(transcript_text, "model_b"),
+        _summarize_groq(transcript_text),
+        _summarize_gemini(transcript_text),
     )
     return model_a, model_b
