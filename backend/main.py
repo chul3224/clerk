@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import upload, process
+from routers import upload, process, realtime, summarize
 
 app = FastAPI(title="Clerkai API", version="1.0.0")
 
@@ -14,6 +14,8 @@ app.add_middleware(
 
 app.include_router(upload.router, prefix="/api")
 app.include_router(process.router, prefix="/api")
+app.include_router(realtime.router, prefix="/api")
+app.include_router(summarize.router, prefix="/api")
 
 
 @app.get("/health")

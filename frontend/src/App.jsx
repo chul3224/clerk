@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import DownloadButtons from './components/DownloadButtons'
+import LiveRecorder from './components/LiveRecorder'
 import ModelComparison from './components/ModelComparison'
 import ProcessingStatus from './components/ProcessingStatus'
 import ServerWakeup from './components/ServerWakeup'
@@ -8,6 +9,7 @@ import UploadZone from './components/UploadZone'
 
 export default function App() {
   const [stage, setStage] = useState('wakeup') // wakeup | upload | processing | result | error
+  const [mode, setMode] = useState('file') // file | live
   const [fileId, setFileId] = useState(null)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
@@ -52,7 +54,7 @@ export default function App() {
             </div>
             <span className="text-xl font-bold text-gray-900">Clerkai</span>
           </button>
-          {stage !== 'upload' && (
+          {stage !== 'wakeup' && stage !== 'upload' && (
             <button onClick={reset} className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
               새 회의록 분석
             </button>
@@ -62,7 +64,31 @@ export default function App() {
 
       <main className="max-w-4xl mx-auto px-6 py-8">
         {stage === 'wakeup' && <ServerWakeup onReady={() => setStage('upload')} />}
-        {stage === 'upload' && <UploadZone onFileUploaded={handleFileUploaded} />}
+
+        {stage === 'upload' && (
+          <div className="flex flex-col gap-6">
+            {/* 모드 탭 */}
+            <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit mx-auto">
+              <button
+                onClick={() => setMode('file')}
+                className={`px-5 py-2 rounded-lg text-sm font-medium transition-all
+                  ${mode === 'file' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                📁 파일 업로드
+              </button>
+              <button
+                onClick={() => setMode('live')}
+                className={`px-5 py-2 rounded-lg text-sm font-medium transition-all
+                  ${mode === 'live' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                🎙️ 실시간 녹음
+              </button>
+            </div>
+
+            {mode === 'file' && <UploadZone onFileUploaded={handleFileUploaded} />}
+            {mode === 'live' && <LiveRecorder onResultReady={handleComplete} />}
+          </div>
+        )}
 
         {stage === 'processing' && (
           <ProcessingStatus fileId={fileId} onComplete={handleComplete} onError={handleError} />
@@ -86,7 +112,7 @@ export default function App() {
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-gray-900">분석 결과</h2>
               <span className="text-sm text-gray-400">
-                화자 {[...new Set(result.transcript.map((s) => s.speaker))].length}명 · {result.transcript.length}개 발화
+                {result.transcript.length}개 발화
               </span>
             </div>
 
