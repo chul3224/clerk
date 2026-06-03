@@ -7,13 +7,13 @@ import google.generativeai as genai
 from groq import AsyncGroq
 
 MODEL_A = {
-    "id": "llama-3.1-8b-instant",
-    "name": "Llama 3.1 8B (Meta · Groq)",
+    "id": "llama-3.3-70b-versatile",
+    "name": "Llama 3.3 70B (Meta · Groq)",
     "provider": "groq",
 }
 MODEL_B = {
-    "id": "gemini-2.0-flash",
-    "name": "Gemini 2.0 Flash (Google)",
+    "id": "gemini-1.5-flash",
+    "name": "Gemini 1.5 Flash (Google)",
     "provider": "gemini",
 }
 
