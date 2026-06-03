@@ -33,7 +33,7 @@ def _transcribe_sync(file_path: str) -> list[dict]:
         },
         params={
             "model": "nova-2",
-            "detect_language": "true",
+            "language": "ko",
             "diarize": "true",
             "punctuate": "true",
             "utterances": "true",
@@ -41,7 +41,9 @@ def _transcribe_sync(file_path: str) -> list[dict]:
         content=audio_data,
         timeout=300.0,
     )
-    response.raise_for_status()
+    if not response.is_success:
+        raise RuntimeError(f"Deepgram API 오류 {response.status_code}: {response.text}")
+
     data = response.json()
 
     utterances = data.get("results", {}).get("utterances", [])
