@@ -21,6 +21,9 @@ frontend/.vite/
 # 업로드 파일
 backend/uploads/
 
+# 테스트 오디오
+test_audio/
+
 # OS
 .DS_Store
 Thumbs.db
