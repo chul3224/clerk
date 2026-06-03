@@ -84,16 +84,19 @@ async def _summarize_gemini(transcript_text: str, model: dict) -> dict:
         start = time.time()
         response = m.generate_content(
             SUMMARY_PROMPT.format(transcript=transcript_text),
-            generation_config=genai.GenerationConfig(
-                temperature=0.3,
-                response_mime_type="application/json",
-            ),
+            generation_config=genai.GenerationConfig(temperature=0.3),
         )
         elapsed_ms = int((time.time() - start) * 1000)
+        text = response.text.strip()
+        # JSON 코드블록 제거
+        if text.startswith("```"):
+            text = text.split("```")[1]
+            if text.startswith("json"):
+                text = text[4:]
         try:
-            data = json.loads(response.text)
+            data = json.loads(text)
         except json.JSONDecodeError:
-            data = {"summary": response.text, "key_decisions": [], "action_items": []}
+            data = {"summary": text, "key_decisions": [], "action_items": []}
         return {
             "model": model["name"],
             "label": model["label"],

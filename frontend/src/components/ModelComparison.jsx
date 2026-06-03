@@ -85,7 +85,7 @@ export default function ModelComparison({ summaries }) {
           {fastest.model}이 가장 빠름 ({fastest.response_time_ms}ms)
         </span>
       </div>
-      <div className={`grid gap-4 ${summaries.length === 3 ? 'grid-cols-1 lg:grid-cols-3' : 'flex'}`}>
+      <div className={`grid gap-4 ${summaries.length === 3 ? 'grid-cols-3' : 'flex'}`}>
         {summaries.map((s, i) => (
           <SummaryCard key={i} summary={s} index={i} />
         ))}
