@@ -52,6 +52,16 @@ def get_history(
     return _serialize(record)
 
 
+@router.delete("/history")
+def delete_all_history(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    db.query(MeetingRecord).filter(MeetingRecord.user_id == current_user.id).delete()
+    db.commit()
+    return {"message": "전체 삭제되었습니다"}
+
+
 @router.delete("/history/{record_id}")
 def delete_history(
     record_id: int,

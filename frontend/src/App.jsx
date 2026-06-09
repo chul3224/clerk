@@ -8,6 +8,7 @@ import ModelComparison from './components/ModelComparison'
 import ModelResult from './components/ModelResult'
 import ProcessingStatus from './components/ProcessingStatus'
 import ServerWakeup from './components/ServerWakeup'
+import Settings from './components/Settings'
 import Sidebar from './components/Sidebar'
 import SlackShare from './components/SlackShare'
 import TranscriptView from './components/TranscriptView'
@@ -24,17 +25,18 @@ const TAB_OPTIONS = [
 export default function App() {
   const { user, loading, logout } = useAuth()
 
-  const [stage, setStage] = useState('wakeup')   // wakeup | upload | processing | result | error
-  const [mode, setMode] = useState('file')        // file | live
+  const [stage, setStage] = useState('wakeup')
+  const [mode, setMode] = useState('file')
   const [fileId, setFileId] = useState(null)
-  const [result, setResult] = useState(null)      // live processing result
-  const [historyView, setHistoryView] = useState(null) // selected history record
+  const [result, setResult] = useState(null)
+  const [historyView, setHistoryView] = useState(null)
   const [error, setError] = useState(null)
   const [speakerNames, setSpeakerNames] = useState({})
   const [openTabs, setOpenTabs] = useState(['A'])
   const [activeTab, setActiveTab] = useState('A')
   const [sidebarRefresh, setSidebarRefresh] = useState(0)
-  const [splitPercent, setSplitPercent] = useState(62) // transcript width %
+  const [showSettings, setShowSettings] = useState(false)
+  const [splitPercent, setSplitPercent] = useState(62)
   const splitContainerRef = useRef(null)
   const isDragging = useRef(false)
 
@@ -64,7 +66,7 @@ export default function App() {
   }, [])
 
   if (loading) return (
-    <div className="h-screen bg-[#0f0f10] flex items-center justify-center">
+    <div className="h-screen bg-c-bg flex items-center justify-center">
       <div className="w-7 h-7 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
     </div>
   )
@@ -132,7 +134,6 @@ export default function App() {
 
   /* ---- derived data ---- */
 
-  // summaries array — live result or single-item array from history
   const summaries = result?.summaries || (historyView ? [{
     model: 'Llama 3.3 70B',
     label: 'Meta · Groq',
@@ -144,11 +145,8 @@ export default function App() {
     token_count: 0,
   }] : [])
 
-  // tabs available depend on whether we have a live result (all) or history (only A)
   const availableTabs = result ? TAB_OPTIONS : historyView ? [TAB_OPTIONS[0]] : []
-
   const closedTabs = availableTabs.filter(t => !openTabs.includes(t.id))
-
   const modelAForSlack = summaries[0]
   const hasSlack = modelAForSlack && !modelAForSlack.summary?.startsWith('오류')
 
@@ -161,7 +159,7 @@ export default function App() {
       return best && !best.summary?.startsWith('오류') ? (
         <MindmapView summary={best.summary} keyDecisions={best.key_decisions} actionItems={best.action_items} />
       ) : (
-        <p className="text-sm text-gray-600 py-12 text-center">요약 데이터가 없습니다</p>
+        <p className="text-sm text-c-faint py-12 text-center">요약 데이터가 없습니다</p>
       )
     }
     const idx = { A: 0, B: 1, C: 2 }[tabId] ?? 0
@@ -171,7 +169,7 @@ export default function App() {
   /* ---- render ---- */
 
   return (
-    <div className="flex h-screen bg-[#0f0f10] text-gray-100 overflow-hidden">
+    <div className="flex h-screen bg-c-bg text-c overflow-hidden">
       <Sidebar
         user={user}
         onLogout={logout}
@@ -179,6 +177,7 @@ export default function App() {
         onSelectRecord={handleSelectHistory}
         currentRecordId={historyView?.id}
         refreshTrigger={sidebarRefresh}
+        onOpenSettings={() => setShowSettings(true)}
       />
 
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -212,8 +211,8 @@ export default function App() {
             <div className="flex flex-col items-center gap-5 text-center">
               <div className="text-4xl">⚠️</div>
               <div>
-                <p className="text-base font-semibold text-gray-200 mb-2">처리 중 오류가 발생했습니다</p>
-                <p className="text-sm text-gray-500 max-w-sm">{error}</p>
+                <p className="text-base font-semibold text-c mb-2">처리 중 오류가 발생했습니다</p>
+                <p className="text-sm text-c-faint max-w-sm">{error}</p>
               </div>
               <button onClick={resetToUpload} className="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors">
                 다시 시도
@@ -244,10 +243,10 @@ export default function App() {
                 {/* Drag handle */}
                 <div
                   onMouseDown={handleDragStart}
-                  className="group w-1.5 flex-shrink-0 bg-[#2a2a2e] hover:bg-indigo-600/60 active:bg-indigo-500 cursor-col-resize transition-colors relative"
+                  className="group w-1.5 flex-shrink-0 bg-c-border hover:bg-indigo-600/60 active:bg-indigo-500 cursor-col-resize transition-colors relative"
                   title="드래그해서 크기 조절"
                 >
-                  <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-[#3a3a42] group-hover:bg-indigo-400 transition-colors" />
+                  <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-c-border2 group-hover:bg-indigo-400 transition-colors" />
                 </div>
               </>
             )}
@@ -256,8 +255,8 @@ export default function App() {
             <div className="flex-1 flex flex-col overflow-hidden min-w-0">
               {/* Model selector — only closed tabs shown */}
               {closedTabs.length > 0 && (
-                <div className="px-4 py-2 border-b border-[#2a2a2e] flex items-center gap-2 flex-shrink-0 bg-[#0f0f10]">
-                  <span className="text-[11px] text-gray-600 mr-1">열기</span>
+                <div className="px-4 py-2 border-b border-c flex items-center gap-2 flex-shrink-0 bg-c-bg">
+                  <span className="text-[11px] text-c-ghost mr-1">열기</span>
                   {closedTabs.map(tab => (
                     <button
                       key={tab.id}
@@ -272,7 +271,7 @@ export default function App() {
               )}
 
               {/* Cursor-style tab bar */}
-              <div className="flex border-b border-[#2a2a2e] bg-[#0f0f10] overflow-x-auto flex-shrink-0">
+              <div className="flex border-b border-c bg-c-bg overflow-x-auto flex-shrink-0">
                 {openTabs.map(tabId => {
                   const tab = TAB_OPTIONS.find(t => t.id === tabId)
                   const isActive = activeTab === tabId
@@ -280,10 +279,10 @@ export default function App() {
                     <div
                       key={tabId}
                       onClick={() => setActiveTab(tabId)}
-                      className={`flex items-center gap-2 px-4 py-2.5 text-xs cursor-pointer border-r border-[#2a2a2e] whitespace-nowrap select-none transition-colors ${
+                      className={`flex items-center gap-2 px-4 py-2.5 text-xs cursor-pointer border-r border-c whitespace-nowrap select-none transition-colors ${
                         isActive
-                          ? 'bg-[#1a1a1c] text-gray-200 border-b-2 border-b-indigo-500 -mb-px'
-                          : 'text-gray-600 hover:text-gray-400 hover:bg-[#161618]'
+                          ? 'bg-c-card text-c border-b-2 border-b-indigo-500 -mb-px'
+                          : 'text-c-dim hover:text-c-muted hover:bg-c-panel'
                       }`}
                     >
                       {isActive && <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full flex-shrink-0" />}
@@ -291,7 +290,7 @@ export default function App() {
                       {openTabs.length > 1 && (
                         <button
                           onClick={e => { e.stopPropagation(); closeTab(tabId) }}
-                          className="text-gray-700 hover:text-gray-400 text-[11px] leading-none ml-0.5 flex-shrink-0"
+                          className="text-c-ghost hover:text-c-muted text-[11px] leading-none ml-0.5 flex-shrink-0"
                         >
                           ×
                         </button>
@@ -306,9 +305,9 @@ export default function App() {
                 {renderTab(activeTab)}
               </div>
 
-              {/* Bottom bar: Slack share + download */}
+              {/* Bottom bar */}
               {(hasSlack || result) && (
-                <div className="border-t border-[#2a2a2e] p-4 flex flex-col gap-3 flex-shrink-0">
+                <div className="border-t border-c p-4 flex flex-col gap-3 flex-shrink-0">
                   {hasSlack && (
                     <SlackShare
                       summary={modelAForSlack.summary}
@@ -330,6 +329,9 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {/* Settings modal */}
+      {showSettings && <Settings onClose={() => setShowSettings(false)} />}
     </div>
   )
 }

@@ -11,20 +11,16 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
   const chatEndRef = useRef(null)
   const containerRef = useRef(null)
   const isDragging = useRef(false)
-  const memoRef = useRef(null)
 
-  // Auto-start recording on mount
   useEffect(() => {
     start()
     return () => { stop() }
   }, [])
 
-  // Auto-scroll chat to bottom
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [finalLines, interim])
 
-  // Drag-to-resize
   const handleDragStart = useCallback((e) => {
     e.preventDefault()
     isDragging.current = true
@@ -50,9 +46,7 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
     window.addEventListener('mouseup', onUp)
   }, [])
 
-  const handleStop = () => {
-    stop()
-  }
+  const handleStop = () => { stop() }
 
   const handleSummarize = async () => {
     const transcript = getFullTranscript()
@@ -89,16 +83,16 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
         className="flex-shrink-0 flex flex-col overflow-hidden"
       >
         {/* Header */}
-        <div className="px-4 h-10 flex items-center justify-between border-b border-[#2a2a2e] flex-shrink-0">
+        <div className="px-4 h-10 flex items-center justify-between border-b border-c flex-shrink-0">
           <div className="flex items-center gap-2">
             {isRecording && (
               <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse flex-shrink-0" />
             )}
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <span className="text-xs font-semibold text-c-muted uppercase tracking-wider">
               {isRecording ? '실시간 대화록' : '대화록'}
             </span>
           </div>
-          <span className="text-[11px] text-gray-600">{finalLines.length}문장</span>
+          <span className="text-[11px] text-c-dim">{finalLines.length}문장</span>
         </div>
 
         {/* Chat area */}
@@ -110,11 +104,11 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
                   <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
                     <span className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
                   </div>
-                  <p className="text-sm text-gray-600">말씀해주세요</p>
-                  <p className="text-xs text-gray-700">음성이 감지되면 자동으로 기록됩니다</p>
+                  <p className="text-sm text-c-faint">말씀해주세요</p>
+                  <p className="text-xs text-c-dim">음성이 감지되면 자동으로 기록됩니다</p>
                 </>
               ) : (
-                <p className="text-sm text-gray-700">마이크 연결 중...</p>
+                <p className="text-sm text-c-dim">마이크 연결 중...</p>
               )}
             </div>
           )}
@@ -128,13 +122,12 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="bg-blue-950/40 border border-blue-900/30 rounded-2xl rounded-tl-sm px-3 py-2">
-                  <p className="text-xs text-gray-300 leading-relaxed">{line}</p>
+                  <p className="text-xs text-c-soft leading-relaxed">{line}</p>
                 </div>
               </div>
             </div>
           ))}
 
-          {/* Interim (in-progress) text */}
           {interim && (
             <div className="flex gap-2.5 mt-1 opacity-60">
               <div className="w-6 h-6 rounded-full bg-blue-500/40 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -143,7 +136,7 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-xs text-gray-500 italic px-1 py-1">{interim}…</p>
+                <p className="text-xs text-c-faint italic px-1 py-1">{interim}…</p>
               </div>
             </div>
           )}
@@ -151,7 +144,6 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
           <div ref={chatEndRef} />
         </div>
 
-        {/* Error */}
         {error && (
           <div className="mx-4 mb-2 px-3 py-2 bg-red-950/30 border border-red-900/30 rounded-lg">
             <p className="text-xs text-red-400">{error}</p>
@@ -159,7 +151,7 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
         )}
 
         {/* Bottom controls */}
-        <div className="border-t border-[#2a2a2e] px-4 py-3 flex items-center justify-between flex-shrink-0">
+        <div className="border-t border-c px-4 py-3 flex items-center justify-between flex-shrink-0">
           {isRecording ? (
             <>
               <div className="flex items-center gap-2 text-xs text-red-400 font-medium">
@@ -168,15 +160,15 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
               </div>
               <button
                 onClick={handleStop}
-                className="flex items-center gap-2 px-4 py-1.5 bg-[#1a1a1c] border border-[#3a3a42] hover:border-gray-500 text-gray-300 rounded-lg text-xs font-medium transition-colors"
+                className="flex items-center gap-2 px-4 py-1.5 bg-c-card border border-c2 hover:border-c-muted text-c-soft rounded-lg text-xs font-medium transition-colors"
               >
-                <span className="w-3 h-3 bg-gray-400 rounded-sm flex-shrink-0" />
+                <span className="w-3 h-3 bg-c-muted rounded-sm flex-shrink-0" />
                 녹음 중지
               </button>
             </>
           ) : finalLines.length > 0 ? (
             <>
-              <span className="text-xs text-gray-600">녹음 완료 · {finalLines.length}문장</span>
+              <span className="text-xs text-c-faint">녹음 완료 · {finalLines.length}문장</span>
               <button
                 onClick={handleSummarize}
                 disabled={summarizing}
@@ -191,7 +183,7 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
               </button>
             </>
           ) : (
-            <button onClick={onCancel} className="text-xs text-gray-600 hover:text-gray-400 transition-colors">
+            <button onClick={onCancel} className="text-xs text-c-faint hover:text-c-muted transition-colors">
               ← 돌아가기
             </button>
           )}
@@ -201,18 +193,18 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
       {/* ── Drag handle ── */}
       <div
         onMouseDown={handleDragStart}
-        className="group w-1.5 flex-shrink-0 bg-[#2a2a2e] hover:bg-indigo-600/60 cursor-col-resize transition-colors relative"
+        className="group w-1.5 flex-shrink-0 bg-c-border hover:bg-indigo-600/60 cursor-col-resize transition-colors relative"
       >
-        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-[#3a3a42] group-hover:bg-indigo-400 transition-colors" />
+        <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-px bg-c-border2 group-hover:bg-indigo-400 transition-colors" />
       </div>
 
       {/* ── Right: memo pad ── */}
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
-        <div className="px-4 h-10 flex items-center justify-between border-b border-[#2a2a2e] flex-shrink-0">
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">메모</span>
+        <div className="px-4 h-10 flex items-center justify-between border-b border-c flex-shrink-0">
+          <span className="text-xs font-semibold text-c-muted uppercase tracking-wider">메모</span>
           <button
             onClick={copyMemo}
-            className="text-[11px] text-gray-600 hover:text-gray-400 transition-colors flex items-center gap-1"
+            className="text-[11px] text-c-dim hover:text-c-muted transition-colors flex items-center gap-1"
           >
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
@@ -222,16 +214,16 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
           </button>
         </div>
         <textarea
-          ref={memoRef}
           value={memo}
           onChange={e => setMemo(e.target.value)}
           placeholder="회의 중 메모를 자유롭게 작성하세요&#10;&#10;— 결정사항&#10;— 액션아이템&#10;— 기타 메모"
-          className="flex-1 bg-transparent text-sm text-gray-300 p-4 resize-none outline-none placeholder-gray-700 leading-7 font-mono"
+          className="flex-1 bg-transparent text-sm text-c p-4 resize-none outline-none leading-7 font-mono"
+          style={{ color: 'var(--c-text)', caretColor: 'var(--c-accent)' }}
           spellCheck={false}
         />
         {memo && (
-          <div className="px-4 py-2 border-t border-[#2a2a2e] flex-shrink-0">
-            <p className="text-[11px] text-gray-700">{memo.length}자 · {memo.split('\n').filter(Boolean).length}줄</p>
+          <div className="px-4 py-2 border-t border-c flex-shrink-0">
+            <p className="text-[11px] text-c-ghost">{memo.length}자 · {memo.split('\n').filter(Boolean).length}줄</p>
           </div>
         )}
       </div>

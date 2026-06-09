@@ -2,18 +2,86 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Theme CSS Custom Properties ─────────────────── */
+:root {
+  --c-bg:     #0f0f10;
+  --c-panel:  #161618;
+  --c-card:   #1a1a1c;
+  --c-input:  #111113;
+  --c-border: #2a2a2e;
+  --c-border2:#3a3a42;
+  --c-hover:  #222226;
+  --c-hover2: #1e1e22;
+  --c-active: #27272b;
+
+  --c-text:       #e8e8ea;
+  --c-text-soft:  #c8c8cc;
+  --c-text-muted: #8888a0;
+  --c-text-faint: #68686e;
+  --c-text-dim:   #44444a;
+  --c-text-ghost: #333338;
+
+  --c-accent:     #6366f1;
+  --c-accent-dark:#4f46e5;
+}
+
+html.light {
+  --c-bg:     #f5f5f6;
+  --c-panel:  #ffffff;
+  --c-card:   #f8f8fa;
+  --c-input:  #f0f0f4;
+  --c-border: #e4e4e7;
+  --c-border2:#d1d1d8;
+  --c-hover:  #ededf0;
+  --c-hover2: #e8e8ec;
+  --c-active: #e1e1e8;
+
+  --c-text:       #18181b;
+  --c-text-soft:  #3f3f46;
+  --c-text-muted: #52525b;
+  --c-text-faint: #71717a;
+  --c-text-dim:   #a1a1aa;
+  --c-text-ghost: #d4d4d8;
+
+  --c-accent:     #4f46e5;
+  --c-accent-dark:#4338ca;
+}
+
+/* ─── Semantic Utility Classes ─────────────────────── */
+@layer utilities {
+  .bg-c-bg     { background-color: var(--c-bg); }
+  .bg-c-panel  { background-color: var(--c-panel); }
+  .bg-c-card   { background-color: var(--c-card); }
+  .bg-c-input  { background-color: var(--c-input); }
+  .bg-c-hover  { background-color: var(--c-hover); }
+  .bg-c-hover2 { background-color: var(--c-hover2); }
+  .bg-c-active { background-color: var(--c-active); }
+
+  .border-c  { border-color: var(--c-border); }
+  .border-c2 { border-color: var(--c-border2); }
+
+  .text-c        { color: var(--c-text); }
+  .text-c-soft   { color: var(--c-text-soft); }
+  .text-c-muted  { color: var(--c-text-muted); }
+  .text-c-faint  { color: var(--c-text-faint); }
+  .text-c-dim    { color: var(--c-text-dim); }
+  .text-c-ghost  { color: var(--c-text-ghost); }
+  .text-c-accent { color: var(--c-accent); }
+}
+
+/* ─── Keyframe Animations ──────────────────────────── */
 @keyframes scalePop {
-  0%   { transform: scale(0); opacity: 0; }
+  0%   { transform: scale(0);    opacity: 0; }
   70%  { transform: scale(1.15); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
 }
 
 @keyframes dotPulse {
   0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
-  40%            { opacity: 1;   transform: scale(1); }
+  40%           { opacity: 1;   transform: scale(1); }
 }
 
 @keyframes subtleFloat {
   0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-4px); }
+  50%      { transform: translateY(-4px); }
 }
