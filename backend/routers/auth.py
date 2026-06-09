@@ -11,21 +11,26 @@ from models import User
 
 router = APIRouter()
 
-SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID")
-SLACK_CLIENT_SECRET = os.getenv("SLACK_CLIENT_SECRET")
-SLACK_REDIRECT_URI = os.getenv("SLACK_REDIRECT_URI", "http://localhost:8000/api/auth/slack/callback")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+
+def _cfg():
+    return {
+        "client_id":     os.getenv("SLACK_CLIENT_ID"),
+        "client_secret": os.getenv("SLACK_CLIENT_SECRET"),
+        "redirect_uri":  os.getenv("SLACK_REDIRECT_URI", "http://localhost:8000/api/auth/slack/callback"),
+        "frontend_url":  os.getenv("FRONTEND_URL", "http://localhost:5173"),
+    }
 
 
 @router.get("/auth/slack")
 def slack_login():
-    if not SLACK_CLIENT_ID:
+    cfg = _cfg()
+    if not cfg["client_id"]:
         raise HTTPException(status_code=500, detail="SLACK_CLIENT_ID 환경변수가 설정되지 않았습니다")
     url = (
         f"https://slack.com/oauth/v2/authorize"
-        f"?client_id={SLACK_CLIENT_ID}"
+        f"?client_id={cfg['client_id']}"
         f"&user_scope=identity.basic,identity.email,identity.avatar"
-        f"&redirect_uri={SLACK_REDIRECT_URI}"
+        f"&redirect_uri={cfg['redirect_uri']}"
     )
     return RedirectResponse(url)
 
@@ -36,22 +41,23 @@ async def slack_callback(
     error: str = None,
     db: Session = Depends(get_db),
 ):
+    cfg = _cfg()
     if error or not code:
-        return RedirectResponse(f"{FRONTEND_URL}/auth/callback?error=access_denied")
+        return RedirectResponse(f"{cfg['frontend_url']}/auth/callback?error=access_denied")
 
     async with httpx.AsyncClient() as client:
         token_resp = await client.post(
             "https://slack.com/api/oauth.v2.access",
             data={
-                "client_id": SLACK_CLIENT_ID,
-                "client_secret": SLACK_CLIENT_SECRET,
-                "code": code,
-                "redirect_uri": SLACK_REDIRECT_URI,
+                "client_id":     cfg["client_id"],
+                "client_secret": cfg["client_secret"],
+                "code":          code,
+                "redirect_uri":  cfg["redirect_uri"],
             },
         )
     token_data = token_resp.json()
     if not token_data.get("ok"):
-        return RedirectResponse(f"{FRONTEND_URL}/auth/callback?error=slack_error")
+        return RedirectResponse(f"{cfg['frontend_url']}/auth/callback?error=slack_error")
 
     user_token = token_data["authed_user"]["access_token"]
 
@@ -62,12 +68,12 @@ async def slack_callback(
         )
     identity = identity_resp.json()
     if not identity.get("ok"):
-        return RedirectResponse(f"{FRONTEND_URL}/auth/callback?error=identity_error")
+        return RedirectResponse(f"{cfg['frontend_url']}/auth/callback?error=identity_error")
 
     slack_user_id = identity["user"]["id"]
-    name = identity["user"]["name"]
-    email = identity["user"].get("email")
-    avatar_url = identity["user"].get("image_72")
+    name          = identity["user"]["name"]
+    email         = identity["user"].get("email")
+    avatar_url    = identity["user"].get("image_72")
 
     user = db.query(User).filter(User.slack_user_id == slack_user_id).first()
     if user:
@@ -81,15 +87,15 @@ async def slack_callback(
     db.refresh(user)
 
     token = create_jwt(user.id)
-    return RedirectResponse(f"{FRONTEND_URL}/auth/callback?token={token}")
+    return RedirectResponse(f"{cfg['frontend_url']}/auth/callback?token={token}")
 
 
 @router.get("/auth/me")
 def get_me(current_user: User = Depends(get_current_user)):
     return {
-        "id": current_user.id,
-        "name": current_user.name,
-        "email": current_user.email,
+        "id":         current_user.id,
+        "name":       current_user.name,
+        "email":      current_user.email,
         "avatar_url": current_user.avatar_url,
     }
 
