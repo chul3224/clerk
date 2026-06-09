@@ -10,7 +10,7 @@ router = APIRouter()
 DEEPGRAM_WS_URL = (
     "wss://api.deepgram.com/v1/listen"
     "?model=nova-2"
-    "&detect_language=true"
+    "&language=ko"
     "&punctuate=true"
     "&interim_results=true"
     "&endpointing=500"
@@ -33,7 +33,7 @@ async def ws_transcribe(websocket: WebSocket):
     try:
         async with websockets.connect(
             DEEPGRAM_WS_URL,
-            extra_headers={"Authorization": f"Token {api_key}"},
+            additional_headers={"Authorization": f"Token {api_key}"},
         ) as dg_ws:
 
             async def client_to_deepgram():

@@ -28,6 +28,9 @@ test_audio/
 .DS_Store
 Thumbs.db
 
+# DB 파일
+*.db
+
 # IDE
 .vscode/
 .idea/

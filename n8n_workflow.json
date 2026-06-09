@@ -1,0 +1,59 @@
+{
+  "name": "Clerkai → Slack 회의록",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "clerkai-meeting",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "회의록 수신",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "a1b2c3d4-0001-0001-0001-000000000001"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\nconst summary = body.summary || '요약 없음';\nconst decisions = (body.key_decisions || []).map(d => `• ${d}`).join('\\n') || '없음';\nconst actions = (body.action_items || []).map(a => `☐ ${a.task}${a.assignee ? ` (${a.assignee})` : ''}`).join('\\n') || '없음';\nconst count = body.transcript_count || 0;\n\nreturn [{\n  json: {\n    text: `📋 *새 회의록이 도착했습니다*\\n\\n*요약*\\n${summary}\\n\\n*결정사항*\\n${decisions}\\n\\n*액션아이템*\\n${actions}\\n\\n발화 ${count}개 | Clerkai`\n  }\n}];"
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000002",
+      "name": "메시지 구성",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://hooks.slack.com/services/YOUR_SLACK_WEBHOOK_URL",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"text\": $json.text } }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000003",
+      "name": "Slack으로 전송",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [690, 300]
+    }
+  ],
+  "connections": {
+    "회의록 수신": {
+      "main": [
+        [{"node": "메시지 구성", "type": "main", "index": 0}]
+      ]
+    },
+    "메시지 구성": {
+      "main": [
+        [{"node": "Slack으로 전송", "type": "main", "index": 0}]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

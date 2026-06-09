@@ -1,56 +1,78 @@
-import { useState } from 'react'
+const SPEAKER_COLORS = [
+  { avatar: 'bg-blue-500',   bubble: 'bg-blue-950/50 border-blue-900/40',   name: 'text-blue-400'   },
+  { avatar: 'bg-violet-500', bubble: 'bg-violet-950/50 border-violet-900/40', name: 'text-violet-400' },
+  { avatar: 'bg-emerald-500',bubble: 'bg-emerald-950/50 border-emerald-900/40',name: 'text-emerald-400'},
+  { avatar: 'bg-orange-500', bubble: 'bg-orange-950/50 border-orange-900/40', name: 'text-orange-400' },
+  { avatar: 'bg-rose-500',   bubble: 'bg-rose-950/50 border-rose-900/40',   name: 'text-rose-400'   },
+]
 
 function formatTime(secs) {
   const s = Math.floor(secs)
   return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`
 }
 
-const COLORS = [
-  'bg-blue-100 text-blue-800',
-  'bg-purple-100 text-purple-800',
-  'bg-green-100 text-green-800',
-  'bg-orange-100 text-orange-800',
-]
-
 export default function TranscriptView({ transcript, speakerNames, onSpeakerNameChange }) {
-  const speakers = [...new Set(transcript.map((s) => s.speaker))].sort()
+  const speakers = [...new Set(transcript.map(s => s.speaker))].sort()
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-gray-900">대화록</h3>
-        <span className="text-sm text-gray-400">{transcript.length}개 발화</span>
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="px-4 h-10 flex items-center justify-between border-b border-[#2a2a2e] flex-shrink-0">
+        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">대화록</span>
+        <span className="text-[11px] text-gray-600">{transcript.length}개 발화</span>
       </div>
 
-      {/* 화자 이름 편집 */}
-      <div className="flex flex-wrap gap-2 mb-5 pb-5 border-b border-gray-100">
-        {speakers.map((id, i) => (
-          <div key={id} className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${COLORS[i % COLORS.length]}`}>
-            <span className="text-xs font-medium opacity-60">{id}</span>
-            <span className="text-xs">→</span>
-            <input
-              className="bg-transparent text-xs font-semibold w-20 outline-none border-b border-current"
-              value={speakerNames[id] || ''}
-              placeholder="이름 입력"
-              onChange={(e) => onSpeakerNameChange(id, e.target.value)}
-            />
-          </div>
-        ))}
-      </div>
-
-      {/* 대화 내용 */}
-      <div className="flex flex-col gap-3 pr-1">
-        {transcript.map((seg, i) => {
-          const colorIdx = speakers.indexOf(seg.speaker) % COLORS.length
-          const displayName = speakerNames[seg.speaker] || seg.speaker
+      {/* Speaker name tags */}
+      <div className="px-4 py-2 border-b border-[#2a2a2e] flex flex-wrap gap-2 flex-shrink-0">
+        {speakers.map((id, i) => {
+          const c = SPEAKER_COLORS[i % SPEAKER_COLORS.length]
           return (
-            <div key={i} className="flex gap-3">
-              <span className="text-xs text-gray-400 pt-1 shrink-0 w-10">{formatTime(seg.start)}</span>
-              <div className="flex-1">
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded mr-2 ${COLORS[colorIdx]}`}>
-                  {displayName}
+            <label key={id} className="flex items-center gap-1.5 cursor-text">
+              <div className={`w-3.5 h-3.5 rounded-full ${c.avatar} flex items-center justify-center flex-shrink-0`}>
+                <span className="text-white font-bold" style={{ fontSize: 7 }}>
+                  {String.fromCharCode(65 + i)}
                 </span>
-                <span className="text-gray-800 text-sm">{seg.text}</span>
+              </div>
+              <input
+                className="bg-transparent text-xs text-gray-400 w-16 outline-none border-b border-transparent focus:border-gray-600 transition-colors placeholder-gray-700"
+                value={speakerNames[id] || ''}
+                placeholder={`화자 ${String.fromCharCode(65 + i)}`}
+                onChange={e => onSpeakerNameChange(id, e.target.value)}
+              />
+            </label>
+          )
+        })}
+      </div>
+
+      {/* Chat messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-1">
+        {transcript.map((seg, i) => {
+          const speakerIdx = speakers.indexOf(seg.speaker)
+          const c = SPEAKER_COLORS[speakerIdx % SPEAKER_COLORS.length]
+          const displayName = speakerNames[seg.speaker] || `화자 ${String.fromCharCode(65 + speakerIdx)}`
+          const showHeader = i === 0 || transcript[i - 1].speaker !== seg.speaker
+
+          return (
+            <div key={i} className={`flex gap-2.5 ${showHeader ? 'mt-3' : 'mt-0.5'}`}>
+              {showHeader ? (
+                <div className={`w-7 h-7 rounded-full ${c.avatar} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                  <span className="text-white text-xs font-bold">
+                    {String.fromCharCode(65 + speakerIdx)}
+                  </span>
+                </div>
+              ) : (
+                <div className="w-7 flex-shrink-0" />
+              )}
+              <div className="flex-1 min-w-0">
+                {showHeader && (
+                  <div className="flex items-baseline gap-2 mb-1">
+                    <span className={`text-xs font-semibold ${c.name}`}>{displayName}</span>
+                    <span className="text-[10px] text-gray-700">{formatTime(seg.start)}</span>
+                  </div>
+                )}
+                <div className={`px-3 py-2 rounded-2xl ${showHeader ? 'rounded-tl-sm' : ''} border ${c.bubble}`}>
+                  <p className="text-xs text-gray-300 leading-relaxed">{seg.text}</p>
+                </div>
               </div>
             </div>
           )

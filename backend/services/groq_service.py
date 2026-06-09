@@ -3,7 +3,6 @@ import json
 import os
 import time
 
-import google.generativeai as genai
 from groq import AsyncGroq
 
 MODELS = [
@@ -11,19 +10,16 @@ MODELS = [
         "id": "llama-3.3-70b-versatile",
         "name": "Llama 3.3 70B",
         "label": "Meta · Groq",
-        "provider": "groq",
     },
     {
-        "id": "gemini-2.5-flash",
-        "name": "Gemini 2.5 Flash",
-        "label": "Google",
-        "provider": "gemini",
+        "id": "meta-llama/llama-4-scout-17b-16e-instruct",
+        "name": "Llama 4 Scout",
+        "label": "Meta · Groq",
     },
     {
-        "id": "gemini-3.1-flash-lite",
-        "name": "Gemini 3.1 Flash-Lite",
-        "label": "Google",
-        "provider": "gemini",
+        "id": "qwen/qwen3-32b",
+        "name": "Qwen3 32B",
+        "label": "Alibaba · Groq",
     },
 ]
 
@@ -53,7 +49,7 @@ JSON 형식:
 JSON만 응답하세요."""
 
 
-async def _summarize_groq(transcript_text: str, model: dict) -> dict:
+async def _summarize_one(transcript_text: str, model: dict) -> dict:
     client = AsyncGroq(api_key=os.getenv("GROQ_API_KEY"))
     start = time.time()
     response = await client.chat.completions.create(
@@ -64,10 +60,11 @@ async def _summarize_groq(transcript_text: str, model: dict) -> dict:
         response_format={"type": "json_object"},
     )
     elapsed_ms = int((time.time() - start) * 1000)
+    raw = response.choices[0].message.content or ""
     try:
-        data = json.loads(response.choices[0].message.content)
+        data = json.loads(raw)
     except json.JSONDecodeError:
-        data = {"summary": response.choices[0].message.content, "key_decisions": [], "action_items": []}
+        data = {"summary": raw, "key_decisions": [], "action_items": []}
     return {
         "model": model["name"],
         "label": model["label"],
@@ -80,53 +77,7 @@ async def _summarize_groq(transcript_text: str, model: dict) -> dict:
     }
 
 
-async def _summarize_gemini(transcript_text: str, model: dict) -> dict:
-    loop = asyncio.get_running_loop()
-
-    def _run():
-        genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-        m = genai.GenerativeModel(model["id"])
-        start = time.time()
-        response = m.generate_content(
-            SUMMARY_PROMPT.format(transcript=transcript_text),
-            generation_config=genai.GenerationConfig(
-                temperature=0.3,
-                max_output_tokens=4096,
-            ),
-        )
-        elapsed_ms = int((time.time() - start) * 1000)
-        text = response.text.strip()
-        # JSON 코드블록 제거
-        if text.startswith("```"):
-            text = text.split("```")[1]
-            if text.startswith("json"):
-                text = text[4:]
-        try:
-            data = json.loads(text)
-        except json.JSONDecodeError:
-            data = {"summary": text, "key_decisions": [], "action_items": []}
-        return {
-            "model": model["name"],
-            "label": model["label"],
-            "model_id": model["id"],
-            "summary": data.get("summary", ""),
-            "key_decisions": data.get("key_decisions", []),
-            "action_items": data.get("action_items", []),
-            "response_time_ms": elapsed_ms,
-            "token_count": getattr(response.usage_metadata, "total_token_count", 0),
-        }
-
-    return await loop.run_in_executor(None, _run)
-
-
-async def _summarize_one(transcript_text: str, model: dict) -> dict:
-    if model["provider"] == "groq":
-        return await _summarize_groq(transcript_text, model)
-    return await _summarize_gemini(transcript_text, model)
-
-
 def _trim_transcript(text: str, max_chars: int = 6000) -> str:
-    """대화록이 너무 길면 앞/뒤 중요 부분만 유지"""
     if len(text) <= max_chars:
         return text
     half = max_chars // 2
@@ -142,11 +93,18 @@ async def summarize_triple(transcript_text: str) -> list[dict]:
     summaries = []
     for i, r in enumerate(results):
         if isinstance(r, Exception):
+            err_str = str(r)
+            if "429" in err_str and ("credits" in err_str.lower() or "quota" in err_str.lower() or "rate" in err_str.lower()):
+                friendly = "API 요청 한도 초과 — 잠시 후 다시 시도하세요"
+            elif "model_not_found" in err_str.lower() or "does not exist" in err_str.lower():
+                friendly = f"모델을 찾을 수 없습니다: {MODELS[i]['name']}"
+            else:
+                friendly = f"오류: {err_str}"
             summaries.append({
                 "model": MODELS[i]["name"],
                 "label": MODELS[i]["label"],
                 "model_id": MODELS[i]["id"],
-                "summary": f"오류: {str(r)}",
+                "summary": friendly,
                 "key_decisions": [],
                 "action_items": [],
                 "response_time_ms": 0,

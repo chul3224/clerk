@@ -1,9 +1,10 @@
-import shutil
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
+from auth_utils import get_current_user
+from models import User
 from state import jobs
 
 router = APIRouter()
@@ -16,7 +17,10 @@ MAX_FILE_SIZE = 25 * 1024 * 1024  # 25MB
 
 
 @router.post("/upload")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_user),
+):
     ext = Path(file.filename or "").suffix.lower()
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(400, f"지원하지 않는 형식입니다: {ext}")
@@ -37,6 +41,7 @@ async def upload_file(file: UploadFile = File(...)):
         "file_path": str(file_path),
         "status": "uploaded",
         "result": None,
+        "user_id": current_user.id,
     }
 
     return {"file_id": file_id}
