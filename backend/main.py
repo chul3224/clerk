@@ -28,13 +28,6 @@ app.include_router(history.router, prefix="/api")
 app.include_router(share.router, prefix="/api")
 
 
-@app.get("/api/env-check")
-def env_check():
-    keys = ["SLACK_CLIENT_ID", "SLACK_CLIENT_SECRET", "SLACK_REDIRECT_URI",
-            "GROQ_API_KEY", "DEEPGRAM_API_KEY", "JWT_SECRET", "FRONTEND_URL"]
-    return {k: ("✅ SET" if os.getenv(k) else "❌ MISSING") for k in keys}
-
-
 @app.get("/health")
 def health():
     return {"status": "ok"}
