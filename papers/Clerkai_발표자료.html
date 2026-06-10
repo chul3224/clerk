@@ -201,6 +201,14 @@ html, body {
 }
 .dark-panel .divider { height: 1px; background: rgba(255,255,255,0.12); }
 
+/* standalone stat-label — used in inline dark panels (slide 01) */
+.stat-label {
+  font-size: 15px; font-family: var(--font-mono);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-top: 6px;
+}
+
 /* ── Chip ── */
 .chip {
   display: inline-flex; align-items: center; gap: 6px;
@@ -416,23 +424,23 @@ a.ext { text-decoration: none; color: inherit; }
     <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
       <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
         <div style="font-size:28px; width:40px; flex-shrink:0;">📝</div>
-        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4 style="font-size:22px;">회의 후 정리 시간 낭비</h4><p style="font-size:16px;">누군가는 30분씩 회의록을 작성합니다</p></div></div>
+        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4>회의 후 정리 시간 낭비</h4><p style="font-size:16px;">누군가는 30분씩 회의록을 작성합니다</p></div></div>
       </div>
       <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
         <div style="font-size:28px; width:40px; flex-shrink:0;">🎯</div>
-        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4 style="font-size:22px;">메모하다 대화 집중 못함</h4><p style="font-size:16px;">받아쓰느라 정작 회의에 참여 못합니다</p></div></div>
+        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4>메모하다 대화 집중 못함</h4><p style="font-size:16px;">받아쓰느라 정작 회의에 참여 못합니다</p></div></div>
       </div>
       <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
         <div style="font-size:28px; width:40px; flex-shrink:0;">👥</div>
-        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4 style="font-size:22px;">누가 무슨 말을 했는지 불명확</h4><p style="font-size:16px;">책임 소재가 흐릿해지고 분쟁이 생깁니다</p></div></div>
+        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4>누가 무슨 말을 했는지 불명확</h4><p style="font-size:16px;">책임 소재가 흐릿해지고 분쟁이 생깁니다</p></div></div>
       </div>
       <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
         <div style="font-size:28px; width:40px; flex-shrink:0;">✅</div>
-        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4 style="font-size:22px;">액션아이템이 흐지부지됨</h4><p style="font-size:16px;">다음 회의에서도 같은 이야기를 반복합니다</p></div></div>
+        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4>액션아이템이 흐지부지됨</h4><p style="font-size:16px;">다음 회의에서도 같은 이야기를 반복합니다</p></div></div>
       </div>
       <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
         <div style="font-size:28px; width:40px; flex-shrink:0;">📊</div>
-        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4 style="font-size:22px;">요약 품질이 담당자마다 다름</h4><p style="font-size:16px;">같은 회의도 누가 정리하느냐에 따라 다릅니다</p></div></div>
+        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4>요약 품질이 담당자마다 다름</h4><p style="font-size:16px;">같은 회의도 누가 정리하느냐에 따라 다릅니다</p></div></div>
       </div>
     </div>
   </div>
@@ -639,7 +647,7 @@ a.ext { text-decoration: none; color: inherit; }
 
   <div class="body center" style="flex-direction:column; gap:40px;">
     <div style="display:flex; align-items:baseline; gap:24px;">
-      <div class="h2" style="font-size:60px;">시스템 아키텍처</div>
+      <div class="h2" style="font-size:64px;">시스템 아키텍처</div>
       <div class="mono-label">End-to-End Pipeline</div>
     </div>
 
@@ -736,7 +744,7 @@ a.ext { text-decoration: none; color: inherit; }
           <div class="chip indigo">추천</div>
         </div>
         <h3 style="font-size:28px;">Llama 3.3 70B</h3>
-        <div class="mono-label" style="color:var(--ink-400);">Meta · Groq</div>
+        <div class="mono-label" style="color:var(--ink-500);">Meta · Groq</div>
         <div class="divider" style="height:1px; background:var(--ink-200); margin:4px 0;"></div>
         <div style="display:flex; flex-direction:column; gap:12px;">
           <div style="display:flex; justify-content:space-between; align-items:baseline;">
@@ -910,7 +918,7 @@ a.ext { text-decoration: none; color: inherit; }
           <div class="ix" style="color:var(--indigo);">Phase 1 · 現在</div>
           <div class="chip indigo" style="font-size:11px;">완료</div>
         </div>
-        <h3 style="font-size:26px;">서비스 론칭</h3>
+        <h3 style="font-size:28px;">서비스 론칭</h3>
         <div style="display:flex; flex-direction:column; gap:10px;">
           <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--green); font-size:16px; flex-shrink:0; margin-top:2px;">✅</span><span style="font-size:16px; color:var(--ink-700);">실시간 STT + AI 3모델 비교</span></div>
           <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--green); font-size:16px; flex-shrink:0; margin-top:2px;">✅</span><span style="font-size:16px; color:var(--ink-700);">Slack OAuth + 공유</span></div>
@@ -925,7 +933,7 @@ a.ext { text-decoration: none; color: inherit; }
           <div class="ix">Phase 2 · 글로벌</div>
           <div class="chip">예정</div>
         </div>
-        <h3 style="font-size:26px;">다국어 확장</h3>
+        <h3 style="font-size:28px;">다국어 확장</h3>
         <div style="display:flex; flex-direction:column; gap:10px;">
           <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">UI 다국어화 (한·영 i18n)</span></div>
           <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">STT 다국어 (영·일·중)</span></div>
@@ -941,7 +949,7 @@ a.ext { text-decoration: none; color: inherit; }
           <div class="ix">Phase 3 · 엔터프라이즈</div>
           <div class="chip">로드맵</div>
         </div>
-        <h3 style="font-size:26px;">기업 도입</h3>
+        <h3 style="font-size:28px;">기업 도입</h3>
         <div style="display:flex; flex-direction:column; gap:10px;">
           <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">SSO (Google · Azure AD)</span></div>
           <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">팀 관리자 대시보드</span></div>
@@ -991,7 +999,7 @@ a.ext { text-decoration: none; color: inherit; }
         <div style="width:64px; height:64px; background:var(--indigo); border-radius:14px; display:flex; align-items:center; justify-content:center;">
           <span style="font-family:var(--font-sans); font-weight:900; font-size:28px; color:white;">C</span>
         </div>
-        <div class="h2" style="font-size:52px; line-height:1.1;">Clerkai</div>
+        <div class="h2" style="font-size:60px; line-height:1.05;">Clerkai</div>
         <div style="display:flex; flex-direction:column; gap:16px;">
           <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="card-link">
             <div class="card indigo" style="padding:18px 24px; gap:6px;">
