@@ -267,6 +267,49 @@ html, body {
   letter-spacing: 0.08em;
 }
 
+/* ── Clickable Links ── */
+a.ext { text-decoration: none; color: inherit; }
+.tag.link {
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.tag.link:hover {
+  background: var(--indigo);
+  border-color: var(--indigo);
+  color: white;
+}
+.tag.link::after { content: ' ↗'; font-size: 0.85em; opacity: 0.7; }
+.card-link {
+  text-decoration: none; display: block; color: inherit;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.card-link:hover { opacity: 0.75; }
+.card-link:hover .url-text { text-decoration: underline; }
+.clickable-url {
+  cursor: pointer; font-family: var(--font-mono);
+  transition: color 0.15s;
+}
+.clickable-url:hover { color: var(--indigo); text-decoration: underline; }
+.clickable-url::after { content: ' ↗'; font-size: 0.8em; opacity: 0.6; }
+
+/* ── Print / PDF ── */
+@media print {
+  html, body { background: white; overflow: visible; width: 1920px; }
+  .deck { height: auto; display: block; }
+  .slide {
+    display: flex !important;
+    position: relative !important;
+    transform: none !important;
+    left: auto !important;
+    top: auto !important;
+    width: 1920px !important;
+    height: 1080px !important;
+    page-break-after: always;
+    break-after: page;
+  }
+  #nav { display: none !important; }
+}
+
 /* ── Navigation ── */
 #nav {
   position: fixed; bottom: 24px; left: 50%;
@@ -312,8 +355,8 @@ html, body {
         <p class="lead" style="max-width:600px;">음성 하나로 실시간 STT · 3개 AI 모델 비교 요약 · Slack 자동 공유까지 자동화하는 회의 어시스턴트</p>
       </div>
       <div style="display:flex; gap:20px; align-items:center;">
-        <div class="tag">clerk-nine-mu.vercel.app</div>
-        <div class="tag">github.com/chul3224/clerk</div>
+        <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="tag link">clerk-nine-mu.vercel.app</a>
+        <a href="https://github.com/chul3224/clerk" target="_blank" class="tag link">github.com/chul3224/clerk</a>
       </div>
     </div>
 
@@ -616,7 +659,7 @@ html, body {
         <div class="card indigo" style="flex:1; padding:24px 32px;">
           <div class="ix" style="color:var(--indigo-ink);">Vercel · Frontend</div>
           <div class="body-text" style="font-weight:700; color:var(--indigo-ink); margin-top:8px;">React 18 + Vite SPA</div>
-          <div style="font-size:16px; color:var(--indigo); font-family:var(--font-mono); margin-top:4px;">clerk-nine-mu.vercel.app</div>
+          <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="clickable-url" style="font-size:16px; color:var(--indigo); margin-top:4px;">clerk-nine-mu.vercel.app</a>
         </div>
       </div>
 
@@ -633,7 +676,7 @@ html, body {
         <div class="card" style="flex:2; padding:24px 32px;">
           <div class="ix">Railway · Backend</div>
           <div class="body-text" style="font-weight:700; margin-top:8px;">FastAPI + Python 3.11 (Docker)</div>
-          <div style="font-size:15px; color:var(--ink-500); font-family:var(--font-mono); margin-top:4px;">clerk-production-9869.up.railway.app</div>
+          <a href="https://clerk-production-9869.up.railway.app/health" target="_blank" class="clickable-url" style="font-size:15px; color:var(--ink-500); margin-top:4px;">clerk-production-9869.up.railway.app</a>
           <div style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;">
             <div class="chip">JWT Auth</div>
             <div class="chip">SQLite / PostgreSQL</div>
@@ -794,16 +837,20 @@ html, body {
         <div class="accent-line" style="margin-top:20px;"></div>
       </div>
       <div style="display:flex; flex-direction:column; gap:16px;">
-        <div class="card indigo" style="padding:24px 32px; gap:10px;">
-          <div class="ix" style="color:var(--indigo-ink);">Frontend · Vercel</div>
-          <div style="font-family:var(--font-mono); font-size:20px; font-weight:600; color:var(--indigo-ink);">clerk-nine-mu.vercel.app</div>
-          <p style="font-size:16px; color:var(--indigo);">React SPA · 전 세계 CDN · 자동 배포</p>
-        </div>
-        <div class="card" style="padding:24px 32px; gap:10px;">
-          <div class="ix">Backend · Railway</div>
-          <div style="font-family:var(--font-mono); font-size:18px; font-weight:600; color:var(--ink-900);">clerk-production-9869.up.railway.app</div>
-          <p style="font-size:16px; color:var(--ink-500);">FastAPI · Docker · Python 3.11</p>
-        </div>
+        <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="card-link">
+          <div class="card indigo" style="padding:24px 32px; gap:10px;">
+            <div class="ix" style="color:var(--indigo-ink);">Frontend · Vercel ↗</div>
+            <div class="url-text" style="font-family:var(--font-mono); font-size:20px; font-weight:600; color:var(--indigo-ink);">clerk-nine-mu.vercel.app</div>
+            <p style="font-size:16px; color:var(--indigo);">React SPA · 전 세계 CDN · 자동 배포</p>
+          </div>
+        </a>
+        <a href="https://clerk-production-9869.up.railway.app/health" target="_blank" class="card-link">
+          <div class="card" style="padding:24px 32px; gap:10px;">
+            <div class="ix">Backend · Railway ↗</div>
+            <div class="url-text" style="font-family:var(--font-mono); font-size:18px; font-weight:600; color:var(--ink-900);">clerk-production-9869.up.railway.app</div>
+            <p style="font-size:16px; color:var(--ink-500);">FastAPI · Docker · Python 3.11</p>
+          </div>
+        </a>
       </div>
     </div>
 
@@ -946,16 +993,18 @@ html, body {
         </div>
         <div class="h2" style="font-size:52px; line-height:1.1;">Clerkai</div>
         <div style="display:flex; flex-direction:column; gap:16px;">
-          <a href="https://clerk-nine-mu.vercel.app" style="text-decoration:none;">
+          <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="card-link">
             <div class="card indigo" style="padding:18px 24px; gap:6px;">
-              <div class="ix" style="color:var(--indigo-ink);">Live Service</div>
-              <div style="font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--indigo-ink);">clerk-nine-mu.vercel.app</div>
+              <div class="ix" style="color:var(--indigo-ink);">Live Service ↗</div>
+              <div class="url-text" style="font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--indigo-ink);">clerk-nine-mu.vercel.app</div>
             </div>
           </a>
-          <div class="card light" style="padding:18px 24px; gap:6px;">
-            <div class="ix">GitHub</div>
-            <div style="font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--ink-700);">github.com/chul3224/clerk</div>
-          </div>
+          <a href="https://github.com/chul3224/clerk" target="_blank" class="card-link">
+            <div class="card light" style="padding:18px 24px; gap:6px;">
+              <div class="ix">GitHub ↗</div>
+              <div class="url-text" style="font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--ink-700);">github.com/chul3224/clerk</div>
+            </div>
+          </a>
         </div>
       </div>
 
