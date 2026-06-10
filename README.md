@@ -201,6 +201,22 @@ npm run dev
 
 ---
 
+## 발표자료
+
+[![Slides](https://img.shields.io/badge/Slides-View_Presentation-4F46E5?style=flat-square&logo=html5&logoColor=white)](https://htmlpreview.github.io/?https://github.com/chul3224/clerk/blob/main/papers/Clerkai_%EB%B0%9C%ED%91%9C%EC%9E%90%EB%A3%8C.html)
+
+| 파일 | 설명 |
+|------|------|
+| [`papers/Clerkai_발표자료.html`](papers/Clerkai_발표자료.html) | InSIGHT 디자인 시스템 기반 10장 슬라이드 (1920×1080) |
+| [`papers/Clerkai_기획서_v2.md`](papers/Clerkai_기획서_v2.md) | 기획 배경 · 기술 선택 근거 · 로드맵 |
+
+```bash
+# 로컬에서 보기
+open papers/Clerkai_발표자료.html
+```
+
+---
+
 ## 개발자
 
 **신우철** · [GitHub](https://github.com/chul3224)

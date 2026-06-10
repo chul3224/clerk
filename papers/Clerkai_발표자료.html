@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Clerkai — AI 회의록 자동화</title>
+<style>
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink-900: #0B0B0E;
+  --ink-700: #2A2A30;
+  --ink-500: #6B6B73;
+  --ink-300: #B5B3AC;
+  --ink-200: #D7D4CB;
+  --paper-0:   #FFFFFF;
+  --paper-50:  #FAF8F2;
+  --paper-100: #F4F2EC;
+  --paper-200: #EDEAE1;
+  --indigo:    #4F46E5;
+  --indigo-bg: #EEF2FF;
+  --indigo-ink:#2730A8;
+  --green:     #1F8A5B;
+  --green-bg:  #E1F1E8;
+  --amber:     #D9A21B;
+  --amber-bg:  #FBF1D8;
+  --font-sans: "Pretendard", "Apple SD Gothic Neo", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: #1a1a1a;
+  font-family: var(--font-sans);
+  overflow: hidden;
+}
+
+/* ── Slide Engine ── */
+.deck {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.slide {
+  width: 1920px; height: 1080px;
+  background: var(--paper-50);
+  position: absolute;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  transform-origin: top left;
+}
+.slide.active { display: flex; }
+
+/* ── Chrome ── */
+.chrome {
+  height: 48px; flex-shrink: 0;
+  padding: 0 80px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--ink-200);
+}
+.chrome-bottom {
+  border-bottom: none;
+  border-top: 1px solid var(--ink-200);
+  margin-top: auto;
+}
+.chrome-brand {
+  font-family: var(--font-sans);
+  font-weight: 900; font-size: 18px;
+  letter-spacing: -0.02em; color: var(--ink-900);
+  display: flex; align-items: center; gap: 10px;
+}
+.chrome-brand .dot {
+  width: 8px; height: 8px;
+  background: var(--indigo); border-radius: 50%;
+}
+.chrome-tag {
+  font-family: var(--font-mono);
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-500);
+}
+.chrome-num {
+  font-family: var(--font-mono);
+  font-size: 13px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-500);
+}
+
+/* ── Body ── */
+.body {
+  flex: 1; padding: 64px 80px 48px;
+  display: flex; flex-direction: column;
+}
+.body.row { flex-direction: row; gap: 64px; }
+.body.center { align-items: center; justify-content: center; }
+
+/* ── Typography ── */
+.hero-num {
+  font-family: var(--font-sans);
+  font-weight: 900; font-size: 240px;
+  letter-spacing: -0.045em; line-height: 0.9;
+  color: var(--ink-900);
+}
+.h1 {
+  font-weight: 900; font-size: 96px;
+  letter-spacing: -0.04em; line-height: 1;
+  color: var(--ink-900);
+}
+.h2 {
+  font-weight: 800; font-size: 72px;
+  letter-spacing: -0.035em; line-height: 1.05;
+  color: var(--ink-900);
+}
+.h3 {
+  font-weight: 800; font-size: 44px;
+  letter-spacing: -0.025em; line-height: 1.1;
+  color: var(--ink-900);
+}
+.lead {
+  font-weight: 400; font-size: 24px;
+  line-height: 1.55; color: var(--ink-500);
+}
+.body-text {
+  font-weight: 400; font-size: 20px;
+  line-height: 1.55; color: var(--ink-700);
+}
+.mono-label {
+  font-family: var(--font-mono);
+  font-size: 14px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-500);
+}
+.mono-lg {
+  font-family: var(--font-mono);
+  font-size: 22px; font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-900);
+}
+
+/* ── Card ── */
+.card {
+  background: var(--paper-0);
+  border: 1px solid var(--ink-900);
+  border-radius: 12px;
+  padding: 28px 32px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.card.light { border-color: var(--ink-200); }
+.card.indigo { background: var(--indigo-bg); border-color: var(--indigo); }
+.card.green  { background: var(--green-bg);  border-color: var(--green); }
+.card.amber  { background: var(--amber-bg);  border-color: var(--amber); }
+
+.card .ix {
+  font-family: var(--font-mono);
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--ink-500);
+}
+.card h3 { font-weight: 800; font-size: 32px; letter-spacing: -0.02em; color: var(--ink-900); }
+.card h4 { font-weight: 800; font-size: 24px; letter-spacing: -0.015em; color: var(--ink-900); }
+.card p  { font-size: 18px; line-height: 1.55; color: var(--ink-700); }
+.card .big {
+  font-family: var(--font-mono);
+  font-size: 56px; font-weight: 700;
+  letter-spacing: -0.02em; color: var(--ink-900);
+}
+.card .big.indigo { color: var(--indigo); background: none; border: none; }
+.card .big.green  { color: var(--green); }
+
+/* ── Dark Panel ── */
+.dark-panel {
+  background: var(--ink-900);
+  color: white;
+  border-radius: 16px;
+  padding: 48px 40px;
+  display: flex; flex-direction: column; gap: 32px;
+}
+.dark-panel .mono-label { color: rgba(255,255,255,0.45); }
+.dark-panel .h3 { color: white; }
+.dark-panel .lead { color: rgba(255,255,255,0.6); }
+.dark-panel .mono-lg { color: white; }
+.dark-panel .stat-num {
+  font-family: var(--font-mono);
+  font-size: 72px; font-weight: 700;
+  letter-spacing: -0.03em; color: white;
+  line-height: 1;
+}
+.dark-panel .stat-unit {
+  font-size: 22px; font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  margin-left: 4px;
+}
+.dark-panel .stat-label {
+  font-size: 16px; font-family: var(--font-mono);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-top: 4px;
+}
+.dark-panel .divider { height: 1px; background: rgba(255,255,255,0.12); }
+
+/* ── Chip ── */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  border: 1px solid var(--ink-900);
+  color: var(--ink-900); background: var(--paper-0);
+}
+.chip.indigo { background: var(--indigo); border-color: var(--indigo); color: white; }
+.chip.green  { background: var(--green);  border-color: var(--green);  color: white; }
+
+/* ── Flow ── */
+.flow {
+  display: flex; align-items: center; gap: 0;
+}
+.flow-step {
+  flex: 1;
+  background: var(--paper-0);
+  border: 1px solid var(--ink-900);
+  border-radius: 12px;
+  padding: 24px 28px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.flow-step .step-ix {
+  font-family: var(--font-mono);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-500);
+}
+.flow-step h4 { font-weight: 800; font-size: 26px; letter-spacing: -0.02em; color: var(--ink-900); }
+.flow-step p  { font-size: 16px; color: var(--ink-500); line-height: 1.5; }
+.flow-arrow {
+  flex-shrink: 0; width: 48px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; color: var(--ink-300);
+}
+
+/* ── Grid helpers ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
+.col { display: flex; flex-direction: column; gap: 20px; }
+
+/* ── Accent line ── */
+.accent-line {
+  width: 80px; height: 6px;
+  background: var(--indigo);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── Tag ── */
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--indigo-bg);
+  border: 1px solid var(--indigo);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 13px; font-weight: 600;
+  color: var(--indigo-ink);
+  letter-spacing: 0.08em;
+}
+
+/* ── Navigation ── */
+#nav {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(11,11,14,0.85);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  padding: 10px 20px;
+  z-index: 100;
+}
+#nav button {
+  background: none; border: none; cursor: pointer;
+  color: white; font-size: 18px; padding: 4px 8px;
+  opacity: 0.7; transition: opacity 0.15s;
+}
+#nav button:hover { opacity: 1; }
+#nav span {
+  font-family: var(--font-mono); font-size: 13px;
+  color: rgba(255,255,255,0.6); letter-spacing: 0.12em;
+}
+</style>
+</head>
+<body>
+<div class="deck" id="deck">
+
+<!-- ────────────────────────────────────────────
+  SLIDE 01 · 표지
+──────────────────────────────────────────── -->
+<div class="slide active" id="s1">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">AX PM 포트폴리오 · 신우철</div>
+  </div>
+
+  <div class="body row" style="align-items:stretch; gap:0; padding:0;">
+    <!-- Left -->
+    <div style="flex:1; padding:80px 80px 64px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div style="display:flex; flex-direction:column; gap:32px;">
+        <div class="chip indigo">AI Meeting Assistant</div>
+        <div class="h1" style="font-size:110px; line-height:0.95;">AI가<br>회의록을<br>정리합니다</div>
+        <div class="accent-line"></div>
+        <p class="lead" style="max-width:600px;">음성 하나로 실시간 STT · 3개 AI 모델 비교 요약 · Slack 자동 공유까지 자동화하는 회의 어시스턴트</p>
+      </div>
+      <div style="display:flex; gap:20px; align-items:center;">
+        <div class="tag">clerk-nine-mu.vercel.app</div>
+        <div class="tag">github.com/chul3224/clerk</div>
+      </div>
+    </div>
+
+    <!-- Right: dark panel -->
+    <div style="width:520px; background:var(--ink-900); padding:80px 56px 64px; display:flex; flex-direction:column; gap:0;">
+      <div class="mono-label" style="color:rgba(255,255,255,0.35); margin-bottom:48px;">핵심 지표</div>
+
+      <div style="display:flex; flex-direction:column; gap:40px; flex:1; justify-content:center;">
+        <div>
+          <div class="stat-num" style="font-family:var(--font-mono); font-size:80px; font-weight:700; color:white; line-height:1;">3</div>
+          <div class="stat-label">AI Models · Parallel</div>
+        </div>
+        <div class="divider" style="height:1px; background:rgba(255,255,255,0.1);"></div>
+        <div>
+          <div class="stat-num" style="font-family:var(--font-mono); font-size:80px; font-weight:700; color:white; line-height:1;">실시간</div>
+          <div class="stat-label">WebSocket STT</div>
+        </div>
+        <div class="divider" style="height:1px; background:rgba(255,255,255,0.1);"></div>
+        <div>
+          <div style="display:flex; align-items:baseline; gap:8px;">
+            <div class="stat-num" style="font-family:var(--font-mono); font-size:80px; font-weight:700; color:white; line-height:1;">1</div>
+            <div style="font-family:var(--font-mono); font-size:24px; color:rgba(255,255,255,0.4);">-click</div>
+          </div>
+          <div class="stat-label">Slack OAuth 로그인</div>
+        </div>
+      </div>
+
+      <div class="mono-label" style="color:rgba(255,255,255,0.25);">Vercel · Railway · Groq · Deepgram</div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">01 / 10</div>
+    <div class="chrome-tag">Cover</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 02 · 문제 정의
+──────────────────────────────────────────── -->
+<div class="slide" id="s2">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">문제 정의</div>
+  </div>
+
+  <div class="body row" style="align-items:flex-start; padding-top:56px;">
+    <!-- Left: big quote -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:32px; padding-right:32px;">
+      <div class="mono-label">Pain Point</div>
+      <div class="h2" style="font-size:80px; line-height:1.0;">"회의가<br>끝나도<br>일은 남는다"</div>
+      <div class="accent-line"></div>
+      <p class="lead">회의 후 정리에 평균 <span style="font-family:var(--font-mono); font-weight:700; color:var(--ink-900);">30분</span> 소요.<br>그 시간은 생산성 낭비입니다.</p>
+    </div>
+
+    <!-- Right: pain cards -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
+      <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
+        <div style="font-size:28px; width:40px; flex-shrink:0;">📝</div>
+        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4 style="font-size:22px;">회의 후 정리 시간 낭비</h4><p style="font-size:16px;">누군가는 30분씩 회의록을 작성합니다</p></div></div>
+      </div>
+      <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
+        <div style="font-size:28px; width:40px; flex-shrink:0;">🎯</div>
+        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4 style="font-size:22px;">메모하다 대화 집중 못함</h4><p style="font-size:16px;">받아쓰느라 정작 회의에 참여 못합니다</p></div></div>
+      </div>
+      <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
+        <div style="font-size:28px; width:40px; flex-shrink:0;">👥</div>
+        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4 style="font-size:22px;">누가 무슨 말을 했는지 불명확</h4><p style="font-size:16px;">책임 소재가 흐릿해지고 분쟁이 생깁니다</p></div></div>
+      </div>
+      <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
+        <div style="font-size:28px; width:40px; flex-shrink:0;">✅</div>
+        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4 style="font-size:22px;">액션아이템이 흐지부지됨</h4><p style="font-size:16px;">다음 회의에서도 같은 이야기를 반복합니다</p></div></div>
+      </div>
+      <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
+        <div style="font-size:28px; width:40px; flex-shrink:0;">📊</div>
+        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4 style="font-size:22px;">요약 품질이 담당자마다 다름</h4><p style="font-size:16px;">같은 회의도 누가 정리하느냐에 따라 다릅니다</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">02 / 10</div>
+    <div class="chrome-tag">Problem</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 03 · 솔루션
+──────────────────────────────────────────── -->
+<div class="slide" id="s3">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">솔루션</div>
+  </div>
+
+  <div class="body center" style="flex-direction:column; gap:48px;">
+    <div class="mono-label">Solution</div>
+    <div class="h1" style="text-align:center; font-size:108px; line-height:1.0;">
+      음성 <span style="color:var(--indigo);">하나</span>로<br>회의록 <span style="color:var(--indigo);">전부</span>
+    </div>
+    <div class="accent-line" style="width:120px; height:8px;"></div>
+
+    <div class="flow" style="width:100%; gap:0;">
+      <div class="flow-step" style="background:var(--indigo-bg); border-color:var(--indigo);">
+        <div class="step-ix" style="color:var(--indigo);">Step 01</div>
+        <h4>🎙 녹음</h4>
+        <p>실시간 녹음 또는 파일 업로드</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-ix">Step 02</div>
+        <h4>🔤 STT</h4>
+        <p>Deepgram nova-2 실시간 음성 인식</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="step-ix">Step 03</div>
+        <h4>✨ AI 요약</h4>
+        <p>3개 LLM 병렬 요약 + 비교</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="background:var(--ink-900); border-color:var(--ink-900);">
+        <div class="step-ix" style="color:rgba(255,255,255,0.4);">Output</div>
+        <h4 style="color:white;">💬 Slack 공유</h4>
+        <p style="color:rgba(255,255,255,0.5);">편집 후 채널로 즉시 전송</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">03 / 10</div>
+    <div class="chrome-tag">Solution</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 04 · 핵심 기능
+──────────────────────────────────────────── -->
+<div class="slide" id="s4">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">핵심 기능</div>
+  </div>
+
+  <div class="body" style="padding-top:48px; gap:32px;">
+    <div style="display:flex; align-items:baseline; gap:24px; margin-bottom:8px;">
+      <div class="h2" style="font-size:64px;">핵심 기능</div>
+      <div class="mono-label">Feature Overview</div>
+    </div>
+
+    <div class="grid-3" style="flex:1;">
+      <div class="card indigo">
+        <div class="ix">Feature 01</div>
+        <h3>실시간 STT</h3>
+        <p>WebSocket 기반 실시간 음성 인식. 말하는 즉시 텍스트로 출력되며, 회의 도중 메모장과 나란히 확인 가능.</p>
+        <div class="chip indigo" style="align-self:flex-start; margin-top:8px;">Deepgram nova-2</div>
+      </div>
+      <div class="card">
+        <div class="ix">Feature 02</div>
+        <h3>3개 AI 모델 비교</h3>
+        <p>Llama 3.3 70B · Llama 4 Scout · Qwen3 32B를 동시에 실행. 속도, 토큰, 품질을 탭별로 비교.</p>
+        <div class="chip" style="align-self:flex-start; margin-top:8px;">Groq API</div>
+      </div>
+      <div class="card">
+        <div class="ix">Feature 03</div>
+        <h3>Cursor 스타일 탭</h3>
+        <p>모델 A·B·C·비교·마인드맵 탭을 파일처럼 열고 닫으며, 좌우 패널 크기를 자유롭게 드래그 조절.</p>
+        <div class="chip" style="align-self:flex-start; margin-top:8px;">Split Panel</div>
+      </div>
+      <div class="card">
+        <div class="ix">Feature 04</div>
+        <h3>Slack 공유</h3>
+        <p>요약·결정사항·액션아이템을 인라인 편집 후 Slack 채널로 원클릭 전송. n8n 워크플로우 연동.</p>
+        <div class="chip" style="align-self:flex-start; margin-top:8px;">n8n Webhook</div>
+      </div>
+      <div class="card">
+        <div class="ix">Feature 05</div>
+        <h3>히스토리 사이드바</h3>
+        <p>오늘·어제·이번 주·이전으로 그룹화된 회의록 히스토리. Codex 스타일 사이드바로 즉시 조회.</p>
+        <div class="chip" style="align-self:flex-start; margin-top:8px;">SQLite DB</div>
+      </div>
+      <div class="card">
+        <div class="ix">Feature 06</div>
+        <h3>테마 · 설정</h3>
+        <p>밝음 / 어두움 / 기기 설정 3가지 테마. CSS 변수 기반으로 전체 UI가 즉시 전환.</p>
+        <div class="chip" style="align-self:flex-start; margin-top:8px;">Light · Dark · System</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">04 / 10</div>
+    <div class="chrome-tag">Features</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 05 · 기술 스택
+──────────────────────────────────────────── -->
+<div class="slide" id="s5">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">기술 스택</div>
+  </div>
+
+  <div class="body row" style="padding-top:56px; gap:48px; align-items:flex-start;">
+    <!-- Left -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:28px;">
+      <div>
+        <div class="mono-label" style="margin-bottom:16px;">Frontend</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div class="body-text" style="font-weight:700;">React 18 + Vite</div>
+            <div class="mono-label">SPA Framework</div>
+          </div>
+          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div class="body-text" style="font-weight:700;">Tailwind CSS</div>
+            <div class="mono-label">CSS Var 테마 시스템</div>
+          </div>
+          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div class="body-text" style="font-weight:700;">Web Audio API</div>
+            <div class="mono-label">실시간 녹음</div>
+          </div>
+          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div class="body-text" style="font-weight:700;">React Flow</div>
+            <div class="mono-label">마인드맵 시각화</div>
+          </div>
+          <div class="card indigo" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div class="body-text" style="font-weight:700; color:var(--indigo-ink);">Vercel</div>
+            <div class="mono-label" style="color:var(--indigo-ink);">Deploy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:28px;">
+      <div>
+        <div class="mono-label" style="margin-bottom:16px;">Backend · AI · Infra</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div class="body-text" style="font-weight:700;">FastAPI + Python 3.11</div>
+            <div class="mono-label">REST API + WebSocket</div>
+          </div>
+          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div class="body-text" style="font-weight:700;">Deepgram nova-2</div>
+            <div class="mono-label">실시간 STT (한국어)</div>
+          </div>
+          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div class="body-text" style="font-weight:700;">Groq API</div>
+            <div class="mono-label">Llama · Qwen 무료 추론</div>
+          </div>
+          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div class="body-text" style="font-weight:700;">Slack OAuth v2 + n8n</div>
+            <div class="mono-label">인증 · 자동화</div>
+          </div>
+          <div class="card" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+            <div class="body-text" style="font-weight:700;">Railway (Docker)</div>
+            <div class="mono-label">Backend Deploy</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">05 / 10</div>
+    <div class="chrome-tag">Tech Stack</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 06 · 아키텍처
+──────────────────────────────────────────── -->
+<div class="slide" id="s6">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">시스템 아키텍처</div>
+  </div>
+
+  <div class="body center" style="flex-direction:column; gap:40px;">
+    <div style="display:flex; align-items:baseline; gap:24px;">
+      <div class="h2" style="font-size:60px;">시스템 아키텍처</div>
+      <div class="mono-label">End-to-End Pipeline</div>
+    </div>
+
+    <!-- Architecture diagram -->
+    <div style="width:100%; display:flex; flex-direction:column; gap:20px;">
+      <!-- Row 1: Browser → Vercel -->
+      <div style="display:flex; align-items:center; gap:20px;">
+        <div class="card" style="flex:1; padding:24px 32px; background:var(--paper-100);">
+          <div class="ix">Client</div>
+          <div style="display:flex; gap:16px; align-items:center; margin-top:8px;">
+            <div class="chip indigo">🎙 실시간 녹음</div>
+            <div class="chip">📁 파일 업로드</div>
+            <div class="chip">🌐 WebSocket</div>
+          </div>
+        </div>
+        <div style="font-size:32px; color:var(--ink-300); font-weight:300;">→</div>
+        <div class="card indigo" style="flex:1; padding:24px 32px;">
+          <div class="ix" style="color:var(--indigo-ink);">Vercel · Frontend</div>
+          <div class="body-text" style="font-weight:700; color:var(--indigo-ink); margin-top:8px;">React 18 + Vite SPA</div>
+          <div style="font-size:16px; color:var(--indigo); font-family:var(--font-mono); margin-top:4px;">clerk-nine-mu.vercel.app</div>
+        </div>
+      </div>
+
+      <!-- Connector -->
+      <div style="display:flex; justify-content:center;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+          <div style="font-family:var(--font-mono); font-size:13px; color:var(--ink-300); letter-spacing:0.1em;">POST /api/upload · SSE /api/process · WS /api/ws/transcribe</div>
+          <div style="font-size:28px; color:var(--ink-300);">↓</div>
+        </div>
+      </div>
+
+      <!-- Row 2: Railway + APIs -->
+      <div style="display:flex; align-items:stretch; gap:20px;">
+        <div class="card" style="flex:2; padding:24px 32px;">
+          <div class="ix">Railway · Backend</div>
+          <div class="body-text" style="font-weight:700; margin-top:8px;">FastAPI + Python 3.11 (Docker)</div>
+          <div style="font-size:15px; color:var(--ink-500); font-family:var(--font-mono); margin-top:4px;">clerk-production-9869.up.railway.app</div>
+          <div style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;">
+            <div class="chip">JWT Auth</div>
+            <div class="chip">SQLite / PostgreSQL</div>
+            <div class="chip">SSE Stream</div>
+          </div>
+        </div>
+        <div style="font-size:28px; color:var(--ink-300); display:flex; align-items:center;">→</div>
+        <div style="flex:3; display:flex; gap:16px;">
+          <div class="card" style="flex:1; padding:20px 24px; border-color:var(--ink-200);">
+            <div class="ix">STT</div>
+            <div style="font-weight:800; font-size:22px; margin-top:6px;">Deepgram</div>
+            <div style="font-size:15px; color:var(--ink-500); margin-top:4px;">nova-2 · 한국어</div>
+          </div>
+          <div class="card" style="flex:2; padding:20px 24px; border-color:var(--ink-200);">
+            <div class="ix">LLM · 병렬 요약</div>
+            <div style="font-weight:800; font-size:22px; margin-top:6px;">Groq API</div>
+            <div style="font-size:14px; color:var(--ink-500); margin-top:6px; font-family:var(--font-mono); line-height:1.8;">
+              Llama 3.3 70B<br>Llama 4 Scout<br>Qwen3 32B
+            </div>
+          </div>
+          <div class="card" style="flex:1; padding:20px 24px; border-color:var(--ink-200);">
+            <div class="ix">Share</div>
+            <div style="font-weight:800; font-size:22px; margin-top:6px;">Slack</div>
+            <div style="font-size:15px; color:var(--ink-500); margin-top:4px;">n8n Webhook</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">06 / 10</div>
+    <div class="chrome-tag">Architecture</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 07 · AI 모델 비교
+──────────────────────────────────────────── -->
+<div class="slide" id="s7">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">AI 모델 비교</div>
+  </div>
+
+  <div class="body" style="padding-top:48px; gap:32px;">
+    <div style="display:flex; align-items:baseline; gap:24px;">
+      <div class="h2" style="font-size:64px;">3개 AI 모델 비교</div>
+      <div class="mono-label">Parallel · Free Tier · Groq</div>
+    </div>
+
+    <div class="grid-3" style="flex:1;">
+      <!-- Model A -->
+      <div class="card" style="border-width:2px; gap:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="ix">Model A</div>
+          <div class="chip indigo">추천</div>
+        </div>
+        <h3 style="font-size:28px;">Llama 3.3 70B</h3>
+        <div class="mono-label" style="color:var(--ink-400);">Meta · Groq</div>
+        <div class="divider" style="height:1px; background:var(--ink-200); margin:4px 0;"></div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono-label">응답 속도</span>
+            <span class="mono-lg" style="font-size:32px;">1.8<span style="font-size:18px; color:var(--ink-500);">초</span></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono-label">요약 품질</span>
+            <span class="mono-lg" style="font-size:32px; color:var(--green);">최상</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono-label">한국어 성능</span>
+            <span class="mono-lg" style="font-size:32px; color:var(--green);">우수</span>
+          </div>
+        </div>
+        <p style="font-size:16px; color:var(--ink-500); margin-top:4px;">범용 고성능. 정확한 의사결정 추적 및 액션아이템 추출에 최적.</p>
+      </div>
+
+      <!-- Model B -->
+      <div class="card light" style="gap:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="ix">Model B</div>
+          <div class="chip">최신</div>
+        </div>
+        <h3 style="font-size:28px;">Llama 4 Scout</h3>
+        <div class="mono-label">Meta · Groq</div>
+        <div class="divider" style="height:1px; background:var(--ink-200); margin:4px 0;"></div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono-label">응답 속도</span>
+            <span class="mono-lg" style="font-size:32px;">1.2<span style="font-size:18px; color:var(--ink-500);">초</span></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono-label">멀티모달</span>
+            <span class="mono-lg" style="font-size:32px; color:var(--indigo);">지원</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono-label">컨텍스트</span>
+            <span class="mono-lg" style="font-size:32px;">10M</span>
+          </div>
+        </div>
+        <p style="font-size:16px; color:var(--ink-500); margin-top:4px;">Meta 최신 모델. 초고속 응답과 멀티모달 확장성 보유.</p>
+      </div>
+
+      <!-- Model C -->
+      <div class="card light" style="gap:20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="ix">Model C</div>
+          <div class="chip">다국어</div>
+        </div>
+        <h3 style="font-size:28px;">Qwen3 32B</h3>
+        <div class="mono-label">Alibaba · Groq</div>
+        <div class="divider" style="height:1px; background:var(--ink-200); margin:4px 0;"></div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono-label">응답 속도</span>
+            <span class="mono-lg" style="font-size:32px;">2.1<span style="font-size:18px; color:var(--ink-500);">초</span></span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono-label">다국어</span>
+            <span class="mono-lg" style="font-size:32px; color:var(--amber);">한·중·영</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <span class="mono-label">특화</span>
+            <span class="mono-lg" style="font-size:32px;">글로벌</span>
+          </div>
+        </div>
+        <p style="font-size:16px; color:var(--ink-500); margin-top:4px;">한·중·영 다국어 최적화. 해외 진출 시나리오에 적합.</p>
+      </div>
+    </div>
+
+    <div class="card" style="border:none; background:var(--paper-100); flex-direction:row; align-items:center; gap:16px; padding:16px 24px;">
+      <div class="mono-label" style="flex-shrink:0;">★ 핵심 인사이트</div>
+      <p class="body-text">모든 모델 <strong>무료(Free Tier)</strong> 사용. 3개를 동시 실행하여 결과를 나란히 비교 — 데이터 기반으로 최적 모델을 선택할 수 있습니다.</p>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">07 / 10</div>
+    <div class="chrome-tag">AI Models</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 08 · 배포 현황
+──────────────────────────────────────────── -->
+<div class="slide" id="s8">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">배포 현황</div>
+  </div>
+
+  <div class="body row" style="padding-top:56px; align-items:flex-start; gap:48px;">
+    <!-- Left -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:32px;">
+      <div>
+        <div class="h2" style="font-size:64px;">라이브 서비스</div>
+        <div class="accent-line" style="margin-top:20px;"></div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card indigo" style="padding:24px 32px; gap:10px;">
+          <div class="ix" style="color:var(--indigo-ink);">Frontend · Vercel</div>
+          <div style="font-family:var(--font-mono); font-size:20px; font-weight:600; color:var(--indigo-ink);">clerk-nine-mu.vercel.app</div>
+          <p style="font-size:16px; color:var(--indigo);">React SPA · 전 세계 CDN · 자동 배포</p>
+        </div>
+        <div class="card" style="padding:24px 32px; gap:10px;">
+          <div class="ix">Backend · Railway</div>
+          <div style="font-family:var(--font-mono); font-size:18px; font-weight:600; color:var(--ink-900);">clerk-production-9869.up.railway.app</div>
+          <p style="font-size:16px; color:var(--ink-500);">FastAPI · Docker · Python 3.11</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: deployment details -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
+      <div class="mono-label" style="margin-bottom:4px;">배포 파이프라인</div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="card light" style="flex-direction:row; gap:16px; align-items:center; padding:16px 24px;">
+          <div style="width:40px; height:40px; background:var(--ink-900); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span style="color:white; font-size:18px; font-weight:800;">G</span>
+          </div>
+          <div><div style="font-weight:700; font-size:18px;">GitHub Push</div><div style="font-size:14px; color:var(--ink-500);">main 브랜치 푸시로 자동 트리거</div></div>
+        </div>
+        <div style="display:flex; justify-content:center; font-size:20px; color:var(--ink-300);">↓</div>
+        <div class="card light" style="flex-direction:row; gap:16px; align-items:center; padding:16px 24px;">
+          <div style="width:40px; height:40px; background:#0B0D0E; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span style="color:white; font-size:14px; font-weight:800;">R</span>
+          </div>
+          <div><div style="font-weight:700; font-size:18px;">Railway Docker Build</div><div style="font-size:14px; color:var(--ink-500);">python:3.11-slim · requirements.txt 설치</div></div>
+        </div>
+        <div style="display:flex; justify-content:center; font-size:20px; color:var(--ink-300);">↓ &nbsp; ↓</div>
+        <div class="card light" style="flex-direction:row; gap:16px; align-items:center; padding:16px 24px;">
+          <div style="width:40px; height:40px; background:#000; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span style="color:white; font-size:14px; font-weight:800;">V</span>
+          </div>
+          <div><div style="font-weight:700; font-size:18px;">Vercel Auto Deploy</div><div style="font-size:14px; color:var(--ink-500);">npm run build · VITE_API_BASE 환경변수 주입</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">08 / 10</div>
+    <div class="chrome-tag">Deployment</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 09 · 확장 로드맵
+──────────────────────────────────────────── -->
+<div class="slide" id="s9">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">확장 로드맵</div>
+  </div>
+
+  <div class="body" style="padding-top:48px; gap:28px;">
+    <div style="display:flex; align-items:baseline; gap:24px;">
+      <div class="h2" style="font-size:64px;">확장 로드맵</div>
+      <div class="mono-label">Global Expansion · Enterprise</div>
+    </div>
+
+    <div class="grid-3" style="flex:1; align-items:start;">
+      <!-- Phase 1 -->
+      <div class="card" style="border-width:2px; border-color:var(--indigo); gap:20px; height:100%;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="ix" style="color:var(--indigo);">Phase 1 · 現在</div>
+          <div class="chip indigo" style="font-size:11px;">완료</div>
+        </div>
+        <h3 style="font-size:26px;">서비스 론칭</h3>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--green); font-size:16px; flex-shrink:0; margin-top:2px;">✅</span><span style="font-size:16px; color:var(--ink-700);">실시간 STT + AI 3모델 비교</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--green); font-size:16px; flex-shrink:0; margin-top:2px;">✅</span><span style="font-size:16px; color:var(--ink-700);">Slack OAuth + 공유</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--green); font-size:16px; flex-shrink:0; margin-top:2px;">✅</span><span style="font-size:16px; color:var(--ink-700);">히스토리 · 다운로드</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--green); font-size:16px; flex-shrink:0; margin-top:2px;">✅</span><span style="font-size:16px; color:var(--ink-700);">Railway + Vercel 배포</span></div>
+        </div>
+      </div>
+
+      <!-- Phase 2 -->
+      <div class="card light" style="gap:20px; height:100%;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="ix">Phase 2 · 글로벌</div>
+          <div class="chip">예정</div>
+        </div>
+        <h3 style="font-size:26px;">다국어 확장</h3>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">UI 다국어화 (한·영 i18n)</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">STT 다국어 (영·일·중)</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">회의 언어 자동 감지 + 번역</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">Notion · Confluence 연동</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">Jira 액션아이템 자동 생성</span></div>
+        </div>
+      </div>
+
+      <!-- Phase 3 -->
+      <div class="card light" style="gap:20px; height:100%;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="ix">Phase 3 · 엔터프라이즈</div>
+          <div class="chip">로드맵</div>
+        </div>
+        <h3 style="font-size:26px;">기업 도입</h3>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">SSO (Google · Azure AD)</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">팀 관리자 대시보드</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">온프레미스 배포 옵션</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">GDPR 컴플라이언스</span></div>
+          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">도메인 파인튜닝 AI</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">09 / 10</div>
+    <div class="chrome-tag">Roadmap</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 10 · 마무리
+──────────────────────────────────────────── -->
+<div class="slide" id="s10">
+  <div class="chrome" style="border:none; position:absolute; top:0; left:0; right:0; z-index:10; background:transparent;">
+    <div class="chrome-brand" style="color:white;"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag" style="color:rgba(255,255,255,0.4);">AX PM · 신우철</div>
+  </div>
+
+  <!-- Full layout: left dark / right paper -->
+  <div style="display:flex; height:100%;">
+    <!-- Left dark panel -->
+    <div style="flex:1; background:var(--ink-900); padding:120px 80px 80px; display:flex; flex-direction:column; justify-content:space-between;">
+      <div style="display:flex; flex-direction:column; gap:36px;">
+        <div class="mono-label" style="color:rgba(255,255,255,0.35);">Clerkai · AI 회의록 자동화</div>
+        <div style="font-family:var(--font-sans); font-weight:900; font-size:80px; line-height:1.0; color:white; letter-spacing:-0.04em;">
+          회의가 끝나면<br><span style="color:var(--indigo);">회의록</span>도<br>끝납니다
+        </div>
+        <div style="width:80px; height:6px; background:var(--indigo); border-radius:3px;"></div>
+        <p style="font-size:22px; color:rgba(255,255,255,0.55); line-height:1.6; max-width:480px;">
+          음성 하나로 STT · AI 요약 · Slack 공유까지.<br>회의록 작성에 쓰던 30분을 돌려드립니다.
+        </p>
+      </div>
+      <div class="mono-label" style="color:rgba(255,255,255,0.2);">개발자 · 신우철 / AX PM</div>
+    </div>
+
+    <!-- Right paper panel -->
+    <div style="width:580px; flex-shrink:0; background:var(--paper-100); padding:120px 60px 80px; display:flex; flex-direction:column; justify-content:space-between; border-left:1px solid var(--ink-200);">
+      <div style="display:flex; flex-direction:column; gap:32px;">
+        <div style="width:64px; height:64px; background:var(--indigo); border-radius:14px; display:flex; align-items:center; justify-content:center;">
+          <span style="font-family:var(--font-sans); font-weight:900; font-size:28px; color:white;">C</span>
+        </div>
+        <div class="h2" style="font-size:52px; line-height:1.1;">Clerkai</div>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <a href="https://clerk-nine-mu.vercel.app" style="text-decoration:none;">
+            <div class="card indigo" style="padding:18px 24px; gap:6px;">
+              <div class="ix" style="color:var(--indigo-ink);">Live Service</div>
+              <div style="font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--indigo-ink);">clerk-nine-mu.vercel.app</div>
+            </div>
+          </a>
+          <div class="card light" style="padding:18px 24px; gap:6px;">
+            <div class="ix">GitHub</div>
+            <div style="font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--ink-700);">github.com/chul3224/clerk</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="divider" style="height:1px; background:var(--ink-200);"></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div>
+            <div class="mono-label" style="margin-bottom:6px;">Tech</div>
+            <div style="font-size:14px; color:var(--ink-500); line-height:1.8;">FastAPI · React<br>Groq · Deepgram<br>Railway · Vercel</div>
+          </div>
+          <div>
+            <div class="mono-label" style="margin-bottom:6px;">Period</div>
+            <div style="font-size:14px; color:var(--ink-500); line-height:1.8;">2026년 6월<br>개인 프로젝트<br>AX PM 포트폴리오</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom" style="position:absolute; bottom:0; left:0; right:0; background:rgba(11,11,14,0.8); border-top:1px solid rgba(255,255,255,0.1);">
+    <div class="chrome-num" style="color:rgba(255,255,255,0.35);">10 / 10</div>
+    <div class="chrome-tag" style="color:rgba(255,255,255,0.3);">Thank You</div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- Navigation -->
+<div id="nav">
+  <button onclick="prev()">←</button>
+  <span id="counter">1 / 10</span>
+  <button onclick="next()">→</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let cur = 0;
+
+function scale() {
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const s = Math.min(vw / 1920, vh / 1080);
+  slides.forEach(sl => {
+    sl.style.transform = `scale(${s})`;
+    sl.style.left = `${(vw - 1920 * s) / 2}px`;
+    sl.style.top  = `${(vh - 1080 * s) / 2}px`;
+  });
+}
+
+function show(n) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === n));
+  document.getElementById('counter').textContent = `${n + 1} / ${slides.length}`;
+}
+
+function next() { if (cur < slides.length - 1) show(++cur); }
+function prev() { if (cur > 0) show(--cur); }
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') next();
+  if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp') prev();
+});
+
+window.addEventListener('resize', scale);
+scale();
+</script>
+</body>
+</html>
