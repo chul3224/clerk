@@ -50,18 +50,15 @@ const PDF_PATH = path.resolve(__dirname, 'Clerkai_발표자료.pdf');
   ).join(' ');
 
   const py = `
-from PIL import Image
-import sys
+from PIL import Image, JpegImagePlugin
+import PIL.PdfImagePlugin, sys, os
 
 files = sys.argv[1:]
 imgs = [Image.open(f).convert('RGB') for f in files]
-imgs[0].save(
-    '${PDF_PATH}',
-    save_all=True,
-    append_images=imgs[1:],
-    resolution=150,
-)
-print(f'  PDF saved → ${PDF_PATH}')
+Image.register_save('PDF', PIL.PdfImagePlugin._save)
+Image.register_mime('PDF', 'application/pdf')
+imgs[0].save('${PDF_PATH}', 'PDF', save_all=True, append_images=imgs[1:], resolution=144)
+print(f'  PDF saved -> ${PDF_PATH}  ({os.path.getsize("${PDF_PATH}") / 1024 / 1024:.1f} MB)')
 `;
 
   const pyScript = path.join(OUT_DIR, 'merge.py');
