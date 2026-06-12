@@ -8,6 +8,7 @@ from fastapi.responses import StreamingResponse
 from database import SessionLocal
 from models import MeetingRecord
 from services.deepgram_service import transcribe_with_diarization
+from services.dify_service import push_to_dify
 from services.groq_service import summarize_triple
 from services.transcript_builder import format_transcript_text
 from state import jobs
@@ -89,9 +90,19 @@ async def process_audio(file_id: str):
 
             yield _sse({"step": "complete", "data": result})
 
-            # 처리 완료 후 DB 저장 (Slack 전송은 사용자가 확정 후 수동 발송)
+            # 처리 완료 후 DB 저장 + Dify 자동 적재
             if user_id:
                 _save_to_db(file_id, user_id, transcript, summaries)
+                best = next(
+                    (s for s in summaries if s.get("summary") and not s["summary"].startswith("오류")),
+                    summaries[0] if summaries else {},
+                )
+                await push_to_dify(
+                    summary=best.get("summary", ""),
+                    action_items=best.get("action_items", []),
+                    key_decisions=best.get("key_decisions", []),
+                    transcript=transcript,
+                )
 
         except Exception as e:
             jobs[file_id]["status"] = "error"

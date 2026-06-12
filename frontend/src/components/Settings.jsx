@@ -4,9 +4,10 @@ import { useAuth } from '../contexts/AuthContext'
 import { useTheme } from '../contexts/ThemeContext'
 
 const SECTIONS = [
-  { id: 'appearance', label: '모양' },
-  { id: 'account',    label: '계정' },
-  { id: 'data',       label: '데이터' },
+  { id: 'appearance',    label: '모양' },
+  { id: 'integrations',  label: '연동' },
+  { id: 'account',       label: '계정' },
+  { id: 'data',          label: '데이터' },
 ]
 
 const THEME_OPTIONS = [
@@ -48,6 +49,26 @@ export default function Settings({ onClose }) {
   const [section, setSection] = useState('appearance')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [deleteStatus, setDeleteStatus] = useState(null) // null | 'deleting' | 'done' | 'error'
+  const [difyStatus, setDifyStatus]   = useState(null)  // null | {configured, dataset_id}
+  const [difyPush, setDifyPush]       = useState(null)  // null | 'pushing' | {pushed,failed} | 'error'
+
+  const checkDify = async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/dify/status`, { headers: authHeaders() })
+      if (res.ok) setDifyStatus(await res.json())
+    } catch { setDifyStatus({ configured: false }) }
+  }
+
+  const handleDifyPushAll = async () => {
+    setDifyPush('pushing')
+    try {
+      const res = await fetch(`${API_BASE}/api/dify/push-all`, {
+        method: 'POST', headers: authHeaders(),
+      })
+      if (res.ok) setDifyPush(await res.json())
+      else setDifyPush('error')
+    } catch { setDifyPush('error') }
+  }
 
   const handleDeleteAll = async () => {
     setDeleteStatus('deleting')
@@ -150,6 +171,90 @@ export default function Settings({ onClose }) {
                       </button>
                     ))}
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── 연동 ── */}
+            {section === 'integrations' && (
+              <div className="space-y-5">
+                {/* Dify */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-xs font-semibold text-c-dim uppercase tracking-wider">Dify 지식베이스</p>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">RAG</span>
+                  </div>
+                  <p className="text-xs text-c-faint mb-4">
+                    회의록을 Dify 지식베이스에 자동 적재합니다.<br />
+                    Railway에 <code className="text-indigo-400 text-[11px]">DIFY_API_KEY</code> / <code className="text-indigo-400 text-[11px]">DIFY_DATASET_ID</code> 설정 필요.
+                  </p>
+
+                  {/* Status check */}
+                  {!difyStatus ? (
+                    <button
+                      onClick={checkDify}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-c text-c-muted hover:bg-c-hover hover:text-c transition-colors"
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0118.8-4.3M22 12.5a10 10 0 01-18.8 4.2"/>
+                      </svg>
+                      연결 상태 확인
+                    </button>
+                  ) : difyStatus.configured ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-emerald-900/20 border border-emerald-800/30 text-emerald-400 text-sm">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                        연결됨 — 새 회의록은 자동으로 Dify에 적재됩니다
+                      </div>
+                      {typeof difyPush === 'object' && difyPush !== null ? (
+                        <div className="text-xs text-c-muted px-1">
+                          ✓ {difyPush.pushed}건 전송 완료{difyPush.failed > 0 && ` / ${difyPush.failed}건 실패`}
+                        </div>
+                      ) : (
+                        <button
+                          onClick={handleDifyPushAll}
+                          disabled={difyPush === 'pushing'}
+                          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium border border-indigo-500/40 text-indigo-400 hover:bg-indigo-500/10 disabled:opacity-50 transition-colors"
+                        >
+                          {difyPush === 'pushing' ? (
+                            <><span className="w-3 h-3 border border-indigo-400 border-t-transparent rounded-full animate-spin" />전송 중...</>
+                          ) : (
+                            <>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>
+                                <path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/>
+                              </svg>
+                              기존 회의록 전체 Dify 전송
+                            </>
+                          )}
+                        </button>
+                      )}
+                      {difyPush === 'error' && (
+                        <p className="text-xs text-red-400 px-1">전송 중 오류가 발생했습니다.</p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-amber-900/20 border border-amber-800/30 text-amber-400 text-sm">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                      환경변수 미설정 — Railway에 API KEY를 추가하세요
+                    </div>
+                  )}
+                </div>
+
+                {/* n8n */}
+                <div className="pt-4 border-t border-c">
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-xs font-semibold text-c-dim uppercase tracking-wider">n8n 자동화</p>
+                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">ACTIVE</span>
+                  </div>
+                  <p className="text-xs text-c-faint">
+                    회의 완료 시 n8n Webhook으로 Slack·Notion·Gmail 자동 전송.<br/>
+                    Railway <code className="text-indigo-400 text-[11px]">N8N_WEBHOOK_URL</code> 설정됨.
+                  </p>
                 </div>
               </div>
             )}

@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
 import models  # noqa: F401 — ensures tables are registered before create_all
-from routers import upload, process, realtime, summarize, auth, mindmap, history, share
+from routers import upload, process, realtime, summarize, auth, mindmap, history, share, dify
 
 Base.metadata.create_all(bind=engine)
 
@@ -26,6 +26,7 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(mindmap.router, prefix="/api")
 app.include_router(history.router, prefix="/api")
 app.include_router(share.router, prefix="/api")
+app.include_router(dify.router, prefix="/api")
 
 
 @app.get("/health")

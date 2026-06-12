@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { API_BASE, authHeaders } from '../api/client'
 
 function timeGroup(dateStr) {
@@ -17,7 +17,21 @@ export default function Sidebar({
   user, onLogout, onNewMeeting, onSelectRecord,
   currentRecordId, refreshTrigger, onOpenSettings,
 }) {
-  const [history, setHistory] = useState([])
+  const [history, setHistory]       = useState([])
+  const [difyPushed, setDifyPushed] = useState({}) // { [record_id]: 'pushing' | 'done' | 'error' }
+
+  const pushToDify = async (e, recordId) => {
+    e.stopPropagation()
+    setDifyPushed(p => ({ ...p, [recordId]: 'pushing' }))
+    try {
+      const res = await fetch(`${API_BASE}/api/dify/push/${recordId}`, {
+        method: 'POST', headers: authHeaders(),
+      })
+      setDifyPushed(p => ({ ...p, [recordId]: res.ok ? 'done' : 'error' }))
+    } catch {
+      setDifyPushed(p => ({ ...p, [recordId]: 'error' }))
+    }
+  }
 
   useEffect(() => {
     fetch(`${API_BASE}/api/history`, { headers: authHeaders() })
@@ -64,24 +78,53 @@ export default function Sidebar({
           <div key={group} className="mb-4">
             <p className="text-[11px] font-semibold text-c-dim uppercase tracking-wider px-2 mb-1">{group}</p>
             {groups[group].map(record => (
-              <button
+              <div
                 key={record.id}
-                onClick={() => onSelectRecord(record)}
-                className={`w-full text-left px-3 py-2 rounded-lg transition-colors group ${
+                className={`relative group flex items-center rounded-lg transition-colors ${
                   currentRecordId === record.id
-                    ? 'bg-c-active text-c'
-                    : 'text-c-faint hover:bg-c-hover2 hover:text-c-soft'
+                    ? 'bg-c-active'
+                    : 'hover:bg-c-hover2'
                 }`}
               >
-                <p className="text-xs truncate leading-5">
-                  {record.summary?.slice(0, 45) || '(요약 없음)'}
-                </p>
-                <p className="text-[10px] text-c-ghost mt-0.5">
-                  {new Date(record.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
-                  {' · '}
-                  {record.transcript_count}개 발화
-                </p>
-              </button>
+                <button
+                  onClick={() => onSelectRecord(record)}
+                  className={`flex-1 text-left px-3 py-2 min-w-0 ${
+                    currentRecordId === record.id ? 'text-c' : 'text-c-faint hover:text-c-soft'
+                  }`}
+                >
+                  <p className="text-xs truncate leading-5">
+                    {record.summary?.slice(0, 40) || '(요약 없음)'}
+                  </p>
+                  <p className="text-[10px] text-c-ghost mt-0.5">
+                    {new Date(record.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                    {' · '}{record.transcript_count}개 발화
+                  </p>
+                </button>
+
+                {/* Dify push button — visible on hover */}
+                <button
+                  onClick={e => pushToDify(e, record.id)}
+                  title="Dify 지식베이스에 저장"
+                  className={`flex-shrink-0 mr-1.5 w-6 h-6 rounded flex items-center justify-center transition-all
+                    opacity-0 group-hover:opacity-100
+                    ${difyPushed[record.id] === 'done'  ? 'text-emerald-400' :
+                      difyPushed[record.id] === 'error' ? 'text-red-400' :
+                      'text-c-dim hover:text-indigo-400 hover:bg-c-hover'}`}
+                >
+                  {difyPushed[record.id] === 'pushing' ? (
+                    <span className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" />
+                  ) : difyPushed[record.id] === 'done' ? (
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  ) : difyPushed[record.id] === 'error' ? (
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  ) : (
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>
+                      <path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
             ))}
           </div>
         ))}
