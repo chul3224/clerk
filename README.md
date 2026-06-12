@@ -210,6 +210,7 @@ npm run dev
 |------|------|
 | [`papers/Clerkai_발표자료.html`](papers/Clerkai_발표자료.html) | InSIGHT 디자인 시스템 기반 10장 슬라이드 (1920×1080) · 링크 클릭 가능 |
 | [`papers/Clerkai_발표자료.pdf`](papers/Clerkai_발표자료.pdf) | PDF 버전 (인쇄·공유용) |
+| [`papers/n8n_workflow_guide.html`](papers/n8n_workflow_guide.html) | n8n 워크플로우 구현 가이드 · 전체 흐름도 · 실제 코드 · 면접 Q&A |
 | [`papers/Clerkai_기획서_v2.md`](papers/Clerkai_기획서_v2.md) | 기획 배경 · 기술 선택 근거 · 로드맵 |
 
 ```bash

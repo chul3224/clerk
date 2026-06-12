@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Clerkai × n8n 워크플로우 가이드</title>
+<style>
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap");
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0f1015;
+  --panel:   #161820;
+  --card:    #1c1e28;
+  --border:  #2a2d3e;
+  --border2: #363a50;
+  --text:    #e2e4f0;
+  --muted:   #8890b0;
+  --faint:   #4a5070;
+  --indigo:  #6366f1;
+  --indigo-l:#818cf8;
+  --green:   #34d399;
+  --amber:   #fbbf24;
+  --red:     #f87171;
+  --mono:    "JetBrains Mono", monospace;
+  --sans:    "Pretendard", sans-serif;
+}
+
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-size: 15px;
+  line-height: 1.6; padding: 0;
+}
+
+/* Layout */
+.page { max-width: 960px; margin: 0 auto; padding: 48px 32px 80px; }
+
+/* Section */
+.section { margin-bottom: 64px; }
+.section-label {
+  font-family: var(--mono); font-size: 11px; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--indigo-l); margin-bottom: 8px;
+}
+.section-title {
+  font-size: 28px; font-weight: 800; letter-spacing: -0.02em;
+  color: var(--text); margin-bottom: 24px;
+}
+
+/* Cards */
+.card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 24px 28px;
+}
+.card + .card { margin-top: 12px; }
+
+/* Flow diagram */
+.flow { display: flex; align-items: stretch; gap: 0; }
+.flow-node {
+  flex: 1; border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 10px;
+  background: var(--card);
+}
+.flow-node.active { border-color: var(--indigo); background: rgba(99,102,241,0.08); }
+.flow-node.output { border-color: var(--green); background: rgba(52,211,153,0.06); }
+.flow-arrow {
+  flex-shrink: 0; width: 40px; display: flex;
+  align-items: center; justify-content: center;
+  color: var(--faint); font-size: 20px;
+}
+.node-num {
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--faint);
+}
+.node-title { font-weight: 700; font-size: 16px; color: var(--text); }
+.node-sub   { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.node-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 4px;
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  border: 1px solid; align-self: flex-start;
+}
+.badge-indigo { color: var(--indigo-l); border-color: rgba(99,102,241,0.4); background: rgba(99,102,241,0.1); }
+.badge-green  { color: var(--green);    border-color: rgba(52,211,153,0.4);  background: rgba(52,211,153,0.1); }
+.badge-amber  { color: var(--amber);    border-color: rgba(251,191,36,0.4);  background: rgba(251,191,36,0.1); }
+
+/* Code block */
+pre {
+  background: #0a0b10; border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px 24px;
+  font-family: var(--mono); font-size: 13px; line-height: 1.7;
+  overflow-x: auto; color: var(--text);
+}
+.k { color: var(--indigo-l); }   /* keyword */
+.s { color: var(--green); }      /* string */
+.n { color: var(--amber); }      /* number/key */
+.c { color: var(--faint); }      /* comment */
+
+/* Step list */
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step  {
+  display: flex; gap: 20px;
+  padding: 20px 0; border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 32px; height: 32px; flex-shrink: 0;
+  background: var(--indigo); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 13px; font-weight: 700; color: white;
+  margin-top: 2px;
+}
+.step-body { flex: 1; }
+.step-title { font-weight: 700; font-size: 16px; color: var(--text); margin-bottom: 6px; }
+.step-desc  { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.step-code  {
+  margin-top: 10px; background: #0a0b10;
+  border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 16px; font-family: var(--mono); font-size: 12px;
+  color: var(--text); line-height: 1.6;
+}
+
+/* Q&A */
+.qa { display: flex; flex-direction: column; gap: 16px; }
+.qa-item { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.qa-q {
+  background: rgba(99,102,241,0.1); border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  font-weight: 700; font-size: 14px; color: var(--indigo-l);
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.qa-q::before {
+  content: "Q"; font-family: var(--mono); font-size: 11px;
+  background: var(--indigo); color: white; padding: 1px 6px;
+  border-radius: 4px; flex-shrink: 0; margin-top: 1px;
+}
+.qa-a {
+  padding: 16px 20px; font-size: 14px; color: var(--muted); line-height: 1.7;
+  background: var(--card);
+}
+.qa-a strong { color: var(--text); }
+
+/* divider */
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+/* pill */
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  font-family: var(--mono);
+}
+.pill-on  { background: rgba(52,211,153,0.12); color: var(--green);  border: 1px solid rgba(52,211,153,0.3); }
+.pill-off { background: rgba(251,191,36,0.12); color: var(--amber);  border: 1px solid rgba(251,191,36,0.3); }
+
+/* highlight box */
+.highlight {
+  border-left: 3px solid var(--indigo);
+  padding: 14px 18px; background: rgba(99,102,241,0.06);
+  border-radius: 0 8px 8px 0; font-size: 14px; color: var(--muted);
+  margin-top: 16px;
+}
+.highlight strong { color: var(--text); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div style="margin-bottom:56px; padding-bottom:32px; border-bottom:1px solid var(--border);">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+      <div style="width:36px;height:36px;background:var(--indigo);border-radius:8px;display:flex;align-items:center;justify-content:center;">
+        <span style="color:white;font-weight:900;font-size:16px;">C</span>
+      </div>
+      <span style="font-weight:900;font-size:20px;letter-spacing:-0.02em;">Clerkai × n8n</span>
+    </div>
+    <h1 style="font-size:40px;font-weight:900;letter-spacing:-0.035em;line-height:1.1;color:var(--text);margin-bottom:12px;">
+      워크플로우 자동화<br><span style="color:var(--indigo-l);">구현 가이드</span>
+    </h1>
+    <p style="color:var(--muted);font-size:16px;max-width:560px;">
+      Clerkai 백엔드 → n8n → Slack 전체 흐름. 실제 구현된 코드와 n8n 설정 방법, 면접 답변까지 정리.
+    </p>
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <span class="pill pill-on">● 실제 동작 중</span>
+      <span class="pill" style="background:rgba(99,102,241,0.1);color:var(--indigo-l);border:1px solid rgba(99,102,241,0.3);">Railway 배포</span>
+      <span class="pill" style="background:rgba(99,102,241,0.1);color:var(--indigo-l);border:1px solid rgba(99,102,241,0.3);">n8n Cloud</span>
+    </div>
+  </div>
+
+
+  <!-- ① 전체 흐름 -->
+  <div class="section">
+    <div class="section-label">Architecture</div>
+    <div class="section-title">전체 자동화 흐름</div>
+
+    <div class="flow" style="flex-direction:column; gap:0;">
+      <!-- Row 1 -->
+      <div class="flow" style="gap:0;">
+        <div class="flow-node" style="border-color:var(--border2);">
+          <div class="node-num">Client</div>
+          <div class="node-title">🎙 사용자</div>
+          <div class="node-sub">회의 녹음 또는 파일 업로드 후<br>"Slack 전송" 버튼 클릭</div>
+          <span class="node-badge badge-indigo">React Frontend</span>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node active">
+          <div class="node-num">Step 01</div>
+          <div class="node-title">⚡ FastAPI</div>
+          <div class="node-sub">POST /api/share/slack<br>n8n Webhook URL로 데이터 전송</div>
+          <span class="node-badge badge-indigo">Railway 백엔드</span>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node active">
+          <div class="node-num">Step 02</div>
+          <div class="node-title">🔀 n8n Webhook</div>
+          <div class="node-sub">Webhook 트리거로 수신<br>JSON 페이로드 파싱</div>
+          <span class="node-badge badge-amber">n8n Cloud</span>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node active">
+          <div class="node-num">Step 03</div>
+          <div class="node-title">✍️ 메시지 포맷</div>
+          <div class="node-sub">요약·결정사항·액션아이템을<br>Slack 블록 형식으로 변환</div>
+          <span class="node-badge badge-amber">n8n Code/Set Node</span>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node output">
+          <div class="node-num">Output</div>
+          <div class="node-title">💬 Slack</div>
+          <div class="node-sub">팀 채널로 회의록 전송<br>Block Kit 포맷 메시지</div>
+          <span class="node-badge badge-green">Slack API</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>핵심 설계 원칙</strong> — Clerkai 백엔드는 n8n에 데이터만 던집니다. 어디로 보낼지(Slack·Notion·Gmail)는 n8n이 결정. 새 채널을 추가해도 <strong>백엔드 코드를 수정할 필요가 없습니다.</strong>
+    </div>
+  </div>
+
+
+  <!-- ② 실제 코드 -->
+  <div class="section">
+    <div class="section-label">실제 구현</div>
+    <div class="section-title">백엔드 코드 — share.py</div>
+
+    <pre><span class="c"># backend/routers/share.py</span>
+<span class="c"># 사용자가 "Slack 전송" 버튼을 누르면 이 엔드포인트가 호출됨</span>
+
+<span class="k">@router</span>.post(<span class="s">"/share/slack"</span>)
+<span class="k">async def</span> share_to_slack(body: ShareRequest, current_user: User = Depends(get_current_user)):
+
+    <span class="c"># 페이로드 구성</span>
+    payload = {
+        <span class="s">"event"</span>:            <span class="s">"meeting_processed"</span>,
+        <span class="s">"user_id"</span>:          current_user.id,
+        <span class="s">"transcript_count"</span>: body.transcript_count,   <span class="c"># 발화 수</span>
+        <span class="s">"summary"</span>:          body.summary,             <span class="c"># AI 요약문</span>
+        <span class="s">"key_decisions"</span>:    body.key_decisions,       <span class="c"># 핵심 결정사항 []</span>
+        <span class="s">"action_items"</span>:     body.action_items,        <span class="c"># 액션아이템 []</span>
+    }
+
+    <span class="c"># n8n Webhook으로 POST — Railway 환경변수 N8N_WEBHOOK_URL 사용</span>
+    <span class="k">async with</span> httpx.AsyncClient(timeout=<span class="n">15</span>) <span class="k">as</span> client:
+        resp = <span class="k">await</span> client.post(N8N_WEBHOOK_URL, json=payload)
+
+    <span class="k">return</span> {<span class="s">"message"</span>: <span class="s">"Slack으로 공유되었습니다"</span>}</pre>
+
+    <div style="margin-top:20px;">
+      <div class="section-label" style="margin-bottom:12px;">n8n이 받는 JSON 페이로드</div>
+      <pre>{
+  <span class="n">"event"</span>:            <span class="s">"meeting_processed"</span>,
+  <span class="n">"user_id"</span>:          <span class="n">42</span>,
+  <span class="n">"transcript_count"</span>: <span class="n">87</span>,          <span class="c">// 87개 발화 감지</span>
+  <span class="n">"summary"</span>:          <span class="s">"이번 회의에서는 Q2 제품 로드맵을..."</span>,
+  <span class="n">"key_decisions"</span>: [
+    <span class="s">"배포일 6월 30일로 확정"</span>,
+    <span class="s">"디자인 QA는 마케팅팀 리뷰 후 진행"</span>
+  ],
+  <span class="n">"action_items"</span>: [
+    <span class="s">"신우철: 배포 체크리스트 작성 (6/15)"</span>,
+    <span class="s">"김지수: Figma 최종본 공유 (6/12)"</span>
+  ]
+}</pre>
+    </div>
+  </div>
+
+
+  <!-- ③ n8n 설정 방법 -->
+  <div class="section">
+    <div class="section-label">n8n 설정</div>
+    <div class="section-title">n8n 워크플로우 구성 방법</div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Webhook 트리거 노드</div>
+          <div class="step-desc">
+            n8n Cloud에서 새 워크플로우 생성 → <strong>Webhook</strong> 노드 추가.<br>
+            HTTP Method: <code>POST</code> / Path: 자동 생성 URL 복사
+          </div>
+          <div class="step-code">
+            Node Type  : Webhook<br>
+            HTTP Method: POST<br>
+            Path       : /clerkai-meeting  (또는 자동 생성)<br>
+            → Production URL 복사 → Railway N8N_WEBHOOK_URL 에 붙여넣기
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Code 노드 — Slack 메시지 포맷</div>
+          <div class="step-desc">
+            수신한 JSON을 Slack Block Kit 형식으로 변환하는 JavaScript 코드 작성.
+          </div>
+          <div class="step-code">
+<span class="c">// n8n Code Node (JavaScript)</span>
+<span class="k">const</span> data = $input.first().json;
+
+<span class="k">const</span> decisions = data.key_decisions
+  .map(d => <span class="s">`• ${d}`</span>).join(<span class="s">'\n'</span>);
+
+<span class="k">const</span> actions = data.action_items
+  .map(a => <span class="s">`☐ ${a}`</span>).join(<span class="s">'\n'</span>);
+
+<span class="k">return</span> [{
+  json: {
+    text: <span class="s">`📋 *회의록 요약* (발화 ${data.transcript_count}건)`</span>,
+    blocks: [
+      { type: <span class="s">"header"</span>, text: { type: <span class="s">"plain_text"</span>, text: <span class="s">"📋 회의록 요약"</span> }},
+      { type: <span class="s">"section"</span>, text: { type: <span class="s">"mrkdwn"</span>, text: data.summary }},
+      { type: <span class="s">"divider"</span> },
+      { type: <span class="s">"section"</span>, text: { type: <span class="s">"mrkdwn"</span>, text: <span class="s">`*핵심 결정사항*\n${decisions}`</span> }},
+      { type: <span class="s">"section"</span>, text: { type: <span class="s">"mrkdwn"</span>, text: <span class="s">`*액션아이템*\n${actions}`</span> }},
+    ]
+  }
+}];
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Slack 노드 — 채널 전송</div>
+          <div class="step-desc">
+            <strong>Slack</strong> 노드 추가 → Slack OAuth 연결 → 채널 선택 → 이전 노드의 blocks 연결.
+          </div>
+          <div class="step-code">
+            Node Type    : Slack<br>
+            Operation    : Send a message<br>
+            Channel      : #회의록 (또는 DM)<br>
+            Message Type : Blocks<br>
+            Blocks       : {{ $json.blocks }}
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">환경변수 연결 (Railway)</div>
+          <div class="step-desc">n8n Webhook URL을 Railway 환경변수에 등록해 백엔드와 연결.</div>
+          <div class="step-code">
+railway variables set N8N_WEBHOOK_URL=https://your-n8n.cloud/webhook/clerkai-meeting
+railway redeploy --yes
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ④ 확장 가능성 -->
+  <div class="section">
+    <div class="section-label">확장성</div>
+    <div class="section-title">n8n으로 더 추가할 수 있는 것</div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="card">
+        <div style="font-size:24px;margin-bottom:8px;">📝</div>
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;">Notion 자동 생성</div>
+        <div style="font-size:13px;color:var(--muted);">Notion 노드 추가만으로 회의록 페이지 자동 생성. 백엔드 코드 수정 없음.</div>
+      </div>
+      <div class="card">
+        <div style="font-size:24px;margin-bottom:8px;">📧</div>
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;">Gmail 이메일 발송</div>
+        <div style="font-size:13px;color:var(--muted);">참석자 이메일로 액션아이템 자동 발송. Gmail 노드 연결만 하면 됨.</div>
+      </div>
+      <div class="card">
+        <div style="font-size:24px;margin-bottom:8px;">🎫</div>
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;">Jira 티켓 자동 생성</div>
+        <div style="font-size:13px;color:var(--muted);">action_items 배열을 순회하며 Jira 이슈 자동 생성. IF 노드로 조건 분기.</div>
+      </div>
+      <div class="card">
+        <div style="font-size:24px;margin-bottom:8px;">⏰</div>
+        <div style="font-weight:700;font-size:15px;margin-bottom:6px;">D+3 팔로업 알림</div>
+        <div style="font-size:13px;color:var(--muted);">Wait 노드로 3일 후 자동 리마인더. "액션아이템 완료 여부 확인" Slack DM.</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ⑤ 면접 Q&A -->
+  <div class="section">
+    <div class="section-label">면접 준비</div>
+    <div class="section-title">예상 질문 & 모범 답변</div>
+
+    <div class="qa">
+      <div class="qa-item">
+        <div class="qa-q">n8n을 왜 직접 Slack API 대신 사용했나요?</div>
+        <div class="qa-a">
+          <strong>백엔드와 전달 채널을 분리</strong>하기 위해서입니다. 직접 Slack API를 호출하면 "Notion도 보내줘", "Teams도 추가해줘" 요청이 올 때마다 백엔드 코드를 수정해야 합니다. n8n을 중간에 두면 <strong>백엔드는 항상 같은 JSON 하나만 던지고</strong>, 어디로 보낼지는 n8n 워크플로우에서 노드만 추가하면 됩니다. 이게 마이크로서비스에서 말하는 단일 책임 원칙(SRP)을 자동화 레이어에 적용한 것입니다.
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">n8n 워크플로우를 직접 만들어보셨나요? 어떻게 구성했나요?</div>
+        <div class="qa-a">
+          네, <strong>3개 노드</strong>로 구성했습니다. ① Webhook 트리거 — Clerkai 백엔드에서 POST 요청을 받습니다. ② Code 노드 — 수신한 JSON(요약, 결정사항, 액션아이템)을 Slack Block Kit 포맷으로 변환하는 JavaScript를 작성했습니다. ③ Slack 노드 — 포맷된 메시지를 지정 채널로 전송합니다. n8n Cloud의 Webhook URL을 Railway 환경변수에 등록해서 백엔드와 연결했습니다.
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">Webhook이 뭔지 설명해줄 수 있나요?</div>
+        <div class="qa-a">
+          <strong>"이벤트가 발생했을 때 지정된 URL로 HTTP 요청을 보내는 방식"</strong>입니다. 반대 개념인 폴링(polling)은 "5초마다 서버한테 변경사항 있어?"라고 물어보는 것이고, 웹훅은 "변경사항 생기면 너가 나한테 알려줘"입니다. Clerkai에서는 사용자가 Slack 전송 버튼을 누르는 순간 백엔드가 n8n Webhook URL로 POST를 날리고, n8n이 바로 Slack으로 전달합니다.
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">Channel.io에서 고객사 CS 자동화를 할 때 n8n을 어떻게 쓸 것 같나요?</div>
+        <div class="qa-a">
+          Clerkai와 동일한 패턴입니다. ① <strong>트리거</strong> — Channel.io에서 상담 종료 이벤트 발생 시 Webhook 수신. ② <strong>데이터 가공</strong> — 상담 내용을 Code 노드에서 정형화. ③ <strong>다중 출력</strong> — Dify 지식베이스에 적재(학습 데이터 축적) + 담당자에게 Slack 요약 + CRM에 상담 내역 기록. <strong>하나의 이벤트에서 세 가지 작업이 자동으로 분기</strong>되는 구조입니다. 고객사마다 원하는 출력이 다르기 때문에 n8n 워크플로우만 바꾸면 대응할 수 있습니다.
+        </div>
+      </div>
+
+      <div class="qa-item">
+        <div class="qa-q">n8n vs Zapier 차이를 설명해줄 수 있나요?</div>
+        <div class="qa-a">
+          <strong>n8n</strong>은 오픈소스고 코드 노드(JavaScript)를 직접 작성할 수 있어 복잡한 데이터 변환이 가능합니다. 자체 서버에 설치도 되고 비용이 저렴합니다. <strong>Zapier</strong>는 코드 없이 클릭만으로 연결하는 게 강점이고 6,000개 이상 앱이 연동됩니다. 대기업 현업팀이 주로 씁니다. 저는 <strong>개발자 친화적인 n8n으로 먼저 빌드하고, 고객사 현업팀이 직접 수정해야 한다면 Zapier로 마이그레이션하는 방식</strong>이 실용적이라고 생각합니다.
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+  <div style="border-top:1px solid var(--border); padding-top:24px; display:flex; justify-content:space-between; align-items:center;">
+    <span style="font-family:var(--mono); font-size:12px; color:var(--faint);">Clerkai — AX PM 포트폴리오 · 신우철</span>
+    <span style="font-family:var(--mono); font-size:12px; color:var(--faint);">n8n Cloud · Railway · Vercel</span>
+  </div>
+
+</div>
+</body>
+</html>
