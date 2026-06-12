@@ -201,7 +201,7 @@ html, body {
 }
 .dark-panel .divider { height: 1px; background: rgba(255,255,255,0.12); }
 
-/* standalone stat-label — used in inline dark panels (slide 01) */
+/* standalone stat-label */
 .stat-label {
   font-size: 15px; font-family: var(--font-mono);
   letter-spacing: 0.12em; text-transform: uppercase;
@@ -221,6 +221,7 @@ html, body {
 }
 .chip.indigo { background: var(--indigo); border-color: var(--indigo); color: white; }
 .chip.green  { background: var(--green);  border-color: var(--green);  color: white; }
+.chip.amber  { background: var(--amber);  border-color: var(--amber);  color: white; }
 
 /* ── Flow ── */
 .flow {
@@ -350,19 +351,22 @@ a.ext { text-decoration: none; color: inherit; }
 <div class="slide active" id="s1">
   <div class="chrome">
     <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
-    <div class="chrome-tag">AX PM 포트폴리오 · 신우철</div>
+    <div class="chrome-tag">Channel.io AX Consultant 지원 · 신우철</div>
   </div>
 
   <div class="body row" style="align-items:stretch; gap:0; padding:0;">
     <!-- Left -->
     <div style="flex:1; padding:80px 80px 64px; display:flex; flex-direction:column; justify-content:space-between;">
       <div style="display:flex; flex-direction:column; gap:32px;">
-        <div class="chip indigo">AI Meeting Assistant</div>
-        <div class="h1" style="font-size:110px; line-height:0.95;">AI가<br>회의록을<br>정리합니다</div>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div class="chip indigo">AI Meeting Assistant</div>
+          <div class="chip" style="border-color:var(--ink-300);">2026.06 베타 운영 중</div>
+        </div>
+        <div class="h1" style="font-size:100px; line-height:0.95;">아이디어가 생기면<br><span style="color:var(--indigo);">다음 날</span><br>프로토타입입니다</div>
         <div class="accent-line"></div>
-        <p class="lead" style="max-width:600px;">음성 하나로 실시간 STT · 3개 AI 모델 비교 요약 · Slack 자동 공유까지 자동화하는 회의 어시스턴트</p>
+        <p class="lead" style="max-width:640px;">F&B 13년 현장에서 비효율을 직접 발굴하고 표준화해온 경험을<br>n8n · Dify · Claude Code로 AI 자동화로 옮겼습니다.</p>
       </div>
-      <div style="display:flex; gap:20px; align-items:center;">
+      <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
         <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="tag link">clerk-nine-mu.vercel.app</a>
         <a href="https://github.com/chul3224/clerk" target="_blank" class="tag link">github.com/chul3224/clerk</a>
       </div>
@@ -370,29 +374,29 @@ a.ext { text-decoration: none; color: inherit; }
 
     <!-- Right: dark panel -->
     <div style="width:520px; background:var(--ink-900); padding:80px 56px 64px; display:flex; flex-direction:column; gap:0;">
-      <div class="mono-label" style="color:rgba(255,255,255,0.35); margin-bottom:48px;">핵심 지표</div>
+      <div class="mono-label" style="color:rgba(255,255,255,0.35); margin-bottom:48px;">증명하는 수치</div>
 
       <div style="display:flex; flex-direction:column; gap:40px; flex:1; justify-content:center;">
         <div>
-          <div class="stat-num" style="font-family:var(--font-mono); font-size:80px; font-weight:700; color:white; line-height:1;">3</div>
-          <div class="stat-label">AI Models · Parallel</div>
+          <div style="font-family:var(--font-mono); font-size:80px; font-weight:700; color:white; line-height:1;">13</div>
+          <div class="stat-label">년 F&B 현장 · 비효율 관찰</div>
         </div>
         <div class="divider" style="height:1px; background:rgba(255,255,255,0.1);"></div>
         <div>
-          <div class="stat-num" style="font-family:var(--font-mono); font-size:80px; font-weight:700; color:white; line-height:1;">실시간</div>
-          <div class="stat-label">WebSocket STT</div>
+          <div style="font-family:var(--font-mono); font-size:80px; font-weight:700; color:white; line-height:1;">n8n</div>
+          <div class="stat-label">자동화 워크플로우 운영 중</div>
         </div>
         <div class="divider" style="height:1px; background:rgba(255,255,255,0.1);"></div>
         <div>
           <div style="display:flex; align-items:baseline; gap:8px;">
-            <div class="stat-num" style="font-family:var(--font-mono); font-size:80px; font-weight:700; color:white; line-height:1;">30</div>
+            <div style="font-family:var(--font-mono); font-size:80px; font-weight:700; color:white; line-height:1;">30</div>
             <div style="font-family:var(--font-mono); font-size:24px; color:rgba(255,255,255,0.4);">min</div>
           </div>
           <div class="stat-label">회의록 작성 절감</div>
         </div>
       </div>
 
-      <div class="mono-label" style="color:rgba(255,255,255,0.25);">Vercel · Railway · Groq · Deepgram</div>
+      <div class="mono-label" style="color:rgba(255,255,255,0.25);">n8n · Dify · Claude Code · Make</div>
     </div>
   </div>
 
@@ -403,107 +407,360 @@ a.ext { text-decoration: none; color: inherit; }
 </div>
 
 <!-- ────────────────────────────────────────────
-  SLIDE 02 · 문제 정의
+  SLIDE 02 · 나는 누구인가
 ──────────────────────────────────────────── -->
 <div class="slide" id="s2">
   <div class="chrome">
     <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
-    <div class="chrome-tag">문제 정의</div>
+    <div class="chrome-tag">배경</div>
   </div>
 
-  <div class="body row" style="align-items:flex-start; padding-top:56px;">
-    <!-- Left: big quote -->
-    <div style="flex:1; display:flex; flex-direction:column; gap:32px; padding-right:32px;">
-      <div class="mono-label">Pain Point</div>
-      <div class="h2" style="font-size:80px; line-height:1.0;">"회의가<br>끝나도<br>일은 남는다"</div>
+  <div class="body row" style="align-items:flex-start; padding-top:56px; gap:56px;">
+    <!-- Left -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:28px;">
+      <div class="mono-label">Who I Am</div>
+      <div class="h2" style="font-size:76px; line-height:1.0;">F&B 13년이<br>만든<br>AX 직관</div>
       <div class="accent-line"></div>
-      <p class="lead">회의 후 정리에 평균 <span style="font-family:var(--font-mono); font-weight:700; color:var(--ink-900);">30분</span> 소요.<br>그 시간은 생산성 낭비입니다.</p>
+      <p class="lead" style="font-size:22px; max-width:520px;">
+        현장에서 직접 발굴한 비효율을 매뉴얼화·교육해온 경험이<br>
+        <strong style="color:var(--ink-900);">지금 AI 자동화 설계로 이어지고 있습니다.</strong>
+      </p>
+
+      <!-- Timeline -->
+      <div style="display:flex; flex-direction:column; gap:0; margin-top:8px;">
+        <div style="display:flex; gap:20px; padding:14px 0; border-top:1px solid var(--ink-200);">
+          <div style="font-family:var(--font-mono); font-size:12px; color:var(--ink-300); width:80px; flex-shrink:0; padding-top:3px;">2010–2017</div>
+          <div>
+            <div style="font-weight:700; font-size:17px; color:var(--ink-900);">바텐더 · 믹솔로지 · 분자칵테일</div>
+            <div style="font-size:14px; color:var(--ink-500); margin-top:3px;">VVIP 라운지 '신시어' — 고객이 말하지 않아도 맥락으로 니즈를 먼저 파악</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:20px; padding:14px 0; border-top:1px solid var(--ink-200);">
+          <div style="font-family:var(--font-mono); font-size:12px; color:var(--ink-300); width:80px; flex-shrink:0; padding-top:3px;">2017–2020</div>
+          <div>
+            <div style="font-weight:700; font-size:17px; color:var(--ink-900);">브랜드 매니저 · 슈퍼바이저</div>
+            <div style="font-size:14px; color:var(--ink-500); margin-top:3px;">전국 27개 매장 CS 케이스 → 매뉴얼·교육 영상으로 표준화. 이해관계자 일정 조율</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:20px; padding:14px 0; border-top:1px solid var(--ink-200);">
+          <div style="font-family:var(--font-mono); font-size:12px; color:var(--ink-300); width:80px; flex-shrink:0; padding-top:3px;">2020–2025</div>
+          <div>
+            <div style="font-weight:700; font-size:17px; color:var(--ink-900);">서핑샵 · 강사 · 커머스 운영</div>
+            <div style="font-size:14px; color:var(--ink-500); margin-top:3px;">양양 스마트스토어 매출 1위 · 3년 연속. FAQ 매뉴얼 → 알고리즘 활용 상위 노출</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:20px; padding:14px 0; border-top:1px solid var(--ink-200); border-bottom:1px solid var(--ink-200);">
+          <div style="font-family:var(--font-mono); font-size:12px; color:var(--indigo); width:80px; flex-shrink:0; padding-top:3px; font-weight:700;">2025–NOW</div>
+          <div>
+            <div style="font-weight:700; font-size:17px; color:var(--indigo);">AI 학습 · 직접 빌드</div>
+            <div style="font-size:14px; color:var(--ink-500); margin-top:3px;">n8n · Dify · Claude Code — 한 달 안에 Clerk_AI 설계·빌드·베타 배포</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Right: pain cards -->
+    <!-- Right: 3 patterns -->
     <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
-      <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
-        <div style="font-size:28px; width:40px; flex-shrink:0;">📝</div>
-        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4>회의 후 정리 시간 낭비</h4><p style="font-size:16px;">누군가는 30분씩 회의록을 작성합니다</p></div></div>
+      <div class="mono-label" style="margin-bottom:4px;">현장에서 반복 발견한 패턴</div>
+      <div class="card indigo" style="gap:16px;">
+        <div class="ix" style="color:var(--indigo-ink);">Pattern 01</div>
+        <h4 style="font-size:22px; color:var(--indigo-ink);">담당자마다 다른 CS 처리 방식</h4>
+        <p style="font-size:16px; color:var(--indigo);">같은 케이스도 처리가 다르다 → 표준화·매뉴얼화가 먼저. Channel.io가 말하는 "AI가 이해할 수 있는 지식으로 변환"과 정확히 같은 문제.</p>
       </div>
-      <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
-        <div style="font-size:28px; width:40px; flex-shrink:0;">🎯</div>
-        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4>메모하다 대화 집중 못함</h4><p style="font-size:16px;">받아쓰느라 정작 회의에 참여 못합니다</p></div></div>
+      <div class="card light" style="gap:12px;">
+        <div class="ix">Pattern 02</div>
+        <h4 style="font-size:22px;">정보 정리에 시간 쓰는 담당자</h4>
+        <p style="font-size:16px; color:var(--ink-500);">회의·상담 후 정리가 반복 비용 → 자동화로 없애야 할 작업. Clerk_AI의 출발점.</p>
       </div>
-      <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
-        <div style="font-size:28px; width:40px; flex-shrink:0;">👥</div>
-        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4>누가 무슨 말을 했는지 불명확</h4><p style="font-size:16px;">책임 소재가 흐릿해지고 분쟁이 생깁니다</p></div></div>
-      </div>
-      <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
-        <div style="font-size:28px; width:40px; flex-shrink:0;">✅</div>
-        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4>액션아이템이 흐지부지됨</h4><p style="font-size:16px;">다음 회의에서도 같은 이야기를 반복합니다</p></div></div>
-      </div>
-      <div class="card light" style="flex-direction:row; align-items:center; gap:20px; padding:20px 28px;">
-        <div style="font-size:28px; width:40px; flex-shrink:0;">📊</div>
-        <div><div class="card" style="border:none; padding:0; gap:4px;"><h4>요약 품질이 담당자마다 다름</h4><p style="font-size:16px;">같은 회의도 누가 정리하느냐에 따라 다릅니다</p></div></div>
+      <div class="card light" style="gap:12px;">
+        <div class="ix">Pattern 03</div>
+        <h4 style="font-size:22px;">비효율 발굴보다 실행이 느림</h4>
+        <p style="font-size:16px; color:var(--ink-500);">문제는 알지만 툴·기술 장벽으로 자동화 못 함 → 내가 직접 빌드하는 이유.</p>
       </div>
     </div>
   </div>
 
   <div class="chrome chrome-bottom">
     <div class="chrome-num">02 / 10</div>
-    <div class="chrome-tag">Problem</div>
+    <div class="chrome-tag">Background</div>
   </div>
 </div>
 
 <!-- ────────────────────────────────────────────
-  SLIDE 03 · 솔루션
+  SLIDE 03 · Clerk_AI 개요
 ──────────────────────────────────────────── -->
 <div class="slide" id="s3">
   <div class="chrome">
     <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
-    <div class="chrome-tag">솔루션</div>
+    <div class="chrome-tag">프로젝트 개요</div>
   </div>
 
-  <div class="body center" style="flex-direction:column; gap:48px;">
-    <div class="mono-label">Solution</div>
-    <div class="h1" style="text-align:center; font-size:108px; line-height:1.0;">
-      음성 <span style="color:var(--indigo);">하나</span>로<br>회의록 <span style="color:var(--indigo);">전부</span>
+  <div class="body center" style="flex-direction:column; gap:44px;">
+    <div class="mono-label">Clerk_AI — 회의록 자동화</div>
+    <div class="h1" style="text-align:center; font-size:100px; line-height:1.0;">
+      문제 정의 → 빌드 → 배포<br><span style="color:var(--indigo);">한 달 안에</span>
     </div>
     <div class="accent-line" style="width:120px; height:8px;"></div>
 
     <div class="flow" style="width:100%; gap:0;">
+      <div class="flow-step" style="background:var(--paper-100); border-color:var(--ink-200);">
+        <div class="step-ix">Input</div>
+        <h4>🎙 녹음 / 업로드</h4>
+        <p>실시간 녹음 또는 음성 파일 업로드</p>
+      </div>
+      <div class="flow-arrow">→</div>
       <div class="flow-step" style="background:var(--indigo-bg); border-color:var(--indigo);">
-        <div class="step-ix" style="color:var(--indigo);">Step 01</div>
-        <h4>🎙 녹음</h4>
-        <p>실시간 녹음 또는 파일 업로드</p>
+        <div class="step-ix" style="color:var(--indigo);">Process ①</div>
+        <h4>🔤 실시간 STT</h4>
+        <p>Deepgram nova-2 · 한국어</p>
       </div>
       <div class="flow-arrow">→</div>
-      <div class="flow-step">
-        <div class="step-ix">Step 02</div>
-        <h4>🔤 STT</h4>
-        <p>Deepgram nova-2 실시간 음성 인식</p>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-step">
-        <div class="step-ix">Step 03</div>
-        <h4>✨ AI 요약</h4>
-        <p>3개 LLM 병렬 요약 + 비교</p>
+      <div class="flow-step" style="background:var(--indigo-bg); border-color:var(--indigo);">
+        <div class="step-ix" style="color:var(--indigo);">Process ②</div>
+        <h4>✨ LLM 3종 병렬 요약</h4>
+        <p>Llama · Scout · Qwen 동시 실행</p>
       </div>
       <div class="flow-arrow">→</div>
       <div class="flow-step" style="background:var(--ink-900); border-color:var(--ink-900);">
         <div class="step-ix" style="color:rgba(255,255,255,0.4);">Output</div>
-        <h4 style="color:white;">💬 Slack 공유</h4>
-        <p style="color:rgba(255,255,255,0.5);">편집 후 채널로 즉시 전송</p>
+        <h4 style="color:white;">💬 액션아이템 · Slack</h4>
+        <p style="color:rgba(255,255,255,0.5);">n8n 워크플로우로 자동 전송</p>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:20px; width:100%;">
+      <div class="card light" style="padding:20px 24px; gap:8px; align-items:center; text-align:center;">
+        <div style="font-family:var(--font-mono); font-size:36px; font-weight:700; color:var(--ink-900);">3</div>
+        <div class="mono-label" style="font-size:12px;">AI 모델 병렬 비교</div>
+      </div>
+      <div class="card light" style="padding:20px 24px; gap:8px; align-items:center; text-align:center;">
+        <div style="font-family:var(--font-mono); font-size:36px; font-weight:700; color:var(--indigo);">n8n</div>
+        <div class="mono-label" style="font-size:12px;">Slack 자동화 워크플로우</div>
+      </div>
+      <div class="card light" style="padding:20px 24px; gap:8px; align-items:center; text-align:center;">
+        <div style="font-family:var(--font-mono); font-size:36px; font-weight:700; color:var(--green);">Dify</div>
+        <div class="mono-label" style="font-size:12px;">RAG 지식베이스 연동</div>
+      </div>
+      <div class="card light" style="padding:20px 24px; gap:8px; align-items:center; text-align:center;">
+        <div style="font-family:var(--font-mono); font-size:36px; font-weight:700; color:var(--amber);">30</div>
+        <div class="mono-label" style="font-size:12px;">분 절감 / 회의</div>
       </div>
     </div>
   </div>
 
   <div class="chrome chrome-bottom">
     <div class="chrome-num">03 / 10</div>
-    <div class="chrome-tag">Solution</div>
+    <div class="chrome-tag">Overview</div>
   </div>
 </div>
 
 <!-- ────────────────────────────────────────────
-  SLIDE 04 · 핵심 기능
+  SLIDE 04 · n8n 자동화 워크플로우
 ──────────────────────────────────────────── -->
 <div class="slide" id="s4">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">n8n 자동화</div>
+  </div>
+
+  <div class="body row" style="padding-top:52px; gap:48px; align-items:flex-start;">
+    <!-- Left -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:28px;">
+      <div>
+        <div class="mono-label" style="margin-bottom:12px;">n8n Workflow</div>
+        <div class="h2" style="font-size:64px;">백엔드와 출력<br>채널의 분리</div>
+        <div class="accent-line" style="margin-top:20px;"></div>
+      </div>
+      <p class="body-text" style="font-size:19px; line-height:1.7; color:var(--ink-500);">
+        Clerk_AI 백엔드는 <strong style="color:var(--ink-900);">항상 같은 JSON 하나</strong>만 n8n으로 던집니다.<br>
+        어디로 보낼지(Slack·Notion·Dify)는 n8n 노드만 추가하면 됩니다.<br>
+        <strong style="color:var(--indigo);">코드 수정 없이 자동화 채널을 확장</strong>하는 구조입니다.
+      </p>
+
+      <!-- Current flow -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="mono-label" style="color:var(--ink-300);">현재 구현 흐름</div>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <div class="card" style="padding:12px 20px; gap:4px; flex-direction:row; align-items:center; border-color:var(--ink-200);">
+            <span style="font-size:16px;">⚡</span>
+            <span style="font-weight:700; font-size:15px;">FastAPI</span>
+            <span style="font-size:13px; color:var(--ink-500);">POST /api/share/slack</span>
+          </div>
+          <span style="font-size:20px; color:var(--ink-300);">→</span>
+          <div class="card indigo" style="padding:12px 20px; gap:4px; flex-direction:row; align-items:center;">
+            <span style="font-size:16px;">🔀</span>
+            <span style="font-weight:700; font-size:15px; color:var(--indigo-ink);">n8n Webhook</span>
+          </div>
+          <span style="font-size:20px; color:var(--ink-300);">→</span>
+          <div class="card" style="padding:12px 20px; gap:4px; flex-direction:row; align-items:center; background:var(--ink-900); border-color:var(--ink-900);">
+            <span style="font-size:16px;">💬</span>
+            <span style="font-weight:700; font-size:15px; color:white;">Slack 채널</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payload -->
+      <div style="background:#0B0B0E; border:1px solid var(--ink-700); border-radius:10px; padding:18px 22px; font-family:var(--font-mono); font-size:13px; color:rgba(255,255,255,0.8); line-height:1.8;">
+        <span style="color:#8890b0;">// n8n이 받는 payload</span><br>
+        { <span style="color:#6366f1;">"event"</span>: <span style="color:#34d399;">"meeting_processed"</span>,<br>
+        &nbsp;&nbsp;<span style="color:#6366f1;">"summary"</span>: <span style="color:#34d399;">"..."</span>,<br>
+        &nbsp;&nbsp;<span style="color:#6366f1;">"key_decisions"</span>: [ ... ],<br>
+        &nbsp;&nbsp;<span style="color:#6366f1;">"action_items"</span>: [ ... ] }
+      </div>
+    </div>
+
+    <!-- Right: extensibility -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
+      <div class="mono-label" style="margin-bottom:4px;">n8n 노드 추가만으로 확장 가능</div>
+
+      <div class="card" style="border-color:var(--indigo); background:var(--indigo-bg); flex-direction:row; align-items:center; gap:16px; padding:18px 24px;">
+        <span style="font-size:24px; flex-shrink:0;">💬</span>
+        <div><div style="font-weight:700; font-size:17px; color:var(--indigo-ink);">Slack — 현재 운영 중</div><div style="font-size:14px; color:var(--indigo);">팀 채널로 회의록 자동 전송 · Block Kit 포맷</div></div>
+        <div class="chip indigo" style="margin-left:auto; flex-shrink:0;">LIVE</div>
+      </div>
+
+      <div class="card light" style="flex-direction:row; align-items:center; gap:16px; padding:18px 24px;">
+        <span style="font-size:24px; flex-shrink:0;">📝</span>
+        <div><div style="font-weight:700; font-size:17px;">Notion — 추가 예정</div><div style="font-size:14px; color:var(--ink-500);">Notion 노드 연결 → 회의록 페이지 자동 생성</div></div>
+        <div class="chip" style="margin-left:auto; flex-shrink:0; font-size:11px;">노드 1개</div>
+      </div>
+
+      <div class="card light" style="flex-direction:row; align-items:center; gap:16px; padding:18px 24px;">
+        <span style="font-size:24px; flex-shrink:0;">🎫</span>
+        <div><div style="font-weight:700; font-size:17px;">Jira / Linear</div><div style="font-size:14px; color:var(--ink-500);">액션아이템 배열 순회 → 이슈 자동 생성</div></div>
+        <div class="chip" style="margin-left:auto; flex-shrink:0; font-size:11px;">노드 2개</div>
+      </div>
+
+      <div class="card light" style="flex-direction:row; align-items:center; gap:16px; padding:18px 24px;">
+        <span style="font-size:24px; flex-shrink:0;">🧠</span>
+        <div><div style="font-weight:700; font-size:17px;">Dify RAG</div><div style="font-size:14px; color:var(--ink-500);">회의록 → 지식베이스 자동 적재 → AI 검색 가능</div></div>
+        <div class="chip green" style="margin-left:auto; flex-shrink:0; font-size:11px;">구현 완료</div>
+      </div>
+
+      <div class="card light" style="flex-direction:row; align-items:center; gap:16px; padding:18px 24px;">
+        <span style="font-size:24px; flex-shrink:0;">⏰</span>
+        <div><div style="font-weight:700; font-size:17px;">D+3 팔로업 알림</div><div style="font-size:14px; color:var(--ink-500);">Wait 노드 → 3일 후 액션아이템 리마인더 DM</div></div>
+        <div class="chip" style="margin-left:auto; flex-shrink:0; font-size:11px;">노드 2개</div>
+      </div>
+
+      <div class="card" style="background:var(--paper-100); border-color:var(--ink-200); flex-direction:row; gap:12px; padding:16px 20px; align-items:center; margin-top:4px;">
+        <div class="mono-label" style="flex-shrink:0; color:var(--ink-900);">★ 핵심</div>
+        <p style="font-size:15px; color:var(--ink-700);">새 출력 채널 추가 시 <strong>백엔드 코드 수정 없음</strong> — n8n 워크플로우만 변경</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">04 / 10</div>
+    <div class="chrome-tag">n8n Automation</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 05 · Dify RAG 연동
+──────────────────────────────────────────── -->
+<div class="slide" id="s5">
+  <div class="chrome">
+    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
+    <div class="chrome-tag">Dify RAG 연동</div>
+  </div>
+
+  <div class="body row" style="padding-top:52px; gap:56px; align-items:flex-start;">
+    <!-- Left -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:28px;">
+      <div>
+        <div class="mono-label" style="margin-bottom:12px;">Dify Knowledge Base</div>
+        <div class="h2" style="font-size:64px;">회의록이<br>지식으로<br>쌓입니다</div>
+        <div class="accent-line" style="margin-top:20px;"></div>
+      </div>
+      <p class="body-text" style="font-size:19px; line-height:1.7; color:var(--ink-500);">
+        처리된 회의록이 Dify 지식베이스에 자동 적재됩니다.<br>
+        누적된 회의 데이터로 <strong style="color:var(--ink-900);">"지난 달 결정된 사항이 뭐였지?"</strong>를<br>
+        AI가 바로 답할 수 있는 구조입니다.
+      </p>
+
+      <!-- Flow -->
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <div class="card" style="flex:1; padding:16px 20px; flex-direction:row; align-items:center; gap:12px; border-color:var(--ink-200);">
+            <span style="font-size:20px;">✨</span>
+            <div>
+              <div style="font-weight:700; font-size:15px;">AI 요약 완료</div>
+              <div style="font-size:13px; color:var(--ink-500);">요약 · 결정사항 · 액션아이템</div>
+            </div>
+          </div>
+          <span style="font-size:20px; color:var(--ink-300);">→</span>
+          <div class="card green" style="flex:1; padding:16px 20px; flex-direction:row; align-items:center; gap:12px;">
+            <span style="font-size:20px;">🧠</span>
+            <div>
+              <div style="font-weight:700; font-size:15px; color:var(--green);">Dify 지식베이스</div>
+              <div style="font-size:13px; color:var(--green);">자동 문서 생성 · 인덱싱</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex; justify-content:center; font-size:20px; color:var(--ink-300);">↓</div>
+        <div class="card" style="padding:16px 20px; flex-direction:row; align-items:center; gap:12px; background:var(--paper-100); border-color:var(--ink-200);">
+          <span style="font-size:20px;">🔍</span>
+          <div>
+            <div style="font-weight:700; font-size:15px;">"6월 1일 회의에서 결정된 배포 일정이 뭐였지?"</div>
+            <div style="font-size:13px; color:var(--green);">→ Dify RAG: "6월 30일 배포 확정, 담당자 신우철" (출처: 2026-06-01 회의록)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
+      <div class="mono-label" style="margin-bottom:4px;">구현 방식</div>
+
+      <div class="card light" style="gap:14px;">
+        <div class="ix">API 연동</div>
+        <h4 style="font-size:20px;">Dify Knowledge Base API</h4>
+        <div style="background:#0B0B0E; border-radius:8px; padding:14px 18px; font-family:var(--font-mono); font-size:12px; color:rgba(255,255,255,0.8); line-height:1.8;">
+          <span style="color:#8890b0;"># backend/services/dify_service.py</span><br>
+          POST /datasets/<span style="color:#fbbf24;">{dataset_id}</span>/documents/create-by-text<br>
+          <span style="color:#34d399;">"indexing_technique"</span>: <span style="color:#34d399;">"high_quality"</span>
+        </div>
+        <p style="font-size:15px; color:var(--ink-500);">환경변수 DIFY_API_KEY 미설정 시 silent skip — 기존 기능 영향 없음</p>
+      </div>
+
+      <div class="card light" style="gap:14px;">
+        <div class="ix">수동 전송 UI</div>
+        <h4 style="font-size:20px;">사이드바 개별 전송 버튼</h4>
+        <p style="font-size:15px; color:var(--ink-500);">히스토리 hover 시 cloud-upload 아이콘 → 해당 회의록만 선택적으로 Dify 전송</p>
+        <div style="display:flex; gap:10px;">
+          <div class="chip" style="font-size:11px;">pushing → spinner</div>
+          <div class="chip green" style="font-size:11px;">done → ✓</div>
+          <div class="chip" style="font-size:11px; border-color:#f87171; color:#b91c1c;">error → ✕</div>
+        </div>
+      </div>
+
+      <div class="card light" style="gap:14px;">
+        <div class="ix">Settings 탭</div>
+        <h4 style="font-size:20px;">연동 관리 UI</h4>
+        <p style="font-size:15px; color:var(--ink-500);">Settings → 연동 탭: Dify 연결 상태 확인, 전체 히스토리 일괄 전송, n8n ACTIVE 배지</p>
+      </div>
+
+      <div class="card" style="background:var(--green-bg); border-color:var(--green); gap:12px; padding:20px 24px;">
+        <div class="ix" style="color:var(--green);">Channel.io 연결</div>
+        <p style="font-size:16px; color:var(--ink-700);">
+          이 구조는 Channel.io 고객사 <strong>상담 데이터 → AI 지식베이스 구축</strong>에 그대로 적용됩니다.<br>
+          상담 종료 → n8n → Dify 적재 → 다음 상담 시 AI가 과거 케이스로 답변 보조.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="chrome chrome-bottom">
+    <div class="chrome-num">05 / 10</div>
+    <div class="chrome-tag">Dify RAG</div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────────
+  SLIDE 06 · 핵심 기능
+──────────────────────────────────────────── -->
+<div class="slide" id="s6">
   <div class="chrome">
     <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
     <div class="chrome-tag">핵심 기능</div>
@@ -526,7 +783,7 @@ a.ext { text-decoration: none; color: inherit; }
         <div class="ix">Feature 02</div>
         <h3>3개 AI 모델 비교</h3>
         <p>Llama 3.3 70B · Llama 4 Scout · Qwen3 32B를 동시에 실행. 속도, 토큰, 품질을 탭별로 비교.</p>
-        <div class="chip" style="align-self:flex-start; margin-top:8px;">Groq API</div>
+        <div class="chip" style="align-self:flex-start; margin-top:8px;">Groq API · Free Tier</div>
       </div>
       <div class="card">
         <div class="ix">Feature 03</div>
@@ -536,355 +793,204 @@ a.ext { text-decoration: none; color: inherit; }
       </div>
       <div class="card">
         <div class="ix">Feature 04</div>
-        <h3>Slack 공유</h3>
-        <p>요약·결정사항·액션아이템을 인라인 편집 후 Slack 채널로 원클릭 전송. n8n 워크플로우 연동.</p>
-        <div class="chip" style="align-self:flex-start; margin-top:8px;">n8n Webhook</div>
+        <h3>n8n Slack 자동화</h3>
+        <p>요약·결정사항·액션아이템을 인라인 편집 후 n8n 워크플로우를 통해 Slack 채널로 원클릭 전송.</p>
+        <div class="chip indigo" style="align-self:flex-start; margin-top:8px;">n8n Webhook</div>
       </div>
       <div class="card">
         <div class="ix">Feature 05</div>
-        <h3>히스토리 사이드바</h3>
-        <p>오늘·어제·이번 주·이전으로 그룹화된 회의록 히스토리. Codex 스타일 사이드바로 즉시 조회.</p>
-        <div class="chip" style="align-self:flex-start; margin-top:8px;">SQLite DB</div>
+        <h3>Dify 지식베이스</h3>
+        <p>회의 완료 시 Dify 자동 적재. 사이드바에서 개별 전송, Settings에서 일괄 전송 지원.</p>
+        <div class="chip green" style="align-self:flex-start; margin-top:8px;">RAG 검색</div>
       </div>
       <div class="card">
         <div class="ix">Feature 06</div>
-        <h3>테마 · 설정</h3>
-        <p>밝음 / 어두움 / 기기 설정 3가지 테마. CSS 변수 기반으로 전체 UI가 즉시 전환.</p>
-        <div class="chip" style="align-self:flex-start; margin-top:8px;">Light · Dark · System</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="chrome chrome-bottom">
-    <div class="chrome-num">04 / 10</div>
-    <div class="chrome-tag">Features</div>
-  </div>
-</div>
-
-<!-- ────────────────────────────────────────────
-  SLIDE 05 · 기술 스택
-──────────────────────────────────────────── -->
-<div class="slide" id="s5">
-  <div class="chrome">
-    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
-    <div class="chrome-tag">기술 스택</div>
-  </div>
-
-  <div class="body row" style="padding-top:56px; gap:48px; align-items:flex-start;">
-    <!-- Left -->
-    <div style="flex:1; display:flex; flex-direction:column; gap:28px;">
-      <div>
-        <div class="mono-label" style="margin-bottom:16px;">Frontend</div>
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
-            <div class="body-text" style="font-weight:700;">React 18 + Vite</div>
-            <div class="mono-label">SPA Framework</div>
-          </div>
-          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
-            <div class="body-text" style="font-weight:700;">Tailwind CSS</div>
-            <div class="mono-label">CSS Var 테마 시스템</div>
-          </div>
-          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
-            <div class="body-text" style="font-weight:700;">Web Audio API</div>
-            <div class="mono-label">실시간 녹음</div>
-          </div>
-          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
-            <div class="body-text" style="font-weight:700;">React Flow</div>
-            <div class="mono-label">마인드맵 시각화</div>
-          </div>
-          <div class="card indigo" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
-            <div class="body-text" style="font-weight:700; color:var(--indigo-ink);">Vercel</div>
-            <div class="mono-label" style="color:var(--indigo-ink);">Deploy</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right -->
-    <div style="flex:1; display:flex; flex-direction:column; gap:28px;">
-      <div>
-        <div class="mono-label" style="margin-bottom:16px;">Backend · AI · Infra</div>
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
-            <div class="body-text" style="font-weight:700;">FastAPI + Python 3.11</div>
-            <div class="mono-label">REST API + WebSocket</div>
-          </div>
-          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
-            <div class="body-text" style="font-weight:700;">Deepgram nova-2</div>
-            <div class="mono-label">실시간 STT (한국어)</div>
-          </div>
-          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
-            <div class="body-text" style="font-weight:700;">Groq API</div>
-            <div class="mono-label">Llama · Qwen 무료 추론</div>
-          </div>
-          <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
-            <div class="body-text" style="font-weight:700;">Slack OAuth v2 + n8n</div>
-            <div class="mono-label">인증 · 자동화</div>
-          </div>
-          <div class="card" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
-            <div class="body-text" style="font-weight:700;">Railway (Docker)</div>
-            <div class="mono-label">Backend Deploy</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="chrome chrome-bottom">
-    <div class="chrome-num">05 / 10</div>
-    <div class="chrome-tag">Tech Stack</div>
-  </div>
-</div>
-
-<!-- ────────────────────────────────────────────
-  SLIDE 06 · 아키텍처
-──────────────────────────────────────────── -->
-<div class="slide" id="s6">
-  <div class="chrome">
-    <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
-    <div class="chrome-tag">시스템 아키텍처</div>
-  </div>
-
-  <div class="body center" style="flex-direction:column; gap:40px;">
-    <div style="display:flex; align-items:baseline; gap:24px;">
-      <div class="h2" style="font-size:64px;">시스템 아키텍처</div>
-      <div class="mono-label">End-to-End Pipeline</div>
-    </div>
-
-    <!-- Architecture diagram -->
-    <div style="width:100%; display:flex; flex-direction:column; gap:20px;">
-      <!-- Row 1: Browser → Vercel -->
-      <div style="display:flex; align-items:center; gap:20px;">
-        <div class="card" style="flex:1; padding:24px 32px; background:var(--paper-100);">
-          <div class="ix">Client</div>
-          <div style="display:flex; gap:16px; align-items:center; margin-top:8px;">
-            <div class="chip indigo">🎙 실시간 녹음</div>
-            <div class="chip">📁 파일 업로드</div>
-            <div class="chip">🌐 WebSocket</div>
-          </div>
-        </div>
-        <div style="font-size:32px; color:var(--ink-300); font-weight:300;">→</div>
-        <div class="card indigo" style="flex:1; padding:24px 32px;">
-          <div class="ix" style="color:var(--indigo-ink);">Vercel · Frontend</div>
-          <div class="body-text" style="font-weight:700; color:var(--indigo-ink); margin-top:8px;">React 18 + Vite SPA</div>
-          <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="clickable-url" style="font-size:16px; color:var(--indigo); margin-top:4px;">clerk-nine-mu.vercel.app</a>
-        </div>
-      </div>
-
-      <!-- Connector -->
-      <div style="display:flex; justify-content:center;">
-        <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
-          <div style="font-family:var(--font-mono); font-size:13px; color:var(--ink-300); letter-spacing:0.1em;">POST /api/upload · SSE /api/process · WS /api/ws/transcribe</div>
-          <div style="font-size:28px; color:var(--ink-300);">↓</div>
-        </div>
-      </div>
-
-      <!-- Row 2: Railway + APIs -->
-      <div style="display:flex; align-items:stretch; gap:20px;">
-        <div class="card" style="flex:2; padding:24px 32px;">
-          <div class="ix">Railway · Backend</div>
-          <div class="body-text" style="font-weight:700; margin-top:8px;">FastAPI + Python 3.11 (Docker)</div>
-          <a href="https://clerk-production-9869.up.railway.app/health" target="_blank" class="clickable-url" style="font-size:15px; color:var(--ink-500); margin-top:4px;">clerk-production-9869.up.railway.app</a>
-          <div style="display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;">
-            <div class="chip">JWT Auth</div>
-            <div class="chip">SQLite / PostgreSQL</div>
-            <div class="chip">SSE Stream</div>
-          </div>
-        </div>
-        <div style="font-size:28px; color:var(--ink-300); display:flex; align-items:center;">→</div>
-        <div style="flex:3; display:flex; gap:16px;">
-          <div class="card" style="flex:1; padding:20px 24px; border-color:var(--ink-200);">
-            <div class="ix">STT</div>
-            <div style="font-weight:800; font-size:22px; margin-top:6px;">Deepgram</div>
-            <div style="font-size:15px; color:var(--ink-500); margin-top:4px;">nova-2 · 한국어</div>
-          </div>
-          <div class="card" style="flex:2; padding:20px 24px; border-color:var(--ink-200);">
-            <div class="ix">LLM · 병렬 요약</div>
-            <div style="font-weight:800; font-size:22px; margin-top:6px;">Groq API</div>
-            <div style="font-size:14px; color:var(--ink-500); margin-top:6px; font-family:var(--font-mono); line-height:1.8;">
-              Llama 3.3 70B<br>Llama 4 Scout<br>Qwen3 32B
-            </div>
-          </div>
-          <div class="card" style="flex:1; padding:20px 24px; border-color:var(--ink-200);">
-            <div class="ix">Share</div>
-            <div style="font-weight:800; font-size:22px; margin-top:6px;">Slack</div>
-            <div style="font-size:15px; color:var(--ink-500); margin-top:4px;">n8n Webhook</div>
-          </div>
-        </div>
+        <h3>히스토리 · 테마</h3>
+        <p>오늘·어제·이번 주·이전 그룹화 히스토리. 밝음/어두움/기기 3가지 테마 CSS 변수 전환.</p>
+        <div class="chip" style="align-self:flex-start; margin-top:8px;">SQLite · Light·Dark</div>
       </div>
     </div>
   </div>
 
   <div class="chrome chrome-bottom">
     <div class="chrome-num">06 / 10</div>
-    <div class="chrome-tag">Architecture</div>
+    <div class="chrome-tag">Features</div>
   </div>
 </div>
 
 <!-- ────────────────────────────────────────────
-  SLIDE 07 · AI 모델 비교
+  SLIDE 07 · 기술 스택
 ──────────────────────────────────────────── -->
 <div class="slide" id="s7">
   <div class="chrome">
     <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
-    <div class="chrome-tag">AI 모델 비교</div>
+    <div class="chrome-tag">기술 스택</div>
   </div>
 
-  <div class="body" style="padding-top:48px; gap:32px;">
-    <div style="display:flex; align-items:baseline; gap:24px;">
-      <div class="h2" style="font-size:64px;">3개 AI 모델 비교</div>
-      <div class="mono-label">Parallel · Free Tier · Groq</div>
-    </div>
-
-    <div class="grid-3" style="flex:1;">
-      <!-- Model A -->
-      <div class="card" style="border-width:2px; gap:20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class="ix">Model A</div>
-          <div class="chip indigo">추천</div>
+  <div class="body row" style="padding-top:52px; gap:48px; align-items:flex-start;">
+    <!-- Left: AX Tools -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
+      <div class="mono-label" style="margin-bottom:4px;">AX 자동화 도구 — 핵심</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="card" style="flex-direction:row; justify-content:space-between; align-items:center; padding:18px 24px; border-width:2px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:36px; height:36px; background:var(--indigo); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:14px; font-weight:700; color:white;">n8n</div>
+            <div class="body-text" style="font-weight:700;">n8n Cloud</div>
+          </div>
+          <div class="mono-label">Slack 자동화 · 워크플로우 설계</div>
         </div>
-        <h3 style="font-size:28px;">Llama 3.3 70B</h3>
-        <div class="mono-label" style="color:var(--ink-500);">Meta · Groq</div>
-        <div class="divider" style="height:1px; background:var(--ink-200); margin:4px 0;"></div>
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline;">
-            <span class="mono-label">응답 속도</span>
-            <span class="mono-lg" style="font-size:32px;">1.8<span style="font-size:18px; color:var(--ink-500);">초</span></span>
+        <div class="card" style="flex-direction:row; justify-content:space-between; align-items:center; padding:18px 24px; border-color:var(--green);">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:36px; height:36px; background:var(--green); border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:13px; font-weight:700; color:white;">Dify</div>
+            <div class="body-text" style="font-weight:700;">Dify Cloud</div>
           </div>
-          <div style="display:flex; justify-content:space-between; align-items:baseline;">
-            <span class="mono-label">요약 품질</span>
-            <span class="mono-lg" style="font-size:32px; color:var(--green);">최상</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:baseline;">
-            <span class="mono-label">한국어 성능</span>
-            <span class="mono-lg" style="font-size:32px; color:var(--green);">우수</span>
-          </div>
+          <div class="mono-label">RAG 지식베이스 · API 연동</div>
         </div>
-        <p style="font-size:16px; color:var(--ink-500); margin-top:4px;">범용 고성능. 정확한 의사결정 추적 및 액션아이템 추출에 최적.</p>
+        <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:18px 24px;">
+          <div class="body-text" style="font-weight:700;">Claude Code (Anthropic)</div>
+          <div class="mono-label">AI 에이전트 개발 환경</div>
+        </div>
+        <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:18px 24px;">
+          <div class="body-text" style="font-weight:700;">Make (Integromat)</div>
+          <div class="mono-label">시나리오 자동화</div>
+        </div>
       </div>
 
-      <!-- Model B -->
-      <div class="card light" style="gap:20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class="ix">Model B</div>
-          <div class="chip">최신</div>
+      <div class="mono-label" style="margin-top:8px; margin-bottom:4px;">AI / STT</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="card indigo" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+          <div class="body-text" style="font-weight:700; color:var(--indigo-ink);">Deepgram nova-2</div>
+          <div class="mono-label" style="color:var(--indigo-ink);">실시간 STT (한국어)</div>
         </div>
-        <h3 style="font-size:28px;">Llama 4 Scout</h3>
-        <div class="mono-label">Meta · Groq</div>
-        <div class="divider" style="height:1px; background:var(--ink-200); margin:4px 0;"></div>
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline;">
-            <span class="mono-label">응답 속도</span>
-            <span class="mono-lg" style="font-size:32px;">1.2<span style="font-size:18px; color:var(--ink-500);">초</span></span>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:baseline;">
-            <span class="mono-label">멀티모달</span>
-            <span class="mono-lg" style="font-size:32px; color:var(--indigo);">지원</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:baseline;">
-            <span class="mono-label">컨텍스트</span>
-            <span class="mono-lg" style="font-size:32px;">10M</span>
-          </div>
+        <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+          <div class="body-text" style="font-weight:700;">Groq API</div>
+          <div class="mono-label">Llama · Qwen 무료 추론</div>
         </div>
-        <p style="font-size:16px; color:var(--ink-500); margin-top:4px;">Meta 최신 모델. 초고속 응답과 멀티모달 확장성 보유.</p>
-      </div>
-
-      <!-- Model C -->
-      <div class="card light" style="gap:20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class="ix">Model C</div>
-          <div class="chip">다국어</div>
-        </div>
-        <h3 style="font-size:28px;">Qwen3 32B</h3>
-        <div class="mono-label">Alibaba · Groq</div>
-        <div class="divider" style="height:1px; background:var(--ink-200); margin:4px 0;"></div>
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <div style="display:flex; justify-content:space-between; align-items:baseline;">
-            <span class="mono-label">응답 속도</span>
-            <span class="mono-lg" style="font-size:32px;">2.1<span style="font-size:18px; color:var(--ink-500);">초</span></span>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:baseline;">
-            <span class="mono-label">다국어</span>
-            <span class="mono-lg" style="font-size:32px; color:var(--amber);">한·중·영</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:baseline;">
-            <span class="mono-label">특화</span>
-            <span class="mono-lg" style="font-size:32px;">글로벌</span>
-          </div>
-        </div>
-        <p style="font-size:16px; color:var(--ink-500); margin-top:4px;">한·중·영 다국어 최적화. 해외 진출 시나리오에 적합.</p>
       </div>
     </div>
 
-    <div class="card" style="border:none; background:var(--paper-100); flex-direction:row; align-items:center; gap:16px; padding:16px 24px;">
-      <div class="mono-label" style="flex-shrink:0;">★ 핵심 인사이트</div>
-      <p class="body-text">모든 모델 <strong>무료(Free Tier)</strong> 사용. 3개를 동시 실행하여 결과를 나란히 비교 — 데이터 기반으로 최적 모델을 선택할 수 있습니다.</p>
+    <!-- Right: Dev Stack -->
+    <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
+      <div class="mono-label" style="margin-bottom:4px;">Frontend</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+          <div class="body-text" style="font-weight:700;">React 18 + Vite</div>
+          <div class="mono-label">SPA Framework</div>
+        </div>
+        <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+          <div class="body-text" style="font-weight:700;">Tailwind CSS</div>
+          <div class="mono-label">CSS Var 테마 시스템</div>
+        </div>
+        <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+          <div class="body-text" style="font-weight:700;">Web Audio API + React Flow</div>
+          <div class="mono-label">실시간 녹음 · 마인드맵</div>
+        </div>
+        <div class="card indigo" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+          <div class="body-text" style="font-weight:700; color:var(--indigo-ink);">Vercel</div>
+          <div class="mono-label" style="color:var(--indigo-ink);">CDN 자동 배포</div>
+        </div>
+      </div>
+
+      <div class="mono-label" style="margin-top:8px; margin-bottom:4px;">Backend · Infra</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+          <div class="body-text" style="font-weight:700;">FastAPI + Python 3.11</div>
+          <div class="mono-label">REST API + WebSocket</div>
+        </div>
+        <div class="card light" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+          <div class="body-text" style="font-weight:700;">Slack OAuth v2</div>
+          <div class="mono-label">인증 · 워크스페이스 연동</div>
+        </div>
+        <div class="card" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+          <div class="body-text" style="font-weight:700;">Railway (Docker)</div>
+          <div class="mono-label">Backend Deploy</div>
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="chrome chrome-bottom">
     <div class="chrome-num">07 / 10</div>
-    <div class="chrome-tag">AI Models</div>
+    <div class="chrome-tag">Tech Stack</div>
   </div>
 </div>
 
 <!-- ────────────────────────────────────────────
-  SLIDE 08 · 배포 현황
+  SLIDE 08 · 아키텍처
 ──────────────────────────────────────────── -->
 <div class="slide" id="s8">
   <div class="chrome">
     <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
-    <div class="chrome-tag">배포 현황</div>
+    <div class="chrome-tag">시스템 아키텍처</div>
   </div>
 
-  <div class="body row" style="padding-top:56px; align-items:flex-start; gap:48px;">
-    <!-- Left -->
-    <div style="flex:1; display:flex; flex-direction:column; gap:32px;">
-      <div>
-        <div class="h2" style="font-size:64px;">라이브 서비스</div>
-        <div class="accent-line" style="margin-top:20px;"></div>
-      </div>
-      <div style="display:flex; flex-direction:column; gap:16px;">
-        <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="card-link">
-          <div class="card indigo" style="padding:24px 32px; gap:10px;">
-            <div class="ix" style="color:var(--indigo-ink);">Frontend · Vercel ↗</div>
-            <div class="url-text" style="font-family:var(--font-mono); font-size:20px; font-weight:600; color:var(--indigo-ink);">clerk-nine-mu.vercel.app</div>
-            <p style="font-size:16px; color:var(--indigo);">React SPA · 전 세계 CDN · 자동 배포</p>
-          </div>
-        </a>
-        <a href="https://clerk-production-9869.up.railway.app/health" target="_blank" class="card-link">
-          <div class="card" style="padding:24px 32px; gap:10px;">
-            <div class="ix">Backend · Railway ↗</div>
-            <div class="url-text" style="font-family:var(--font-mono); font-size:18px; font-weight:600; color:var(--ink-900);">clerk-production-9869.up.railway.app</div>
-            <p style="font-size:16px; color:var(--ink-500);">FastAPI · Docker · Python 3.11</p>
-          </div>
-        </a>
-      </div>
+  <div class="body center" style="flex-direction:column; gap:36px;">
+    <div style="display:flex; align-items:baseline; gap:24px;">
+      <div class="h2" style="font-size:64px;">시스템 아키텍처</div>
+      <div class="mono-label">End-to-End Pipeline</div>
     </div>
 
-    <!-- Right: deployment details -->
-    <div style="flex:1; display:flex; flex-direction:column; gap:20px;">
-      <div class="mono-label" style="margin-bottom:4px;">배포 파이프라인</div>
-      <div style="display:flex; flex-direction:column; gap:12px;">
-        <div class="card light" style="flex-direction:row; gap:16px; align-items:center; padding:16px 24px;">
-          <div style="width:40px; height:40px; background:var(--ink-900); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <span style="color:white; font-size:18px; font-weight:800;">G</span>
+    <div style="width:100%; display:flex; flex-direction:column; gap:18px;">
+      <!-- Row 1 -->
+      <div style="display:flex; align-items:center; gap:18px;">
+        <div class="card" style="flex:1; padding:22px 28px; background:var(--paper-100); border-color:var(--ink-200);">
+          <div class="ix">Client</div>
+          <div style="display:flex; gap:14px; align-items:center; margin-top:8px;">
+            <div class="chip indigo">🎙 실시간 녹음</div>
+            <div class="chip">📁 파일 업로드</div>
+            <div class="chip">🌐 WebSocket</div>
           </div>
-          <div><div style="font-weight:700; font-size:18px;">GitHub Push</div><div style="font-size:14px; color:var(--ink-500);">main 브랜치 푸시로 자동 트리거</div></div>
         </div>
-        <div style="display:flex; justify-content:center; font-size:20px; color:var(--ink-300);">↓</div>
-        <div class="card light" style="flex-direction:row; gap:16px; align-items:center; padding:16px 24px;">
-          <div style="width:40px; height:40px; background:#0B0D0E; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <span style="color:white; font-size:14px; font-weight:800;">R</span>
-          </div>
-          <div><div style="font-weight:700; font-size:18px;">Railway Docker Build</div><div style="font-size:14px; color:var(--ink-500);">python:3.11-slim · requirements.txt 설치</div></div>
+        <div style="font-size:28px; color:var(--ink-300);">→</div>
+        <div class="card indigo" style="flex:1; padding:22px 28px;">
+          <div class="ix" style="color:var(--indigo-ink);">Vercel · Frontend</div>
+          <div class="body-text" style="font-weight:700; color:var(--indigo-ink); margin-top:6px;">React 18 + Vite SPA</div>
+          <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="clickable-url" style="font-size:15px; color:var(--indigo); margin-top:2px;">clerk-nine-mu.vercel.app</a>
         </div>
-        <div style="display:flex; justify-content:center; font-size:20px; color:var(--ink-300);">↓ &nbsp; ↓</div>
-        <div class="card light" style="flex-direction:row; gap:16px; align-items:center; padding:16px 24px;">
-          <div style="width:40px; height:40px; background:#000; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <span style="color:white; font-size:14px; font-weight:800;">V</span>
+      </div>
+
+      <!-- Connector -->
+      <div style="display:flex; justify-content:center;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
+          <div style="font-family:var(--font-mono); font-size:13px; color:var(--ink-300); letter-spacing:0.1em;">POST /api/upload · SSE /api/process · WS /api/ws/transcribe</div>
+          <div style="font-size:24px; color:var(--ink-300);">↓</div>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div style="display:flex; align-items:stretch; gap:18px;">
+        <div class="card" style="flex:2; padding:22px 28px;">
+          <div class="ix">Railway · Backend</div>
+          <div class="body-text" style="font-weight:700; margin-top:6px;">FastAPI + Python 3.11 (Docker)</div>
+          <a href="https://clerk-production-9869.up.railway.app/health" target="_blank" class="clickable-url" style="font-size:14px; color:var(--ink-500); margin-top:3px;">clerk-production-9869.up.railway.app</a>
+          <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+            <div class="chip">JWT Auth</div>
+            <div class="chip">SQLite</div>
+            <div class="chip">SSE Stream</div>
           </div>
-          <div><div style="font-weight:700; font-size:18px;">Vercel Auto Deploy</div><div style="font-size:14px; color:var(--ink-500);">npm run build · VITE_API_BASE 환경변수 주입</div></div>
+        </div>
+        <div style="font-size:24px; color:var(--ink-300); display:flex; align-items:center;">→</div>
+        <div style="flex:3; display:grid; grid-template-columns:1fr 2fr 1fr 1fr; gap:14px;">
+          <div class="card" style="padding:18px 20px; border-color:var(--ink-200);">
+            <div class="ix">STT</div>
+            <div style="font-weight:800; font-size:20px; margin-top:4px;">Deepgram</div>
+            <div style="font-size:14px; color:var(--ink-500); margin-top:2px;">nova-2 · 한국어</div>
+          </div>
+          <div class="card" style="padding:18px 20px; border-color:var(--ink-200);">
+            <div class="ix">LLM · 병렬</div>
+            <div style="font-weight:800; font-size:20px; margin-top:4px;">Groq API</div>
+            <div style="font-size:13px; color:var(--ink-500); margin-top:4px; font-family:var(--font-mono); line-height:1.7;">Llama 3.3 70B<br>Llama 4 Scout<br>Qwen3 32B</div>
+          </div>
+          <div class="card" style="padding:18px 20px; border-color:var(--ink-200);">
+            <div class="ix">Share</div>
+            <div style="font-weight:800; font-size:20px; margin-top:4px;">n8n</div>
+            <div style="font-size:14px; color:var(--ink-500); margin-top:2px;">→ Slack</div>
+          </div>
+          <div class="card green" style="padding:18px 20px;">
+            <div class="ix" style="color:var(--green);">RAG</div>
+            <div style="font-weight:800; font-size:20px; margin-top:4px; color:var(--green);">Dify</div>
+            <div style="font-size:14px; color:var(--green); margin-top:2px;">지식베이스</div>
+          </div>
         </div>
       </div>
     </div>
@@ -892,70 +998,85 @@ a.ext { text-decoration: none; color: inherit; }
 
   <div class="chrome chrome-bottom">
     <div class="chrome-num">08 / 10</div>
-    <div class="chrome-tag">Deployment</div>
+    <div class="chrome-tag">Architecture</div>
   </div>
 </div>
 
 <!-- ────────────────────────────────────────────
-  SLIDE 09 · 확장 로드맵
+  SLIDE 09 · Channel.io 적용 시나리오
 ──────────────────────────────────────────── -->
 <div class="slide" id="s9">
   <div class="chrome">
     <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
-    <div class="chrome-tag">확장 로드맵</div>
+    <div class="chrome-tag">Channel.io 적용</div>
   </div>
 
   <div class="body" style="padding-top:48px; gap:28px;">
-    <div style="display:flex; align-items:baseline; gap:24px;">
-      <div class="h2" style="font-size:64px;">확장 로드맵</div>
-      <div class="mono-label">Global Expansion · Enterprise</div>
+    <div style="display:flex; align-items:baseline; gap:24px; margin-bottom:4px;">
+      <div class="h2" style="font-size:60px;">이 역량을<br>Channel.io에서</div>
+      <div style="flex:1; display:flex; flex-direction:column; gap:8px; align-self:flex-end; padding-bottom:8px;">
+        <p class="body-text" style="font-size:17px; color:var(--ink-500); line-height:1.6;">
+          Clerk_AI에서 쌓은 패턴 — 현장 관찰 → 비효율 정의 → n8n 설계 → Dify 적재 — 을<br>
+          <strong style="color:var(--ink-900);">Channel.io 고객사 CS 자동화</strong>에 그대로 적용합니다.
+        </p>
+      </div>
     </div>
 
-    <div class="grid-3" style="flex:1; align-items:start;">
-      <!-- Phase 1 -->
-      <div class="card" style="border-width:2px; border-color:var(--indigo); gap:20px; height:100%;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class="ix" style="color:var(--indigo);">Phase 1 · 現在</div>
-          <div class="chip indigo" style="font-size:11px;">완료</div>
+    <!-- Comparison: Clerkai → Channel.io -->
+    <div style="display:grid; grid-template-columns:1fr 80px 1fr; gap:0; flex:1; align-items:start;">
+      <!-- Left: Clerkai pattern -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="mono-label" style="color:var(--indigo);">Clerk_AI에서 한 것</div>
+        <div class="card indigo" style="gap:10px; padding:20px 24px;">
+          <div class="ix" style="color:var(--indigo-ink);">Trigger</div>
+          <div style="font-weight:700; font-size:17px; color:var(--indigo-ink);">회의 종료 → 사용자 "Slack 전송" 클릭</div>
         </div>
-        <h3 style="font-size:28px;">서비스 론칭</h3>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--green); font-size:16px; flex-shrink:0; margin-top:2px;">✅</span><span style="font-size:16px; color:var(--ink-700);">실시간 STT + AI 3모델 비교</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--green); font-size:16px; flex-shrink:0; margin-top:2px;">✅</span><span style="font-size:16px; color:var(--ink-700);">Slack OAuth + 공유</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--green); font-size:16px; flex-shrink:0; margin-top:2px;">✅</span><span style="font-size:16px; color:var(--ink-700);">히스토리 · 다운로드</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--green); font-size:16px; flex-shrink:0; margin-top:2px;">✅</span><span style="font-size:16px; color:var(--ink-700);">Railway + Vercel 배포</span></div>
+        <div class="card light" style="gap:10px; padding:20px 24px;">
+          <div class="ix">Process</div>
+          <div style="font-weight:700; font-size:17px;">FastAPI → n8n Webhook POST</div>
+          <div style="font-size:14px; color:var(--ink-500);">payload: summary / key_decisions / action_items</div>
         </div>
-      </div>
-
-      <!-- Phase 2 -->
-      <div class="card light" style="gap:20px; height:100%;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class="ix">Phase 2 · 글로벌</div>
-          <div class="chip">예정</div>
+        <div class="card light" style="gap:10px; padding:20px 24px;">
+          <div class="ix">Output ①</div>
+          <div style="font-weight:700; font-size:17px;">n8n → Slack Block Kit 메시지</div>
+          <div style="font-size:14px; color:var(--ink-500);">팀 채널로 회의록 자동 전송</div>
         </div>
-        <h3 style="font-size:28px;">다국어 확장</h3>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">UI 다국어화 (한·영 i18n)</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">STT 다국어 (영·일·중)</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">회의 언어 자동 감지 + 번역</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">Notion · Confluence 연동</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--indigo); font-size:16px; flex-shrink:0; margin-top:2px;">→</span><span style="font-size:16px; color:var(--ink-700);">Jira 액션아이템 자동 생성</span></div>
+        <div class="card green" style="gap:10px; padding:20px 24px;">
+          <div class="ix" style="color:var(--green);">Output ②</div>
+          <div style="font-weight:700; font-size:17px; color:var(--green);">Dify 지식베이스 자동 적재</div>
+          <div style="font-size:14px; color:var(--green);">누적 회의록 → RAG 검색 가능</div>
         </div>
       </div>
 
-      <!-- Phase 3 -->
-      <div class="card light" style="gap:20px; height:100%;">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div class="ix">Phase 3 · 엔터프라이즈</div>
-          <div class="chip">로드맵</div>
+      <!-- Arrow -->
+      <div style="display:flex; align-items:center; justify-content:center; height:100%;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+          <div style="font-size:32px; color:var(--indigo);">→</div>
+          <div style="font-family:var(--font-mono); font-size:11px; color:var(--indigo); letter-spacing:0.1em; writing-mode:vertical-rl; text-orientation:mixed; transform:rotate(180deg);">SAME PATTERN</div>
         </div>
-        <h3 style="font-size:28px;">기업 도입</h3>
-        <div style="display:flex; flex-direction:column; gap:10px;">
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">SSO (Google · Azure AD)</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">팀 관리자 대시보드</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">온프레미스 배포 옵션</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">GDPR 컴플라이언스</span></div>
-          <div style="display:flex; gap:10px; align-items:flex-start;"><span style="color:var(--amber); font-size:16px; flex-shrink:0; margin-top:2px;">◆</span><span style="font-size:16px; color:var(--ink-700);">도메인 파인튜닝 AI</span></div>
+      </div>
+
+      <!-- Right: Channel.io scenario -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="mono-label" style="color:var(--amber);">Channel.io에서 할 것</div>
+        <div class="card amber" style="gap:10px; padding:20px 24px;">
+          <div class="ix" style="color:#92400e;">Trigger</div>
+          <div style="font-weight:700; font-size:17px; color:#92400e;">상담 종료 → Channel.io Webhook 이벤트</div>
+        </div>
+        <div class="card light" style="gap:10px; padding:20px 24px;">
+          <div class="ix">Process</div>
+          <div style="font-weight:700; font-size:17px;">n8n: 상담 내용 → 정형화 + 분류</div>
+          <div style="font-size:14px; color:var(--ink-500);">카테고리 / 감정 / 해결 여부 태깅</div>
+        </div>
+        <div class="card light" style="gap:10px; padding:20px 24px;">
+          <div class="ix">Output ①</div>
+          <div style="font-weight:700; font-size:17px;">담당자 Slack DM — 요약 + 재연락 필요</div>
+          <div style="font-size:14px; color:var(--ink-500);">미해결 건 자동 에스컬레이션</div>
+        </div>
+        <div class="card" style="background:var(--green-bg); border-color:var(--green); gap:10px; padding:20px 24px;">
+          <div class="ix" style="color:var(--green);">Output ②</div>
+          <div style="font-weight:700; font-size:17px; color:var(--green);">Dify → 고객사 FAQ 지식베이스 갱신</div>
+          <div style="font-size:14px; color:var(--green);">"고객사 FAQ·상담·정책 → AI가 이해할 수 있는 지식으로 변환" — 공고 원문</div>
         </div>
       </div>
     </div>
@@ -963,7 +1084,7 @@ a.ext { text-decoration: none; color: inherit; }
 
   <div class="chrome chrome-bottom">
     <div class="chrome-num">09 / 10</div>
-    <div class="chrome-tag">Roadmap</div>
+    <div class="chrome-tag">Channel.io Application</div>
   </div>
 </div>
 
@@ -973,60 +1094,66 @@ a.ext { text-decoration: none; color: inherit; }
 <div class="slide" id="s10">
   <div class="chrome" style="border:none; position:absolute; top:0; left:0; right:0; z-index:10; background:transparent;">
     <div class="chrome-brand" style="color:white;"><div class="dot"></div>CLERKAI</div>
-    <div class="chrome-tag" style="color:rgba(255,255,255,0.4);">AX PM · 신우철</div>
+    <div class="chrome-tag" style="color:rgba(255,255,255,0.4);">Channel.io AX Consultant 지원 · 신우철</div>
   </div>
 
-  <!-- Full layout: left dark / right paper -->
   <div style="display:flex; height:100%;">
-    <!-- Left dark panel -->
+    <!-- Left dark -->
     <div style="flex:1; background:var(--ink-900); padding:120px 80px 80px; display:flex; flex-direction:column; justify-content:space-between;">
       <div style="display:flex; flex-direction:column; gap:36px;">
-        <div class="mono-label" style="color:rgba(255,255,255,0.35);">Clerkai · AI 회의록 자동화</div>
-        <div style="font-family:var(--font-sans); font-weight:900; font-size:80px; line-height:1.0; color:white; letter-spacing:-0.04em;">
-          회의가 끝나면<br><span style="color:var(--indigo);">회의록</span>도<br>끝납니다
+        <div class="mono-label" style="color:rgba(255,255,255,0.35);">Clerkai · AI 회의록 자동화 · 신우철</div>
+        <div style="font-family:var(--font-sans); font-weight:900; font-size:76px; line-height:1.0; color:white; letter-spacing:-0.04em;">
+          처음부터 끝까지<br><span style="color:var(--indigo);">능동적으로</span><br>빠르게 성장하겠습니다
         </div>
         <div style="width:80px; height:6px; background:var(--indigo); border-radius:3px;"></div>
-        <p style="font-size:22px; color:rgba(255,255,255,0.55); line-height:1.6; max-width:480px;">
-          음성 하나로 STT · AI 요약 · Slack 공유까지.<br>회의록 작성에 쓰던 30분을 돌려드립니다.
+        <p style="font-size:20px; color:rgba(255,255,255,0.55); line-height:1.7; max-width:500px;">
+          아이디어가 생기면 다음 날 프로토타입.<br>
+          Dify를 공고 보고 그날 바로 Clerk_AI에 적용했습니다.<br>
+          <strong style="color:rgba(255,255,255,0.85);">모르는 걸 만나면 일단 해보고 배우는 편입니다.</strong>
         </p>
       </div>
-      <div class="mono-label" style="color:rgba(255,255,255,0.2);">개발자 · 신우철 / AX PM</div>
+      <div class="mono-label" style="color:rgba(255,255,255,0.2);">신우철 · chul3224@naver.com · github.com/chul3224</div>
     </div>
 
-    <!-- Right paper panel -->
+    <!-- Right paper -->
     <div style="width:580px; flex-shrink:0; background:var(--paper-100); padding:120px 60px 80px; display:flex; flex-direction:column; justify-content:space-between; border-left:1px solid var(--ink-200);">
-      <div style="display:flex; flex-direction:column; gap:32px;">
+      <div style="display:flex; flex-direction:column; gap:28px;">
         <div style="width:64px; height:64px; background:var(--indigo); border-radius:14px; display:flex; align-items:center; justify-content:center;">
           <span style="font-family:var(--font-sans); font-weight:900; font-size:28px; color:white;">C</span>
         </div>
-        <div class="h2" style="font-size:60px; line-height:1.05;">Clerkai</div>
-        <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="h2" style="font-size:56px; line-height:1.05;">Clerk_AI</div>
+        <div style="display:flex; flex-direction:column; gap:12px;">
           <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="card-link">
-            <div class="card indigo" style="padding:18px 24px; gap:6px;">
+            <div class="card indigo" style="padding:16px 22px; gap:5px;">
               <div class="ix" style="color:var(--indigo-ink);">Live Service ↗</div>
-              <div class="url-text" style="font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--indigo-ink);">clerk-nine-mu.vercel.app</div>
+              <div class="url-text" style="font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--indigo-ink);">clerk-nine-mu.vercel.app</div>
             </div>
           </a>
           <a href="https://github.com/chul3224/clerk" target="_blank" class="card-link">
-            <div class="card light" style="padding:18px 24px; gap:6px;">
+            <div class="card light" style="padding:16px 22px; gap:5px;">
               <div class="ix">GitHub ↗</div>
-              <div class="url-text" style="font-family:var(--font-mono); font-size:15px; font-weight:600; color:var(--ink-700);">github.com/chul3224/clerk</div>
+              <div class="url-text" style="font-family:var(--font-mono); font-size:14px; font-weight:600; color:var(--ink-700);">github.com/chul3224/clerk</div>
             </div>
           </a>
         </div>
       </div>
 
       <div style="display:flex; flex-direction:column; gap:12px;">
-        <div class="divider" style="height:1px; background:var(--ink-200);"></div>
+        <div style="height:1px; background:var(--ink-200);"></div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
           <div>
-            <div class="mono-label" style="margin-bottom:6px;">Tech</div>
-            <div style="font-size:14px; color:var(--ink-500); line-height:1.8;">FastAPI · React<br>Groq · Deepgram<br>Railway · Vercel</div>
+            <div class="mono-label" style="margin-bottom:6px;">AX Tools</div>
+            <div style="font-size:14px; color:var(--ink-500); line-height:1.8;">n8n · Dify<br>Make · Claude Code<br>Zapier</div>
           </div>
           <div>
-            <div class="mono-label" style="margin-bottom:6px;">Period</div>
-            <div style="font-size:14px; color:var(--ink-500); line-height:1.8;">2026년 6월<br>개인 프로젝트<br>AX PM 포트폴리오</div>
+            <div class="mono-label" style="margin-bottom:6px;">Dev Stack</div>
+            <div style="font-size:14px; color:var(--ink-500); line-height:1.8;">FastAPI · React<br>Groq · Deepgram<br>Railway · Vercel</div>
           </div>
+        </div>
+        <div style="height:1px; background:var(--ink-200);"></div>
+        <div>
+          <div class="mono-label" style="margin-bottom:6px;">Contact</div>
+          <div style="font-size:14px; color:var(--ink-500); line-height:1.8;">010-7274-3224<br>chul3224@naver.com<br>서울 동작구 상도동</div>
         </div>
       </div>
     </div>

@@ -34,3 +34,6 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# 개인 자료 (공개 금지)
+papers/gitignore/
