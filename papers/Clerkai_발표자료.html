@@ -203,7 +203,7 @@ html, body {
         <div class="chip indigo">AI Meeting Assistant</div>
         <div class="h1" style="font-size:110px; line-height:0.95;">AI가<br>회의록을<br>정리합니다</div>
         <div class="accent-line"></div>
-        <p class="lead" style="max-width:600px;">음성 하나로 실시간 STT · 3개 AI 모델 비교 요약 · n8n 자동화 Slack 공유 · Dify 지식베이스 적재까지</p>
+        <p class="lead" style="max-width:600px;">음성 하나로 실시간 STT · 3개 AI 모델 비교 요약 · n8n 워크플로우로 Slack 자동 공유까지</p>
       </div>
       <div style="display:flex; gap:20px; align-items:center;">
         <a href="https://clerk-nine-mu.vercel.app" target="_blank" class="tag link">clerk-nine-mu.vercel.app</a>
@@ -232,7 +232,7 @@ html, body {
           <div class="stat-label">회의록 작성 절감</div>
         </div>
       </div>
-      <div class="mono-label" style="color:rgba(255,255,255,0.25);">Vercel · Railway · Groq · Deepgram · n8n · Dify</div>
+      <div class="mono-label" style="color:rgba(255,255,255,0.25);">Vercel · Railway · Groq · Deepgram · n8n</div>
     </div>
   </div>
 
@@ -329,11 +329,11 @@ html, body {
         <h4 style="color:white;">💬 n8n → Slack</h4>
         <p style="color:rgba(255,255,255,0.5);">워크플로우 자동화<br>팀 채널 전송</p>
       </div>
-      <div class="flow-arrow" style="color:var(--green);">→</div>
-      <div class="flow-step" style="background:var(--green-bg); border-color:var(--green);">
-        <div class="step-ix" style="color:var(--green);">Output ②</div>
-        <h4 style="color:var(--green);">🧠 Dify RAG</h4>
-        <p style="color:var(--green);">지식베이스 자동 적재<br>AI 검색 가능</p>
+      <div class="flow-arrow" style="color:var(--ink-300); opacity:0.5;">→</div>
+      <div class="flow-step" style="border-style:dashed; border-color:var(--ink-300); background:var(--paper-100); opacity:0.7;">
+        <div class="step-ix" style="color:var(--amber);">확장 예정</div>
+        <h4 style="color:var(--ink-500);">🧠 Dify RAG</h4>
+        <p>회의록 지식베이스 적재<br>과거 결정사항 AI 검색</p>
       </div>
     </div>
   </div>
@@ -391,8 +391,8 @@ html, body {
 
       <div class="card light" style="flex-direction:row; align-items:center; gap:16px; padding:18px 24px;">
         <span style="font-size:22px; flex-shrink:0;">🧠</span>
-        <div style="flex:1;"><div style="font-weight:700; font-size:17px;">Dify 지식베이스</div><div style="font-size:14px; color:var(--ink-500);">회의록 자동 적재 → RAG 검색 가능 (구현 완료)</div></div>
-        <div class="chip green" style="flex-shrink:0; font-size:11px;">구현 완료</div>
+        <div style="flex:1;"><div style="font-weight:700; font-size:17px;">Dify 지식베이스</div><div style="font-size:14px; color:var(--ink-500);">n8n → Dify로 회의록 push → RAG 검색 (Dify 계정 연결 시 활성화)</div></div>
+        <div class="chip amber" style="flex-shrink:0; font-size:11px;">확장 예정</div>
       </div>
 
       <div class="card light" style="flex-direction:row; align-items:center; gap:16px; padding:18px 24px;">
@@ -428,96 +428,93 @@ html, body {
 </div>
 
 <!-- ────────────────────────────────────────────
-  SLIDE 05 · Dify RAG 연동
+  SLIDE 05 · Dify RAG 확장 방향
 ──────────────────────────────────────────── -->
 <div class="slide" id="s5">
   <div class="chrome">
     <div class="chrome-brand"><div class="dot"></div>CLERKAI</div>
-    <div class="chrome-tag">Dify RAG 연동</div>
+    <div class="chrome-tag">확장 방향 · Dify RAG</div>
   </div>
 
   <div class="body row" style="padding-top:52px; gap:56px; align-items:flex-start;">
     <div style="flex:1; display:flex; flex-direction:column; gap:24px;">
       <div>
-        <div class="mono-label" style="margin-bottom:12px;">Dify Knowledge Base</div>
+        <div class="mono-label" style="margin-bottom:12px;">Next Step · Dify 연동 시</div>
         <div class="h2" style="font-size:60px;">회의록이<br>검색 가능한<br>지식이 됩니다</div>
         <div class="accent-line" style="margin-top:20px;"></div>
       </div>
       <p class="body-text" style="font-size:18px; line-height:1.7; color:var(--ink-500);">
-        처리된 회의록을 Dify 지식베이스에 <strong style="color:var(--ink-900);">자동 적재</strong>합니다.<br>
-        누적된 회의 데이터로 과거 결정사항을 <strong style="color:var(--green);">AI가 즉시 검색</strong>합니다.
+        n8n이 Dify로 회의록을 push하면 <strong style="color:var(--ink-900);">지식베이스가 자동으로 쌓입니다.</strong><br>
+        과거 결정사항을 <strong style="color:var(--ink-900);">AI가 문서 기준으로 답변</strong>할 수 있는 구조입니다.
       </p>
 
-      <!-- Flow -->
+      <!-- Concept flow -->
       <div style="display:flex; flex-direction:column; gap:10px;">
         <div style="display:flex; align-items:center; gap:14px;">
-          <div class="card" style="flex:1; padding:14px 20px; flex-direction:row; align-items:center; gap:10px; border-color:var(--ink-200);">
-            <span style="font-size:18px;">✨</span>
-            <div><div style="font-weight:700; font-size:15px;">AI 요약 완료</div><div style="font-size:13px; color:var(--ink-500);">요약 · 결정사항 · 액션아이템</div></div>
+          <div class="card" style="flex:1; padding:14px 20px; flex-direction:row; align-items:center; gap:10px; border-color:var(--indigo);">
+            <span style="font-size:18px;">💬</span>
+            <div><div style="font-weight:700; font-size:15px;">n8n Webhook</div><div style="font-size:13px; color:var(--ink-500);">회의록 payload 수신</div></div>
           </div>
           <span style="font-size:20px; color:var(--ink-300);">→</span>
-          <div class="card green" style="flex:1; padding:14px 20px; flex-direction:row; align-items:center; gap:10px;">
+          <div class="card" style="flex:1; padding:14px 20px; flex-direction:row; align-items:center; gap:10px; border-style:dashed; border-color:var(--amber);">
             <span style="font-size:18px;">🧠</span>
-            <div><div style="font-weight:700; font-size:15px; color:var(--green);">Dify 자동 적재</div><div style="font-size:13px; color:var(--green);">high_quality 인덱싱</div></div>
+            <div><div style="font-weight:700; font-size:15px; color:var(--amber);">Dify 지식베이스</div><div style="font-size:13px; color:var(--ink-500);">문서 인덱싱 · 벡터 저장</div></div>
           </div>
         </div>
         <div style="display:flex; justify-content:center; font-size:20px; color:var(--ink-300);">↓</div>
         <div class="card" style="padding:16px 20px; flex-direction:row; align-items:center; gap:12px; background:var(--paper-100); border-color:var(--ink-200);">
           <span style="font-size:18px;">🔍</span>
           <div>
-            <div style="font-weight:700; font-size:14px;">"6월 1일 회의에서 배포 일정이 어떻게 결정됐지?"</div>
-            <div style="font-size:13px; color:var(--green); margin-top:3px;">→ Dify: "6월 30일 배포 확정 (출처: 2026-06-01 회의록)"</div>
+            <div style="font-weight:700; font-size:14px;">"지난달 배포 일정이 어떻게 결정됐지?"</div>
+            <div style="font-size:13px; color:var(--amber); margin-top:3px;">→ Dify: 회의록 문서 기준으로 답변 + 출처 회의록 명시</div>
           </div>
         </div>
       </div>
     </div>
 
     <div style="flex:1; display:flex; flex-direction:column; gap:14px;">
-      <div class="mono-label" style="margin-bottom:4px;">구현 상세</div>
+      <div class="mono-label" style="margin-bottom:4px;">Dify vs n8n — 역할 구분</div>
 
-      <div class="card light" style="gap:14px;">
-        <div class="ix">자동 적재 — process.py</div>
-        <div style="background:#0B0B0E; border-radius:8px; padding:14px 18px; font-family:var(--font-mono); font-size:12px; color:rgba(255,255,255,0.8); line-height:1.9;">
-          <span style="color:#4a5070;"># 회의 처리 완료 직후 자동 실행</span><br>
-          await push_to_dify(<br>
-          &nbsp;&nbsp;summary=<span style="color:#fbbf24;">record.summary</span>,<br>
-          &nbsp;&nbsp;action_items=<span style="color:#fbbf24;">json.loads(record.action_items)</span>,<br>
-          &nbsp;&nbsp;key_decisions=<span style="color:#fbbf24;">json.loads(record.key_decisions)</span><br>
-          )<br>
-          <span style="color:#4a5070;"># 환경변수 미설정 시 silent skip</span>
-        </div>
+      <div class="card" style="border-color:var(--indigo); background:var(--indigo-bg); gap:12px; padding:20px 24px;">
+        <div class="ix" style="color:var(--indigo-ink);">n8n 역할</div>
+        <h4 style="font-size:20px; color:var(--indigo-ink);">데이터 전달 파이프</h4>
+        <p style="font-size:15px; color:var(--indigo);">회의록 처리 완료 시 Dify API로 문서를 push.<br>n8n 자체는 RAG를 수행하지 않고 <strong>데이터를 전달하는 역할.</strong></p>
+      </div>
+
+      <div class="card" style="border-style:dashed; border-color:var(--amber); background:var(--amber-bg); gap:12px; padding:20px 24px;">
+        <div class="ix" style="color:var(--amber);">Dify 역할 (적용 예정)</div>
+        <h4 style="font-size:20px;">문서 기반 AI 답변 (RAG)</h4>
+        <p style="font-size:15px; color:var(--ink-700);">벡터 인덱싱 → 유사도 검색 → LLM이 문서 기준으로 답변.<br><strong>"저번 달 결정사항이 뭐였지?"</strong>에 출처 포함 답변 가능.</p>
       </div>
 
       <div class="card light" style="gap:12px; padding:20px 24px;">
-        <div class="ix">수동 전송 UI</div>
-        <h4 style="font-size:20px;">사이드바 개별 전송</h4>
-        <p style="font-size:15px;">히스토리 hover → cloud 아이콘 클릭 → 해당 회의록만 선택 전송</p>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <div class="chip" style="font-size:11px; padding:4px 10px;">pushing → spinner</div>
-          <div class="chip green" style="font-size:11px; padding:4px 10px;">done → ✓</div>
-          <div class="chip" style="font-size:11px; padding:4px 10px; border-color:#f87171; color:#b91c1c;">error → ✕</div>
+        <div class="ix">실무 적용 시 가능한 것</div>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:15px; color:var(--ink-700);">
+            <span style="color:var(--amber); flex-shrink:0;">→</span>과거 회의 결정사항 AI 검색 (출처 명시)
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:15px; color:var(--ink-700);">
+            <span style="color:var(--amber); flex-shrink:0;">→</span>팀 내 지식베이스로 온보딩 신입 질문 자동 답변
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:15px; color:var(--ink-700);">
+            <span style="color:var(--amber); flex-shrink:0;">→</span>CS 고객사 FAQ·정책 문서 → AI 상담 보조 답변
+          </div>
+          <div style="display:flex; gap:10px; align-items:flex-start; font-size:15px; color:var(--ink-700);">
+            <span style="color:var(--amber); flex-shrink:0;">→</span>n8n 노드 추가만으로 Notion·Confluence 문서도 동일하게 적재 가능
+          </div>
         </div>
       </div>
 
-      <div class="card light" style="gap:12px; padding:20px 24px;">
-        <div class="ix">Settings → 연동 탭</div>
-        <h4 style="font-size:20px;">일괄 전송 + 상태 확인</h4>
-        <p style="font-size:15px;">전체 히스토리 일괄 Dify 전송 / Dify 연결 상태 확인 / n8n ACTIVE 배지</p>
-      </div>
-
-      <div class="card" style="background:var(--green-bg); border-color:var(--green); gap:10px; padding:18px 24px;">
-        <div class="ix" style="color:var(--green);">API</div>
-        <p style="font-size:15px; color:var(--ink-700);">
-          <span style="font-family:var(--font-mono); font-size:13px; background:rgba(31,138,91,0.1); padding:2px 8px; border-radius:4px;">POST /datasets/{id}/documents/create-by-text</span><br>
-          <span style="font-size:14px; color:var(--ink-500); margin-top:6px; display:block;">indexing_technique: high_quality · 환경변수: DIFY_API_KEY, DIFY_DATASET_ID</span>
-        </p>
+      <div class="card" style="background:var(--paper-100); border-color:var(--ink-200); flex-direction:row; gap:14px; padding:16px 20px; align-items:center;">
+        <div class="mono-label" style="color:var(--ink-900); flex-shrink:0;">현재</div>
+        <p style="font-size:15px; color:var(--ink-500);">Dify 계정·Dataset 연결 시 즉시 활성화 가능한 구조로 설계됨 (환경변수 2개)</p>
       </div>
     </div>
   </div>
 
   <div class="chrome chrome-bottom">
     <div class="chrome-num">05 / 10</div>
-    <div class="chrome-tag">Dify RAG</div>
+    <div class="chrome-tag">Expansion · Dify RAG</div>
   </div>
 </div>
 
@@ -561,11 +558,11 @@ html, body {
         <p>요약·결정사항·액션아이템을 편집 후 n8n 워크플로우 경유로 Slack 채널 원클릭 전송.</p>
         <div class="chip indigo" style="align-self:flex-start; margin-top:8px;">n8n Webhook</div>
       </div>
-      <div class="card green">
-        <div class="ix">Feature 05</div>
-        <h3>Dify 지식베이스</h3>
-        <p>회의 완료 시 Dify 자동 적재. 사이드바 개별 전송, Settings 일괄 전송, RAG 검색 지원.</p>
-        <div class="chip green" style="align-self:flex-start; margin-top:8px;">RAG · high_quality</div>
+      <div class="card amber">
+        <div class="ix">Feature 05 · 확장 예정</div>
+        <h3>Dify RAG 연동</h3>
+        <p>n8n → Dify 지식베이스로 회의록 push. 누적된 회의 데이터를 AI가 문서 기준으로 검색·답변.</p>
+        <div class="chip amber" style="align-self:flex-start; margin-top:8px;">Dify 계정 연결 시 활성화</div>
       </div>
       <div class="card">
         <div class="ix">Feature 06</div>
@@ -603,12 +600,12 @@ html, body {
             </div>
             <div class="mono-label">Slack 자동화 · 워크플로우</div>
           </div>
-          <div class="card green" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
+          <div class="card" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px; border-color:var(--amber); border-style:dashed;">
             <div style="display:flex; align-items:center; gap:12px;">
-              <div style="width:32px; height:32px; background:var(--green); border-radius:6px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:11px; font-weight:700; color:white;">Dify</div>
+              <div style="width:32px; height:32px; background:var(--amber); border-radius:6px; display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:11px; font-weight:700; color:white;">Dify</div>
               <div class="body-text" style="font-weight:700;">Dify Cloud</div>
             </div>
-            <div class="mono-label" style="color:var(--green);">RAG 지식베이스 · API</div>
+            <div class="mono-label" style="color:var(--amber);">RAG 지식베이스 · 적용 예정</div>
           </div>
           <div class="card indigo" style="flex-direction:row; justify-content:space-between; align-items:center; padding:16px 24px;">
             <div class="body-text" style="font-weight:700; color:var(--indigo-ink);">Deepgram nova-2</div>
@@ -738,10 +735,10 @@ html, body {
             <div style="font-weight:800; font-size:20px; margin-top:4px;">n8n</div>
             <div style="font-size:14px; color:var(--ink-500); margin-top:2px;">Webhook<br>→ Slack</div>
           </div>
-          <div class="card green" style="padding:18px 20px;">
-            <div class="ix" style="color:var(--green);">RAG</div>
-            <div style="font-weight:800; font-size:20px; margin-top:4px; color:var(--green);">Dify</div>
-            <div style="font-size:14px; color:var(--green); margin-top:2px;">지식베이스<br>자동 적재</div>
+          <div class="card" style="padding:18px 20px; border-style:dashed; border-color:var(--amber);">
+            <div class="ix" style="color:var(--amber);">확장 예정</div>
+            <div style="font-weight:800; font-size:20px; margin-top:4px; color:var(--amber);">Dify</div>
+            <div style="font-size:14px; color:var(--ink-500); margin-top:2px;">RAG<br>지식베이스</div>
           </div>
         </div>
       </div>
@@ -877,7 +874,7 @@ html, body {
         </div>
         <div style="width:80px; height:6px; background:var(--indigo); border-radius:3px;"></div>
         <p style="font-size:20px; color:rgba(255,255,255,0.55); line-height:1.7; max-width:460px;">
-          음성 하나로 STT · AI 요약 · Slack 공유 · Dify 적재까지.<br>
+          음성 하나로 STT · AI 요약 · n8n Slack 공유까지.<br>
           회의록 작성에 쓰던 30분을 돌려드립니다.
         </p>
       </div>
@@ -898,7 +895,7 @@ html, body {
         <div style="display:flex; gap:24px; flex-wrap:wrap;">
           <span style="font-size:15px; color:var(--indigo-ink);">✅ 실시간 STT + 3모델 병렬</span>
           <span style="font-size:15px; color:var(--indigo-ink);">✅ n8n → Slack 자동화</span>
-          <span style="font-size:15px; color:var(--indigo-ink);">✅ Dify RAG 적재</span>
+          <span style="font-size:15px; color:var(--indigo-ink);">✅ n8n → Slack 자동화</span>
           <span style="font-size:15px; color:var(--indigo-ink);">✅ Railway + Vercel 배포</span>
         </div>
       </div>
