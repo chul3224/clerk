@@ -85,3 +85,70 @@ html.light {
   0%, 100% { transform: translateY(0px); }
   50%      { transform: translateY(-4px); }
 }
+
+/* ─── Typography & Rendering ───────────────────────── */
+html {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    system-ui, Roboto, 'Helvetica Neue', 'Segoe UI',
+    'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em; /* 한글은 살짝 좁혀야 단정해 보임 */
+}
+
+/* 숫자는 고정폭으로 — ms/토큰 지표가 흔들리지 않게 */
+body {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Custom Scrollbar (Claude Desktop 스타일) ─────── */
+* {
+  scrollbar-width: thin;                       /* Firefox */
+  scrollbar-color: var(--c-border2) transparent;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--c-border2);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-text-dim);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ─── Selection & Focus ────────────────────────────── */
+::selection {
+  background: color-mix(in srgb, var(--c-accent) 30%, transparent);
+  color: var(--c-text);
+}
+
+/* 키보드 사용자를 위한 포커스 링 (마우스 클릭 시엔 안 보임) */
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+input:focus-visible,
+textarea:focus-visible {
+  outline: none; /* 입력창은 자체 border 스타일 사용 */
+}
+
+/* ─── Micro-interactions ───────────────────────────── */
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+button:active {
+  transform: scale(0.98);
+}
