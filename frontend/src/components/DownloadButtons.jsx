@@ -68,13 +68,13 @@ export default function DownloadButtons({ transcript, speakerNames, summaries })
     <div className="flex gap-3 justify-center">
       <button
         onClick={() => downloadBlob(buildTxt(transcript, speakerNames, summaries), 'meeting_transcript.txt', 'text/plain;charset=utf-8')}
-        className="flex items-center gap-2 px-5 py-2.5 bg-gray-700 text-white rounded-xl hover:bg-gray-800 transition-colors font-medium"
+        className="flex items-center gap-2 px-4 py-2 bg-c-card border border-c2 text-c-soft rounded-lg hover:bg-c-hover text-sm font-medium transition-colors"
       >
         <span>📄</span> 대화록 .txt
       </button>
       <button
         onClick={() => downloadBlob(buildMd(transcript, speakerNames, summaries), 'meeting_summary.md', 'text/markdown;charset=utf-8')}
-        className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium"
+        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
       >
         <span>📝</span> 요약 .md
       </button>

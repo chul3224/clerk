@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { API_BASE } from '../api/client'
+import { API_BASE, authToken } from '../api/client'
 
 const STEPS = [
-  { key: 'stt', label: 'STT 변환', icon: '🔤' },
-  { key: 'diarization', label: '화자 분리', icon: '👥' },
-  { key: 'summarization', label: 'AI 요약', icon: '✨' },
+  { key: 'stt', label: 'STT 변환', desc: '음성을 텍스트로 변환합니다' },
+  { key: 'diarization', label: '화자 분리', desc: '발화자를 구분합니다' },
+  { key: 'summarization', label: 'AI 요약', desc: '3개 모델이 동시에 요약합니다' },
 ]
 
 export default function ProcessingStatus({ fileId, onComplete, onError }) {
@@ -12,7 +12,8 @@ export default function ProcessingStatus({ fileId, onComplete, onError }) {
   const [messages, setMessages] = useState([])
 
   useEffect(() => {
-    const es = new EventSource(`${API_BASE}/api/process/${fileId}`)
+    // EventSource는 헤더를 못 붙이므로 토큰을 쿼리스트링으로 전달
+    const es = new EventSource(`${API_BASE}/api/process/${fileId}?token=${authToken()}`)
 
     es.onmessage = (event) => {
       const data = JSON.parse(event.data)
@@ -46,34 +47,39 @@ export default function ProcessingStatus({ fileId, onComplete, onError }) {
   }, [fileId, onComplete, onError])
 
   return (
-    <div className="flex flex-col items-center gap-8 py-16">
+    <div className="flex flex-col items-center gap-8 py-16 w-full max-w-md">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">처리 중...</h2>
-        <p className="text-gray-500">잠시만 기다려 주세요</p>
+        <h2 className="text-xl font-semibold text-c mb-1.5 tracking-tight">회의록 생성 중</h2>
+        <p className="text-sm text-c-faint">잠시만 기다려 주세요</p>
       </div>
 
-      <div className="w-full max-w-md flex flex-col gap-4">
-        {STEPS.map((step, i) => {
+      <div className="w-full flex flex-col gap-2.5">
+        {STEPS.map((step) => {
           const status = stepStatus[step.key]
           return (
             <div
               key={step.key}
-              className={`flex items-center gap-4 p-4 rounded-xl border transition-all
-                ${status === 'done' ? 'border-green-200 bg-green-50' :
-                  status === 'processing' ? 'border-blue-200 bg-blue-50' :
-                  'border-gray-200 bg-white opacity-50'}`}
+              className={`flex items-center gap-4 px-4 py-3.5 rounded-xl border transition-all duration-300
+                ${status === 'done' ? 'border-emerald-500/30 bg-emerald-500/5' :
+                  status === 'processing' ? 'border-indigo-500/40 bg-indigo-500/5' :
+                  'border-c bg-c-card opacity-50'}`}
             >
-              <span className="text-2xl">{step.icon}</span>
-              <div className="flex-1">
-                <p className={`font-medium ${status === 'done' ? 'text-green-700' : status === 'processing' ? 'text-blue-700' : 'text-gray-400'}`}>
-                  {step.label}
-                </p>
-              </div>
-              <div className="w-6 h-6 flex items-center justify-center">
-                {status === 'done' && <span className="text-green-500 text-lg">✓</span>}
-                {status === 'processing' && (
-                  <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0
+                ${status === 'done' ? 'bg-emerald-500/15 text-emerald-500' :
+                  status === 'processing' ? 'bg-indigo-500/15 text-indigo-400' :
+                  'bg-c-hover text-c-dim'}`}
+              >
+                {status === 'done' ? (
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                ) : status === 'processing' ? (
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <span className="w-1.5 h-1.5 bg-current rounded-full" />
                 )}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className={`text-sm font-medium ${status ? 'text-c' : 'text-c-faint'}`}>{step.label}</p>
+                <p className="text-xs text-c-faint mt-0.5">{step.desc}</p>
               </div>
             </div>
           )
@@ -81,7 +87,7 @@ export default function ProcessingStatus({ fileId, onComplete, onError }) {
       </div>
 
       {messages.length > 0 && (
-        <p className="text-sm text-gray-400">{messages[messages.length - 1]}</p>
+        <p className="text-xs text-c-dim">{messages[messages.length - 1]}</p>
       )}
     </div>
   )

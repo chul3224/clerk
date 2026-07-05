@@ -1,9 +1,9 @@
 const SPEAKER_COLORS = [
-  { avatar: 'bg-blue-500',   bubble: 'bg-blue-950/50 border-blue-900/40',   name: 'text-blue-400'   },
-  { avatar: 'bg-violet-500', bubble: 'bg-violet-950/50 border-violet-900/40', name: 'text-violet-400' },
-  { avatar: 'bg-emerald-500',bubble: 'bg-emerald-950/50 border-emerald-900/40',name: 'text-emerald-400'},
-  { avatar: 'bg-orange-500', bubble: 'bg-orange-950/50 border-orange-900/40', name: 'text-orange-400' },
-  { avatar: 'bg-rose-500',   bubble: 'bg-rose-950/50 border-rose-900/40',   name: 'text-rose-400'   },
+  { avatar: 'bg-blue-500',   bubble: 'bg-blue-500/10 border-blue-500/20',   name: 'text-blue-500'   },
+  { avatar: 'bg-violet-500', bubble: 'bg-violet-500/10 border-violet-500/20', name: 'text-violet-500' },
+  { avatar: 'bg-emerald-500',bubble: 'bg-emerald-500/10 border-emerald-500/20',name: 'text-emerald-500'},
+  { avatar: 'bg-orange-500', bubble: 'bg-orange-500/10 border-orange-500/20', name: 'text-orange-500' },
+  { avatar: 'bg-rose-500',   bubble: 'bg-rose-500/10 border-rose-500/20',   name: 'text-rose-500'   },
 ]
 
 function formatTime(secs) {
@@ -17,13 +17,13 @@ export default function TranscriptView({ transcript, speakerNames, onSpeakerName
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="px-4 h-10 flex items-center justify-between border-b border-[#2a2a2e] flex-shrink-0">
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">대화록</span>
-        <span className="text-[11px] text-gray-600">{transcript.length}개 발화</span>
+      <div className="px-4 h-10 flex items-center justify-between border-b border-c flex-shrink-0">
+        <span className="text-xs font-semibold text-c-muted uppercase tracking-wider">대화록</span>
+        <span className="text-[11px] text-c-dim">{transcript.length}개 발화</span>
       </div>
 
       {/* Speaker name tags */}
-      <div className="px-4 py-2 border-b border-[#2a2a2e] flex flex-wrap gap-2 flex-shrink-0">
+      <div className="px-4 py-2 border-b border-c flex flex-wrap gap-2 flex-shrink-0">
         {speakers.map((id, i) => {
           const c = SPEAKER_COLORS[i % SPEAKER_COLORS.length]
           return (
@@ -34,7 +34,7 @@ export default function TranscriptView({ transcript, speakerNames, onSpeakerName
                 </span>
               </div>
               <input
-                className="bg-transparent text-xs text-gray-400 w-16 outline-none border-b border-transparent focus:border-gray-600 transition-colors placeholder-gray-700"
+                className="bg-transparent text-xs text-c-muted w-16 outline-none border-b border-transparent focus:border-c2 transition-colors"
                 value={speakerNames[id] || ''}
                 placeholder={`화자 ${String.fromCharCode(65 + i)}`}
                 onChange={e => onSpeakerNameChange(id, e.target.value)}
@@ -67,11 +67,11 @@ export default function TranscriptView({ transcript, speakerNames, onSpeakerName
                 {showHeader && (
                   <div className="flex items-baseline gap-2 mb-1">
                     <span className={`text-xs font-semibold ${c.name}`}>{displayName}</span>
-                    <span className="text-[10px] text-gray-700">{formatTime(seg.start)}</span>
+                    <span className="text-[10px] text-c-dim">{formatTime(seg.start)}</span>
                   </div>
                 )}
                 <div className={`px-3 py-2 rounded-2xl ${showHeader ? 'rounded-tl-sm' : ''} border ${c.bubble}`}>
-                  <p className="text-xs text-gray-300 leading-relaxed">{seg.text}</p>
+                  <p className="text-xs text-c-soft leading-relaxed">{seg.text}</p>
                 </div>
               </div>
             </div>

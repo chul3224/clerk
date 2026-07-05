@@ -104,10 +104,10 @@ export default function MindmapView({ summary, keyDecisions, actionItems }) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-80 bg-gray-50 rounded-xl border border-gray-200">
+      <div className="flex items-center justify-center h-80 bg-c-card rounded-xl border border-c">
         <div className="text-center">
-          <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-          <p className="text-sm text-gray-500">마인드맵 생성 중...</p>
+          <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+          <p className="text-sm text-c-faint">마인드맵 생성 중...</p>
         </div>
       </div>
     )
@@ -115,17 +115,17 @@ export default function MindmapView({ summary, keyDecisions, actionItems }) {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-80 bg-red-50 rounded-xl border border-red-100">
+      <div className="flex items-center justify-center h-80 bg-red-500/5 rounded-xl border border-red-500/20">
         <div className="text-center">
           <p className="text-sm text-red-500 mb-2">{error}</p>
-          <button onClick={load} className="text-xs text-blue-600 hover:underline">다시 시도</button>
+          <button onClick={load} className="text-xs text-indigo-500 hover:underline">다시 시도</button>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="h-[480px] rounded-xl border border-gray-200 overflow-hidden bg-gray-50">
+    <div className="h-[480px] rounded-xl border border-c overflow-hidden bg-c-card">
       <ReactFlow
         nodes={nodes}
         edges={edges}

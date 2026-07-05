@@ -18,14 +18,22 @@ def create_jwt(user_id: int) -> str:
     return jwt.encode({"sub": str(user_id), "exp": expire}, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 
+def verify_token(token: str) -> int | None:
+    """토큰 문자열을 검증하고 user_id를 돌려준다. 실패하면 None.
+    EventSource(SSE)는 헤더를 못 붙이므로 쿼리스트링 토큰 검증용으로 사용."""
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return int(payload["sub"])
+    except (JWTError, ValueError, KeyError):
+        return None
+
+
 def get_current_user(authorization: str = Header(None), db: Session = Depends(get_db)) -> User:
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="로그인이 필요합니다")
     token = authorization[7:]
-    try:
-        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        user_id = int(payload["sub"])
-    except (JWTError, ValueError):
+    user_id = verify_token(token)
+    if user_id is None:
         raise HTTPException(status_code=401, detail="유효하지 않은 토큰입니다")
     user = db.query(User).filter(User.id == user_id).first()
     if not user:

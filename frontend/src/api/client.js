@@ -1,5 +1,9 @@
 export const API_BASE = import.meta.env.VITE_API_BASE || ''
 
+export function authToken() {
+  return localStorage.getItem('auth_token') || ''
+}
+
 export function authHeaders() {
   const token = localStorage.getItem('auth_token')
   return token ? { Authorization: `Bearer ${token}` } : {}

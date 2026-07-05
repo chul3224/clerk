@@ -111,8 +111,18 @@ export default function App() {
 
   const handleSelectHistory = (record) => {
     setHistoryView(record)
-    setResult(null)
-    setSpeakerNames({})
+    // 새 백엔드는 대화록과 3개 모델 요약 전체를 저장하므로 결과 화면을 그대로 복원한다.
+    // (예전 기록은 요약만 있어서 기존 방식으로 표시)
+    if (record.transcript?.length && record.summaries?.length) {
+      const speakers = [...new Set(record.transcript.map(s => s.speaker))].sort()
+      const names = {}
+      speakers.forEach((id, i) => { names[id] = `화자 ${String.fromCharCode(65 + i)}` })
+      setSpeakerNames(names)
+      setResult({ transcript: record.transcript, summaries: record.summaries })
+    } else {
+      setResult(null)
+      setSpeakerNames({})
+    }
     setStage('result')
     setOpenTabs(['A'])
     setActiveTab('A')
@@ -146,6 +156,14 @@ export default function App() {
   }] : [])
 
   const availableTabs = result ? TAB_OPTIONS : historyView ? [TAB_OPTIONS[0]] : []
+
+  // 모델 탭은 "모델 A" 대신 실제 모델명(예: Llama 3.3 70B)을 보여준다
+  const MODEL_TAB_IDX = { A: 0, B: 1, C: 2 }
+  const tabLabel = (tab) => {
+    const idx = MODEL_TAB_IDX[tab?.id]
+    if (idx !== undefined && summaries[idx]?.model) return summaries[idx].model
+    return tab?.label
+  }
   const closedTabs = availableTabs.filter(t => !openTabs.includes(t.id))
   const modelAForSlack = summaries[0]
   const hasSlack = modelAForSlack && !modelAForSlack.summary?.startsWith('오류')
@@ -264,7 +282,7 @@ export default function App() {
                       className="flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-950/50 border border-indigo-800/40 text-indigo-400 hover:bg-indigo-900/50 hover:text-indigo-300 transition-colors"
                     >
                       <span className="text-indigo-600 text-[10px]">+</span>
-                      {tab.label}
+                      {tabLabel(tab)}
                     </button>
                   ))}
                 </div>
@@ -286,7 +304,7 @@ export default function App() {
                       }`}
                     >
                       {isActive && <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full flex-shrink-0" />}
-                      <span>{tab?.label}</span>
+                      <span>{tabLabel(tab)}</span>
                       {openTabs.length > 1 && (
                         <button
                           onClick={e => { e.stopPropagation(); closeTab(tabId) }}

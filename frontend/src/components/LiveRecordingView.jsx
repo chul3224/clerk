@@ -121,7 +121,7 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <div className="bg-blue-950/40 border border-blue-900/30 rounded-2xl rounded-tl-sm px-3 py-2">
+                <div className="bg-blue-500/10 border border-blue-500/20 rounded-2xl rounded-tl-sm px-3 py-2">
                   <p className="text-xs text-c-soft leading-relaxed">{line}</p>
                 </div>
               </div>
@@ -145,8 +145,8 @@ export default function LiveRecordingView({ onResultReady, onCancel }) {
         </div>
 
         {error && (
-          <div className="mx-4 mb-2 px-3 py-2 bg-red-950/30 border border-red-900/30 rounded-lg">
-            <p className="text-xs text-red-400">{error}</p>
+          <div className="mx-4 mb-2 px-3 py-2 bg-red-500/5 border border-red-500/25 rounded-lg">
+            <p className="text-xs text-red-500">{error}</p>
           </div>
         )}
 

@@ -168,10 +168,10 @@ export default function ServerWakeup({ onReady }) {
             {isFailed ? (
               <>
                 <p className="text-sm font-medium text-red-400">서버 연결 실패</p>
-                <p className="text-xs text-gray-600">잠시 후 새로고침 해주세요</p>
+                <p className="text-xs text-gray-500">잠시 후 새로고침 해주세요</p>
                 <button
                   onClick={() => window.location.reload()}
-                  className="mt-2 px-4 py-1.5 text-xs text-gray-400 border border-[#2a2a2e] rounded-lg hover:border-gray-600 hover:text-gray-200 transition-colors"
+                  className="mt-2 px-4 py-1.5 text-xs text-gray-400 border border-gray-700 rounded-lg hover:border-gray-600 hover:text-gray-200 transition-colors"
                 >
                   새로고침
                 </button>

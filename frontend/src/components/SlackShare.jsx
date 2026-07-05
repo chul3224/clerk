@@ -51,14 +51,14 @@ export default function SlackShare({ summary, keyDecisions, actionItems, transcr
   const showContent = status === STATUS.idle || status === STATUS.error
 
   return (
-    <div className="bg-[#1a1a1c] border border-[#2a2a2e] rounded-xl p-4 flex flex-col gap-3">
+    <div className="bg-c-card border border-c rounded-xl p-4 flex flex-col gap-3">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 bg-[#4A154B] rounded-md flex items-center justify-center flex-shrink-0">
             <SlackIcon />
           </div>
-          <span className="text-sm font-medium text-gray-300">Slack으로 공유</span>
+          <span className="text-sm font-medium text-c-soft">Slack으로 공유</span>
         </div>
         {showContent && (
           <button onClick={() => setIsEditing(!isEditing)} className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors">
@@ -68,29 +68,29 @@ export default function SlackShare({ summary, keyDecisions, actionItems, transcr
       </div>
 
       {showContent && !isEditing && (
-        <p className="text-xs text-gray-600">회의록을 검토하고 Slack 채널로 전송합니다.</p>
+        <p className="text-xs text-c-dim">회의록을 검토하고 Slack 채널로 전송합니다.</p>
       )}
 
       {/* Content preview / edit */}
       {showContent && (
-        <div className="bg-[#111113] border border-[#2a2a2e] rounded-lg p-3.5 flex flex-col gap-3">
+        <div className="bg-c-input border border-c rounded-lg p-3.5 flex flex-col gap-3">
           {/* Summary */}
           <div>
-            <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-widest mb-1.5">핵심 요약</p>
+            <p className="text-[10px] font-semibold text-c-dim uppercase tracking-widest mb-1.5">핵심 요약</p>
             {isEditing ? (
               <textarea
                 value={editedSummary}
                 onChange={e => setEditedSummary(e.target.value)}
-                className="w-full text-xs text-gray-300 bg-[#1a1a1c] border border-[#2a2a2e] rounded-lg p-2 resize-none outline-none min-h-[64px] focus:border-indigo-700"
+                className="w-full text-xs text-c-soft bg-c-card border border-c rounded-lg p-2 resize-none outline-none min-h-[64px] focus:border-indigo-500/60"
               />
             ) : (
-              <p className="text-xs text-gray-400 leading-relaxed whitespace-pre-line">{editedSummary}</p>
+              <p className="text-xs text-c-muted leading-relaxed whitespace-pre-line">{editedSummary}</p>
             )}
           </div>
 
           {(editedDecisions.length > 0 || isEditing) && (
             <div>
-              <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-widest mb-1.5">결정사항</p>
+              <p className="text-[10px] font-semibold text-c-dim uppercase tracking-widest mb-1.5">결정사항</p>
               <ul className="flex flex-col gap-1.5">
                 {editedDecisions.map((d, i) => (
                   <li key={i} className="flex items-start gap-2">
@@ -98,11 +98,11 @@ export default function SlackShare({ summary, keyDecisions, actionItems, transcr
                     {isEditing ? (
                       <>
                         <input value={d} onChange={e => updateDecision(i, e.target.value)}
-                          className="flex-1 text-xs text-gray-300 bg-[#1a1a1c] border border-[#2a2a2e] rounded px-2 py-0.5 outline-none focus:border-indigo-700" />
+                          className="flex-1 text-xs text-c-soft bg-c-card border border-c rounded px-2 py-0.5 outline-none focus:border-indigo-500/60" />
                         <button onClick={() => deleteDecision(i)} className="text-red-700 hover:text-red-500 text-xs shrink-0 leading-5">✕</button>
                       </>
                     ) : (
-                      <span className="text-xs text-gray-400">{d}</span>
+                      <span className="text-xs text-c-muted">{d}</span>
                     )}
                   </li>
                 ))}
@@ -115,7 +115,7 @@ export default function SlackShare({ summary, keyDecisions, actionItems, transcr
 
           {(editedActions.length > 0 || isEditing) && (
             <div>
-              <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-widest mb-1.5">액션아이템</p>
+              <p className="text-[10px] font-semibold text-c-dim uppercase tracking-widest mb-1.5">액션아이템</p>
               <ul className="flex flex-col gap-2">
                 {editedActions.map((item, i) => (
                   <li key={i} className="flex items-start gap-2">
@@ -123,12 +123,12 @@ export default function SlackShare({ summary, keyDecisions, actionItems, transcr
                     {isEditing ? (
                       <div className="flex-1 flex flex-col gap-1">
                         <input value={item.task} onChange={e => updateAction(i, 'task', e.target.value)} placeholder="작업 내용"
-                          className="text-xs text-gray-300 bg-[#1a1a1c] border border-[#2a2a2e] rounded px-2 py-0.5 outline-none focus:border-indigo-700 w-full" />
+                          className="text-xs text-c-soft bg-c-card border border-c rounded px-2 py-0.5 outline-none focus:border-indigo-500/60 w-full" />
                         <input value={item.assignee || ''} onChange={e => updateAction(i, 'assignee', e.target.value || null)} placeholder="담당자 (선택)"
-                          className="text-[11px] text-gray-500 bg-[#1a1a1c] border border-[#2a2a2e] rounded px-2 py-0.5 outline-none focus:border-indigo-700 w-full" />
+                          className="text-[11px] text-c-faint bg-c-card border border-c rounded px-2 py-0.5 outline-none focus:border-indigo-500/60 w-full" />
                       </div>
                     ) : (
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-c-muted">
                         {item.task}
                         {item.assignee && <span className="text-indigo-500"> ({item.assignee})</span>}
                       </span>
@@ -151,8 +151,8 @@ export default function SlackShare({ summary, keyDecisions, actionItems, transcr
         <div className="flex items-center gap-2.5 py-1">
           <div className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin flex-shrink-0" />
           <div>
-            <p className="text-xs font-medium text-gray-300">Slack으로 공유 중...</p>
-            <p className="text-[11px] text-gray-600">n8n 처리로 수 초 소요될 수 있습니다</p>
+            <p className="text-xs font-medium text-c-soft">Slack으로 공유 중...</p>
+            <p className="text-[11px] text-c-dim">n8n 처리로 수 초 소요될 수 있습니다</p>
           </div>
         </div>
       )}
@@ -170,7 +170,7 @@ export default function SlackShare({ summary, keyDecisions, actionItems, transcr
             <span className="text-red-500 text-xs">⚠</span>
             <p className="text-xs text-red-400">{errorMsg}</p>
           </div>
-          <button onClick={() => setStatus(STATUS.idle)} className="text-xs text-gray-600 hover:text-gray-400 ml-2">다시 시도</button>
+          <button onClick={() => setStatus(STATUS.idle)} className="text-xs text-c-dim hover:text-c-soft ml-2">다시 시도</button>
         </div>
       )}
 

@@ -6,13 +6,13 @@ export default function Login() {
   const hasError = params.get('error')
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 w-full max-w-sm text-center">
+    <div className="min-h-screen bg-c-bg flex items-center justify-center px-4">
+      <div className="bg-c-panel rounded-2xl shadow-sm border border-c p-10 w-full max-w-sm text-center">
         <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4">
           <span className="text-white font-bold text-xl">C</span>
         </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">Clerkai</h1>
-        <p className="text-gray-500 text-sm mb-8">AI 회의록 자동화 서비스</p>
+        <h1 className="text-2xl font-bold text-c mb-1">Clerkai</h1>
+        <p className="text-c-faint text-sm mb-8">AI 회의록 자동화 서비스</p>
 
         {hasError && (
           <p className="text-red-500 text-xs mb-4 bg-red-50 rounded-lg px-3 py-2">
@@ -27,7 +27,7 @@ export default function Login() {
           <SlackIcon />
           Slack으로 로그인
         </a>
-        <p className="text-xs text-gray-400 mt-4">사내 Slack 계정으로만 접근 가능합니다</p>
+        <p className="text-xs text-c-dim mt-4">사내 Slack 계정으로만 접근 가능합니다</p>
       </div>
     </div>
   )

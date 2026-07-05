@@ -39,6 +39,7 @@ SUMMARY_PROMPT = """당신은 회의록 전문 분석 AI입니다. 다음 회의
 
 JSON 형식:
 {{
+    "title": "회의 제목 (핵심 주제를 담은 명사형, 15자 이내)",
     "summary": "회의 핵심 요약 (3-5문장, 주요 논의 흐름 포함)",
     "key_decisions": ["결정사항1", "결정사항2"],
     "action_items": [
@@ -69,6 +70,7 @@ async def _summarize_one(transcript_text: str, model: dict) -> dict:
         "model": model["name"],
         "label": model["label"],
         "model_id": model["id"],
+        "title": data.get("title", ""),
         "summary": data.get("summary", ""),
         "key_decisions": data.get("key_decisions", []),
         "action_items": data.get("action_items", []),

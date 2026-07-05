@@ -14,7 +14,10 @@ def _serialize(r: MeetingRecord) -> dict:
     return {
         "id": r.id,
         "file_id": r.file_id,
+        "title": r.title,
         "summary": r.summary,
+        "transcript": json.loads(r.transcript or "[]"),
+        "summaries": json.loads(r.summaries or "[]"),
         "action_items": json.loads(r.action_items or "[]"),
         "key_decisions": json.loads(r.key_decisions or "[]"),
         "transcript_count": r.transcript_count,
